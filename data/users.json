@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "6f41184a-7ea3-486b-8f8d-5733e1a87907",
+      "name": "batorgil",
+      "email": "batkaorgil09@gmail.com",
+      "phone": "8670445",
+      "passwordHash": "3b0670bce06291444274e14fa922c8ce:232fd019f03178844b945252437ec1caa2306b1856efc36a95839483b909b045",
+      "createdAt": "2026-04-28T08:14:56.023Z"
+    },
+    {
+      "id": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
+      "name": "uriwa",
+      "email": "batbatka005@gmail.com",
+      "phone": "86705445",
+      "passwordHash": "53b3fa3ba2c0e34ca5dab11509d5b4b8:4ce85daafc6ed7ae549989c550942c800e5a774f02f84f38f4aa6ec804cb416f",
+      "createdAt": "2026-04-28T08:47:54.936Z"
+    }
+  ]
+}

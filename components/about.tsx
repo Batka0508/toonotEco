@@ -1,66 +1,58 @@
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, Clock, MapPin, ShieldCheck, Trees } from "lucide-react"
 
 const features = [
-  "25 жилийн туршлага",
-  "ISO 9001 чанарын баталгаа",
-  "Орчин үеийн технологи",
-  "Мэргэжлийн баг хамт олон",
-  "Цаг хугацааны баталгаа",
-  "Хариуцлагатай үйлчилгээ",
+  "2 болон 3 өрөөний сонголттой",
+  "Гэрэл сайн тусах цонх, зөв зохион байгуулалт",
+  "Ногоон байгууламж, хүүхдийн тоглоомын талбай",
+  "24/7 хяналт, нэвтрэх зохион байгуулалт",
+  "Авто зогсоол, явган хүний аюулгүй орчин",
+  "Урт хугацаанд үнэ цэнээ хадгалах хөрөнгө оруулалт",
+]
+
+const facts = [
+  { icon: MapPin, label: "Байршил", value: "Улаанбаатар хот" },
+  { icon: Clock, label: "Ашиглалтад орох", value: "2026 он" },
+  { icon: Trees, label: "Орчны шийдэл", value: "Ногоон бүс" },
+  { icon: ShieldCheck, label: "Аюулгүй байдал", value: "24/7 хяналт" },
 ]
 
 export function About() {
   return (
-    <section id="about" className="py-20 md:py-28 bg-secondary">
+    <section id="about" className="bg-[linear-gradient(180deg,var(--secondary)_0%,oklch(0.99_0.008_145)_100%)] py-20 md:py-28">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Content */}
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <div>
-            <p className="text-primary font-medium mb-4 tracking-wide uppercase text-sm">
-              Бидний тухай
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-6 text-balance">
-              Монгол улсын тэргүүлэгч барилгын компани
+            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Төслийн тухай</p>
+            <h2 className="mb-6 font-serif text-3xl font-bold text-foreground text-balance md:text-4xl">
+              Амьдрахад тухтай, худалдан авахад ойлгомжтой төлөвлөлт
             </h2>
-            <p className="text-muted-foreground mb-6 leading-relaxed">
-              Mongol Od нь 1999 онд байгуулагдсан бөгөөд өнөөг хүртэл 150 гаруй томоохон 
-              төсөл амжилттай хэрэгжүүлсэн. Бид орон сууцны хороолол, оффис барилга, 
-              худалдааны төв зэрэг төрөл бүрийн барилга угсралтын ажлыг гүйцэтгэдэг.
+            <p className="mb-6 leading-relaxed text-muted-foreground">
+              Тоонот Эко Хотхон нь өдөр тутмын амьдралын хэрэгцээг ойр байршил, ногоон орчин,
+              аюулгүй төлөвлөлттэй нэгтгэсэн орон сууцны төсөл юм.
             </p>
-            <p className="text-muted-foreground mb-8 leading-relaxed">
-              Манай компани нь олон улсын стандартад нийцсэн, орчин үеийн технологи 
-              ашигладаг, мэргэжлийн өндөр ур чадвартай баг хамт олонтой.
+            <p className="mb-8 leading-relaxed text-muted-foreground">
+              Борлуулалтын мэдээллийг хэрэглэгч хурдан ойлгохоор м², өрөөний тоо, үнэ, зураг,
+              байршил, холбоо барих сувгийг нэг дараалалд байршууллаа.
             </p>
-            
-            {/* Features Grid */}
-            <div className="grid sm:grid-cols-2 gap-4">
+
+            <div className="grid gap-4 sm:grid-cols-2">
               {features.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
-                  <span className="text-foreground font-medium">{feature}</span>
+                  <CheckCircle2 className="h-5 w-5 shrink-0 text-primary" />
+                  <span className="font-medium text-foreground">{feature}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Numbers */}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-background rounded-xl p-8 text-center shadow-sm">
-              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">150+</p>
-              <p className="text-muted-foreground">Дууссан төсөл</p>
-            </div>
-            <div className="bg-background rounded-xl p-8 text-center shadow-sm">
-              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">50+</p>
-              <p className="text-muted-foreground">Мэргэжилтнүүд</p>
-            </div>
-            <div className="bg-background rounded-xl p-8 text-center shadow-sm">
-              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">25</p>
-              <p className="text-muted-foreground">Жилийн туршлага</p>
-            </div>
-            <div className="bg-background rounded-xl p-8 text-center shadow-sm">
-              <p className="text-4xl md:text-5xl font-bold text-primary mb-2">100%</p>
-              <p className="text-muted-foreground">Сэтгэл ханамж</p>
-            </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {facts.map((fact) => (
+              <div key={fact.label} className="rounded-lg border border-emerald-800/15 bg-card p-6 shadow-sm shadow-emerald-900/5">
+                <fact.icon className="mb-5 h-7 w-7 text-primary" />
+                <p className="text-sm text-muted-foreground">{fact.label}</p>
+                <p className="mt-1 text-2xl font-bold text-foreground">{fact.value}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

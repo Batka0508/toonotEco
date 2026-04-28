@@ -2,17 +2,18 @@ import Link from "next/link"
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react"
 
 const footerLinks = {
-  company: [
-    { label: "Бидний тухай", href: "#about" },
-    { label: "Үйлчилгээ", href: "#services" },
-    { label: "Төслүүд", href: "#projects" },
-    { label: "Холбоо барих", href: "#contact" },
+  menu: [
+    { label: "Төслийн тухай", href: "#about" },
+    { label: "Давуу тал", href: "#advantages" },
+    { label: "Байрны сонголт", href: "#apartments" },
+    { label: "Үнэ", href: "#price" },
+    { label: "Байршил", href: "#location" },
   ],
-  services: [
-    { label: "Оффис барилга", href: "#" },
-    { label: "Орон сууц", href: "#" },
-    { label: "Худалдааны төв", href: "#" },
-    { label: "Барилга засвар", href: "#" },
+  apartments: [
+    { label: "2 өрөө байр", href: "#apartments" },
+    { label: "3 өрөө байр", href: "#apartments" },
+    { label: "Зогсоол", href: "#apartments" },
+    { label: "Төлбөрийн нөхцөл", href: "#contact" },
   ],
 }
 
@@ -25,46 +26,39 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="bg-[linear-gradient(180deg,oklch(0.2_0.07_154)_0%,oklch(0.14_0.055_154)_100%)] text-background">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand */}
-          <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-primary rounded-sm flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">M</span>
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <Link href="/" className="mb-6 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
+                <span className="text-xl font-bold text-primary-foreground">T</span>
               </div>
-              <div>
-                <span className="font-serif text-xl font-bold text-background">Mongol Od</span>
-              </div>
+              <span className="font-serif text-xl font-bold text-background">Тоонот Эко Хотхон</span>
             </Link>
-            <p className="text-background/70 mb-6 leading-relaxed">
-              Чанартай барилга, итгэлтэй хамтрагч. 25 жилийн туршлагатай Монголын тэргүүлэгч барилгын компани.
+            <p className="mb-6 leading-relaxed text-background/70">
+              Байрны сонголт, м² үнэ, зураг, байршил, борлуулалтын мэдээллийг нэг дороос авах орон сууцны төсөл.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
-                  className="w-10 h-10 bg-background/10 rounded-lg flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50/10 transition-colors hover:bg-primary hover:text-primary-foreground"
                   aria-label={social.label}
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="h-5 w-5" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Company Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Компани</h4>
+            <h4 className="mb-6 text-lg font-semibold">Цэс</h4>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
+              {footerLinks.menu.map((link) => (
                 <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-background/70 hover:text-primary transition-colors"
-                  >
+                  <Link href={link.href} className="text-background/70 transition-colors hover:text-background">
                     {link.label}
                   </Link>
                 </li>
@@ -72,16 +66,12 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Services Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Үйлчилгээ</h4>
+            <h4 className="mb-6 text-lg font-semibold">Сонголтууд</h4>
             <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
+              {footerLinks.apartments.map((link) => (
                 <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-background/70 hover:text-primary transition-colors"
-                  >
+                  <Link href={link.href} className="text-background/70 transition-colors hover:text-background">
                     {link.label}
                   </Link>
                 </li>
@@ -89,36 +79,39 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h4 className="text-lg font-semibold mb-6">Холбоо барих</h4>
+            <h4 className="mb-6 text-lg font-semibold">Холбоо барих</h4>
             <ul className="space-y-3 text-background/70">
-              <li>Улаанбаатар, Хан-Уул дүүрэг</li>
+              <li>Улаанбаатар хот</li>
               <li>
-                <a href="tel:+97611234567" className="hover:text-primary transition-colors">
-                  +976 1123-4567
+                <a href="tel:+97611111111" className="transition-colors hover:text-background">
+                  +976 1111-1111
                 </a>
               </li>
               <li>
-                <a href="mailto:info@mongolod.mn" className="hover:text-primary transition-colors">
-                  info@mongolod.mn
+                <a href="mailto:info@toonot-eco.mn" className="transition-colors hover:text-background">
+                  info@toonot-eco.mn
                 </a>
+              </li>
+              <li>
+                <Link href="/admin" className="transition-colors hover:text-background">
+                  Admin Login
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 md:flex-row">
           <p className="text-sm text-background/50">
-            © {new Date().getFullYear()} Mongol Od. Бүх эрх хуулиар хамгаалагдсан.
+            © {new Date().getFullYear()} Toonot Eco Hothon. Бүх эрх хуулиар хамгаалагдсан.
           </p>
           <div className="flex gap-6 text-sm text-background/50">
-            <Link href="#" className="hover:text-background transition-colors">
-              Нууцлалын бодлого
+            <Link href="#contact" className="transition-colors hover:text-background">
+              Борлуулалтын алба
             </Link>
-            <Link href="#" className="hover:text-background transition-colors">
-              Үйлчилгээний нөхцөл
+            <Link href="#price" className="transition-colors hover:text-background">
+              Үнийн мэдээлэл
             </Link>
           </div>
         </div>

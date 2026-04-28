@@ -3,19 +3,19 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({ 
-  subsets: ["latin"],
-  variable: '--font-inter'
-});
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+})
 
-const playfair = Playfair_Display({ 
-  subsets: ["latin"],
-  variable: '--font-playfair'
-});
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+})
 
 export const metadata: Metadata = {
-  title: 'Mongol Od | Барилгын Компани',
-  description: 'Монгол Од - Чанартай барилга, итгэлтэй хамтрагч. Бид орон сууц, оффис барилга, худалдааны төвүүдийг барьдаг.',
+  title: 'Тоонот Эко Хотхон | Орон сууцны борлуулалт',
+  description: 'Тоонот Эко Хотхон - байрны сонголт, м² үнэ, зураг, байршил болон борлуулалтын мэдээлэл.',
   generator: 'v0.app',
   icons: {
     icon: [

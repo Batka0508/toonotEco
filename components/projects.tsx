@@ -1,75 +1,94 @@
 import Image from "next/image"
-import { ArrowUpRight } from "lucide-react"
+import Link from "next/link"
+import { ArrowUpRight, BedDouble, Ruler, Wallet } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
-const projects = [
-  {
-    title: "Хан-Уул Резиденс",
-    category: "Орон сууц",
-    image: "/images/project-1.jpg",
-    year: "2024",
-  },
-  {
-    title: "Central Tower",
-    category: "Оффис барилга",
-    image: "/images/project-2.jpg",
-    year: "2023",
-  },
-  {
-    title: "Номин Молл",
-    category: "Худалдааны төв",
-    image: "/images/project-3.jpg",
-    year: "2023",
-  },
-]
+import { getSiteContent } from "@/lib/site-content"
 
 export function Projects() {
+  const { apartments } = getSiteContent()
+
   return (
-    <section id="projects" className="py-20 md:py-28 bg-secondary">
+    <section id="apartments" className="bg-[linear-gradient(180deg,oklch(0.985_0.014_142)_0%,oklch(0.998_0.004_145)_100%)] py-20 md:py-28">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-primary font-medium mb-4 tracking-wide uppercase text-sm">
-              Төслүүд
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground text-balance">
-              Сүүлийн үеийн ажлууд
+            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Байрны сонголт</p>
+            <h2 className="font-serif text-3xl font-bold text-foreground text-balance md:text-4xl">
+              Өрөө, м², үнэ, зураг нэг дор
             </h2>
           </div>
-          <Button variant="outline">
-            Бүх төслүүд
-            <ArrowUpRight className="w-4 h-4 ml-2" />
+          <Button asChild variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
+            <Link href="#contact">
+              Борлуулалтын ажилтантай холбогдох
+              <ArrowUpRight className="ml-2 h-4 w-4" />
+            </Link>
           </Button>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {apartments.map((apartment) => (
             <div
-              key={project.title}
-              className="group relative bg-background rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+              key={apartment.id}
+              className="group relative overflow-hidden rounded-lg border border-emerald-800/15 bg-card shadow-sm shadow-emerald-900/5 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-900/12"
             >
-              <div className="aspect-[4/3] relative overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src={project.image}
-                  alt={project.title}
+                  src={apartment.image}
+                  alt={apartment.title}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute left-4 top-4 rounded bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                  {apartment.tag}
+                </div>
               </div>
               <div className="p-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">
-                    {project.category}
-                  </span>
-                  <span className="text-xs text-muted-foreground">{project.year}</span>
+                <h3 className="mb-4 text-2xl font-semibold text-foreground">{apartment.title}</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <Ruler className="h-4 w-4 text-primary" />
+                      Талбай
+                    </span>
+                    <span className="font-semibold text-foreground">{apartment.area}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <Wallet className="h-4 w-4 text-primary" />
+                      1 м² үнэ
+                    </span>
+                    <span className="font-semibold text-foreground">{apartment.price}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="flex items-center gap-2 text-muted-foreground">
+                      <BedDouble className="h-4 w-4 text-primary" />
+                      Нийт үнэ
+                    </span>
+                    <span className="font-semibold text-primary">{apartment.total}</span>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold text-foreground">{project.title}</h3>
+                <Button asChild className="mt-6 w-full">
+                  <Link href="#contact">Энэ сонголтыг лавлах</Link>
+                </Button>
               </div>
             </div>
           ))}
+        </div>
+
+        <div id="price" className="mt-12 overflow-hidden rounded-lg border border-emerald-800/15 bg-card shadow-sm shadow-emerald-900/5">
+          <div className="border-b border-border p-6">
+            <h3 className="text-2xl font-semibold text-foreground">Үнийн товч мэдээлэл</h3>
+            <p className="mt-2 text-muted-foreground">Үнэ нь сонгосон давхар, цонхны харц, төлбөрийн нөхцөлөөс хамаарч өөрчлөгдөж болно.</p>
+          </div>
+          <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
+            {apartments.map((apartment) => (
+              <div key={apartment.id} className="p-6">
+                <p className="text-sm text-muted-foreground">{apartment.title}</p>
+                <p className="mt-2 text-2xl font-bold text-foreground">{apartment.price}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{apartment.area}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
