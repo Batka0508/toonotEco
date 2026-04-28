@@ -73,7 +73,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <main className="min-h-screen bg-background">
       <header className="border-b border-emerald-800/15 bg-emerald-50/95">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex min-h-16 flex-col items-start justify-center gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-primary">Admin</p>
             <h1 className="font-serif text-xl font-bold text-foreground">Байрны мэдээлэл засах</h1>
@@ -87,9 +87,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </div>
       </header>
 
-      <section className="container mx-auto px-4 py-10">
-        <div className="mb-8 rounded-lg border border-emerald-800/15 bg-card p-6 shadow-sm shadow-emerald-900/5">
-          <div className="flex items-start gap-4">
+      <section className="container mx-auto px-4 py-8 sm:py-10">
+        <div className="mb-6 rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 sm:mb-8 sm:p-6">
+          <div className="grid gap-4 sm:flex sm:items-start">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <ShieldCheck className="h-6 w-6" />
             </div>
@@ -123,7 +123,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <form action={updateApartment} className="grid gap-6 lg:grid-cols-[18rem_1fr]">
+                <form action={updateApartment} className="grid gap-5 lg:grid-cols-[18rem_1fr] lg:gap-6">
                   <input type="hidden" name="id" value={apartment.id} />
 
                   <div>
@@ -180,12 +180,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                         Upload хийвэл path автоматаар /images/... болж хадгалагдана.
                       </p>
                     </div>
-                    <div className="flex items-center justify-between gap-3 md:col-span-2">
-                      <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="grid gap-3 md:col-span-2 lg:flex lg:items-center lg:justify-between">
+                      <p className="flex items-start gap-2 text-sm text-muted-foreground">
                         <Wallet className="h-4 w-4 text-primary" />
                         Үнэ, м² өөрчлөөд хадгалах товч дарна.
                       </p>
-                      <Button type="submit" className="min-w-36">
+                      <Button type="submit" className="w-full min-w-36 sm:w-fit">
                         <Save className="h-4 w-4" />
                         Хадгалах
                       </Button>

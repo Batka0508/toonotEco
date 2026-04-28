@@ -34,40 +34,40 @@ const contactInfo = [
 
 export function Contact() {
   return (
-    <section id="contact" className="bg-[linear-gradient(180deg,var(--background)_0%,oklch(0.985_0.012_145)_100%)] py-20 md:py-28">
+    <section id="contact" className="bg-[linear-gradient(180deg,var(--background)_0%,oklch(0.985_0.012_145)_100%)] py-16 md:py-28">
       <div className="container mx-auto px-4">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
           <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Борлуулалтын алба</p>
-            <h2 className="mb-6 font-serif text-3xl font-bold text-foreground text-balance md:text-4xl">
+            <h2 className="mb-5 font-serif text-3xl font-bold text-foreground text-balance md:mb-6 md:text-4xl">
               Байрны сонголт, үнэ, төлбөрийн нөхцөлийн талаар лавлах
             </h2>
-            <p className="mb-10 leading-relaxed text-muted-foreground">
+            <p className="mb-8 leading-relaxed text-muted-foreground md:mb-10">
               Та сонирхож буй өрөөний сонголт, м², давхар, төлбөрийн нөхцөлөө үлдээгээрэй.
               Борлуулалтын ажилтан танд дэлгэрэнгүй мэдээлэл өгнө.
             </p>
 
-            <div className="space-y-6">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
               {contactInfo.map((info) => (
-                <a key={info.title} href={info.href} className="group flex items-start gap-4">
+                <a key={info.title} href={info.href} className="group flex items-start gap-4 rounded-lg border border-emerald-800/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
                     <info.icon className="h-5 w-5 text-primary" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-sm text-muted-foreground">{info.title}</p>
-                    <p className="font-medium text-foreground transition-colors group-hover:text-primary">{info.value}</p>
+                    <p className="break-words font-medium text-foreground transition-colors group-hover:text-primary">{info.value}</p>
                   </div>
                 </a>
               ))}
             </div>
 
-            <div id="location" className="mt-10 rounded-lg border border-emerald-800/15 bg-card p-6 shadow-sm shadow-emerald-900/5">
+            <div id="location" className="mt-8 rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 md:mt-10 md:p-6">
               <div className="mb-4 flex items-center gap-3">
                 <MapPin className="h-6 w-6 text-primary" />
-                <h3 className="text-xl font-semibold text-foreground">Байршлын мэдээлэл</h3>
+                <h3 className="text-lg font-semibold text-foreground sm:text-xl">Байршлын мэдээлэл</h3>
               </div>
-              <div className="flex min-h-56 items-center justify-center rounded-md border border-dashed border-emerald-800/25 bg-emerald-50 text-center">
-                <div className="max-w-sm px-6">
+              <div className="flex min-h-48 items-center justify-center rounded-md border border-dashed border-emerald-800/25 bg-emerald-50 text-center sm:min-h-56">
+                <div className="max-w-sm px-5">
                   <p className="font-semibold text-foreground">Газрын зураг / байршлын зураг</p>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                     Энд Google Map embed эсвэл байршлын зураг байрлуулах боломжтой.
@@ -77,9 +77,9 @@ export function Contact() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-emerald-800/15 bg-card p-8 shadow-sm shadow-emerald-900/5">
+          <div className="rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
             <h3 className="mb-6 text-xl font-semibold text-foreground">Мэдээлэл авах хүсэлт</h3>
-            <form className="space-y-6">
+            <form className="space-y-5 sm:space-y-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">

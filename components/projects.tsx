@@ -8,16 +8,16 @@ export function Projects() {
   const { apartments } = getSiteContent()
 
   return (
-    <section id="apartments" className="bg-[linear-gradient(180deg,oklch(0.985_0.014_142)_0%,oklch(0.998_0.004_145)_100%)] py-20 md:py-28">
+    <section id="apartments" className="bg-[linear-gradient(180deg,oklch(0.985_0.014_142)_0%,oklch(0.998_0.004_145)_100%)] py-16 md:py-28">
       <div className="container mx-auto px-4">
-        <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="mb-10 flex flex-col gap-5 md:mb-12 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Байрны сонголт</p>
             <h2 className="font-serif text-3xl font-bold text-foreground text-balance md:text-4xl">
               Өрөө, м², үнэ, зураг нэг дор
             </h2>
           </div>
-          <Button asChild variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">
+          <Button asChild variant="outline" className="w-full border-primary/30 text-primary hover:bg-primary/10 sm:w-fit">
             <Link href="#contact">
               Борлуулалтын ажилтантай холбогдох
               <ArrowUpRight className="ml-2 h-4 w-4" />
@@ -25,7 +25,7 @@ export function Projects() {
           </Button>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {apartments.map((apartment) => (
             <div
               key={apartment.id}
@@ -42,24 +42,24 @@ export function Projects() {
                   {apartment.tag}
                 </div>
               </div>
-              <div className="p-6">
-                <h3 className="mb-4 text-2xl font-semibold text-foreground">{apartment.title}</h3>
+              <div className="p-5 sm:p-6">
+                <h3 className="mb-4 text-xl font-semibold text-foreground sm:text-2xl">{apartment.title}</h3>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
+                  <div className="grid gap-1 border-b border-border pb-3 sm:flex sm:items-center sm:justify-between sm:gap-4">
                     <span className="flex items-center gap-2 text-muted-foreground">
                       <Ruler className="h-4 w-4 text-primary" />
                       Талбай
                     </span>
                     <span className="font-semibold text-foreground">{apartment.area}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-4 border-b border-border pb-3">
+                  <div className="grid gap-1 border-b border-border pb-3 sm:flex sm:items-center sm:justify-between sm:gap-4">
                     <span className="flex items-center gap-2 text-muted-foreground">
                       <Wallet className="h-4 w-4 text-primary" />
                       1 м² үнэ
                     </span>
                     <span className="font-semibold text-foreground">{apartment.price}</span>
                   </div>
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="grid gap-1 sm:flex sm:items-center sm:justify-between sm:gap-4">
                     <span className="flex items-center gap-2 text-muted-foreground">
                       <BedDouble className="h-4 w-4 text-primary" />
                       Нийт үнэ
@@ -75,16 +75,18 @@ export function Projects() {
           ))}
         </div>
 
-        <div id="price" className="mt-12 overflow-hidden rounded-lg border border-emerald-800/15 bg-card shadow-sm shadow-emerald-900/5">
-          <div className="border-b border-border p-6">
-            <h3 className="text-2xl font-semibold text-foreground">Үнийн товч мэдээлэл</h3>
-            <p className="mt-2 text-muted-foreground">Үнэ нь сонгосон давхар, цонхны харц, төлбөрийн нөхцөлөөс хамаарч өөрчлөгдөж болно.</p>
+        <div id="price" className="mt-10 overflow-hidden rounded-lg border border-emerald-800/15 bg-card shadow-sm shadow-emerald-900/5 md:mt-12">
+          <div className="border-b border-border p-5 sm:p-6">
+            <h3 className="text-xl font-semibold text-foreground sm:text-2xl">Үнийн товч мэдээлэл</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Үнэ нь сонгосон давхар, цонхны харц, төлбөрийн нөхцөлөөс хамаарч өөрчлөгдөж болно.
+            </p>
           </div>
           <div className="grid divide-y divide-border md:grid-cols-3 md:divide-x md:divide-y-0">
             {apartments.map((apartment) => (
-              <div key={apartment.id} className="p-6">
+              <div key={apartment.id} className="p-5 sm:p-6">
                 <p className="text-sm text-muted-foreground">{apartment.title}</p>
-                <p className="mt-2 text-2xl font-bold text-foreground">{apartment.price}</p>
+                <p className="mt-2 text-xl font-bold text-foreground sm:text-2xl">{apartment.price}</p>
                 <p className="mt-1 text-sm text-muted-foreground">{apartment.area}</p>
               </div>
             ))}
