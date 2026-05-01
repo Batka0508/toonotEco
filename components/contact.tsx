@@ -1,6 +1,7 @@
 "use client"
 
 import { Clock, Mail, MapPin, Phone } from "lucide-react"
+import { submitInquiry } from "@/app/contact-actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -43,8 +44,8 @@ export function Contact() {
               Байрны сонголт, үнэ, төлбөрийн нөхцөлийн талаар лавлах
             </h2>
             <p className="mb-8 leading-relaxed text-muted-foreground md:mb-10">
-              Та сонирхож буй өрөөний сонголт, м², давхар, төлбөрийн нөхцөлөө үлдээгээрэй.
-              Борлуулалтын ажилтан танд дэлгэрэнгүй мэдээлэл өгнө.
+              Та сонирхож буй өрөөний сонголт, м2, давхар, төлбөрийн нөхцөлөө үлдээгээрэй.
+              Илгээсэн хүсэлт admin хэсэгт шинэ notification болж очно.
             </p>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
@@ -79,26 +80,26 @@ export function Contact() {
 
           <div className="rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
             <h3 className="mb-6 text-xl font-semibold text-foreground">Мэдээлэл авах хүсэлт</h3>
-            <form className="space-y-5 sm:space-y-6">
+            <form action={submitInquiry} className="space-y-5 sm:space-y-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
                     Нэр
                   </label>
-                  <Input id="name" placeholder="Таны нэр" />
+                  <Input id="name" name="name" placeholder="Таны нэр" required />
                 </div>
                 <div>
                   <label htmlFor="phone" className="mb-2 block text-sm font-medium text-foreground">
                     Утас
                   </label>
-                  <Input id="phone" type="tel" placeholder="Утасны дугаар" />
+                  <Input id="phone" name="phone" type="tel" placeholder="Утасны дугаар" required />
                 </div>
               </div>
               <div>
                 <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
                   И-мэйл
                 </label>
-                <Input id="email" type="email" placeholder="example@mail.com" />
+                <Input id="email" name="email" type="email" placeholder="example@mail.com" />
               </div>
               <div>
                 <label htmlFor="apartment" className="mb-2 block text-sm font-medium text-foreground">
@@ -106,22 +107,23 @@ export function Contact() {
                 </label>
                 <select
                   id="apartment"
+                  name="apartment"
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <option value="">Сонгох...</option>
-                  <option value="2-room">2 өрөө байр</option>
-                  <option value="3-room">3 өрөө байр</option>
-                  <option value="parking">Зогсоол</option>
-                  <option value="payment">Төлбөрийн нөхцөл</option>
+                  <option value="2 өрөө байр">2 өрөө байр</option>
+                  <option value="3 өрөө байр">3 өрөө байр</option>
+                  <option value="Зогсоол">Зогсоол</option>
+                  <option value="Төлбөрийн нөхцөл">Төлбөрийн нөхцөл</option>
                 </select>
               </div>
               <div>
                 <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
                   Нэмэлт мэдээлэл
                 </label>
-                <Textarea id="message" rows={4} placeholder="Жишээ: 2 өрөө, 50 м² орчим, төлбөрийн нөхцөл..." />
+                <Textarea id="message" name="message" rows={4} placeholder="Жишээ: 2 өрөө, 50 м2 орчим, төлбөрийн нөхцөл..." />
               </div>
-              <Button className="w-full" size="lg">
+              <Button className="w-full" size="lg" type="submit">
                 Хүсэлт илгээх
               </Button>
             </form>

@@ -1,21 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { ClerkProvider } from '@clerk/nextjs'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-})
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-playfair',
-})
-
 export const metadata: Metadata = {
   title: 'Тоонот Эко Хотхон | Орон сууцны борлуулалт',
-  description: 'Тоонот Эко Хотхон - байрны сонголт, м² үнэ, зураг, байршил болон борлуулалтын мэдээлэл.',
+  description: 'Тоонот Эко Хотхон - байрны сонголт, м2 үнэ, зураг, байршил болон борлуулалтын мэдээлэл.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -42,11 +32,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="mn">
-      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
-        {children}
-        <Analytics />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="mn">
+        <body className="font-sans antialiased">
+          {children}
+          <Analytics />
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

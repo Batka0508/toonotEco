@@ -37,7 +37,7 @@ export function Footer() {
               <span className="font-serif text-xl font-bold text-background">Тоонот Эко Хотхон</span>
             </Link>
             <p className="mb-6 leading-relaxed text-background/70">
-              Байрны сонголт, м² үнэ, зураг, байршил, борлуулалтын мэдээллийг нэг дороос авах орон сууцны төсөл.
+              Байрны сонголт, м2 үнэ, зураг, байршил, борлуулалтын мэдээллийг нэг дороос авах орон сууцны төсөл.
             </p>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
@@ -92,11 +92,6 @@ export function Footer() {
                 <a href="mailto:info@toonot-eco.mn" className="transition-colors hover:text-background">
                   info@toonot-eco.mn
                 </a>
-              </li>
-              <li>
-                <Link href="/admin" className="transition-colors hover:text-background">
-                  Admin Login
-                </Link>
               </li>
             </ul>
           </div>

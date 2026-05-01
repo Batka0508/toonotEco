@@ -1,0 +1,58 @@
+[
+  {
+    "id": "8af1e27f-ae8b-4599-9fee-8c7850e10de2",
+    "name": "luvsan",
+    "phone": "99778888",
+    "email": "luuya10@gmail.com",
+    "apartment": "Зогсоол",
+    "message": "ZOGSOOL AVYAA HO",
+    "createdAt": "2026-05-01T06:57:51.907Z",
+    "status": "contacted",
+    "adminReply": "26say GEJ BGAA",
+    "repliedAt": "2026-05-01T07:34:28.975Z"
+  },
+  {
+    "id": "be91f542-d7dd-4e36-8af6-f2789c35f122",
+    "name": "Usuhbayar",
+    "phone": "90785566",
+    "email": "ushuu27@gmail",
+    "apartment": "Төлбөрийн нөхцөл",
+    "message": "BI B  blocknii 17 dawhart uuzliin oroond ooroo zasvaraa enee tereegee hiigeed neg heseg amidarch bolhuu zoogii agaa jagaa agaa",
+    "createdAt": "2026-04-29T07:36:26.806Z",
+    "status": "contacted",
+    "adminReply": "chi odoo bitgii dawraaad baildaa ymar gawiyaa baiguulsan gej uuzliin oroond orno enee teree geed bgn bitgii demi ym yriad bai ci",
+    "repliedAt": "2026-05-01T06:25:42.354Z"
+  },
+  {
+    "id": "9147d5c3-1b20-4a42-83c4-70ddc04e1a01",
+    "name": "jek",
+    "phone": "90785566",
+    "email": "jek27era@gmail.com",
+    "apartment": "Төлбөрийн нөхцөл",
+    "message": "bi ter 17dawhriin uuzliin oroond neg heseg amidarch bolohuu zoogii agaa jagaa guij bna",
+    "createdAt": "2026-04-29T07:33:08.912Z",
+    "status": "read",
+    "adminReply": "dasa",
+    "repliedAt": "2026-04-29T09:11:55.717Z"
+  },
+  {
+    "id": "22adeea2-a17e-46ca-91ad-2bd28b9dcf7c",
+    "name": "bataaa",
+    "phone": "99114444",
+    "email": "bataa12@gmail.com",
+    "apartment": "Зогсоол",
+    "message": "zaalnii dooddoh grash sonirhoj bn a",
+    "createdAt": "2026-04-29T07:23:13.577Z",
+    "status": "new"
+  },
+  {
+    "id": "459c158e-4015-4d55-8a32-af8c15611291",
+    "name": "bataaa",
+    "phone": "99114444",
+    "email": "bataa12@gmail.com",
+    "apartment": "Зогсоол",
+    "message": "zaalnii dooddoh grash sonirhoj bn a",
+    "createdAt": "2026-04-29T07:23:12.181Z",
+    "status": "read"
+  }
+]

@@ -1,22 +1,78 @@
 {
   "apartments": [
     {
+      "id": "5",
+      "title": "5  өрөө байр",
+      "description": "",
+      "price": "4,7 сая/м2-с",
+      "location": "Нисэх",
+      "district": "Хан уул дүүрэг",
+      "rooms": "5өрөө",
+      "area": "70м2",
+      "floor": "12давхар",
+      "totalFloors": "1",
+      "status": "available",
+      "images": [
+        "/images/5-1777617364714-0.jpg",
+        "/images/5-1777617390745-0.jpg"
+      ],
+      "image": "/images/5-1777617364714-0.jpg",
+      "floorPlanImage": "",
+      "amenities": [],
+      "total": "275сая",
+      "tag": "олон ам бүлтэй гэр бүл",
+      "createdAt": "2026-05-01T06:36:04.711Z",
+      "updatedAt": "2026-05-01T06:36:30.745Z"
+    },
+    {
       "id": "two-room",
       "title": "2 өрөө байр",
-      "area": "42-55 м²",
-      "price": "3.2 сая/м²-с",
+      "area": "42-55 м2",
+      "price": "3.2 сая/м2-с",
       "total": "134 саяас",
-      "image": "/images/apartment-two-room-1777368424773.jpg",
-      "tag": "Залуу гэр бүл"
+      "image": "/images/two-room-1777448384494-0.jpg",
+      "images": [
+        "/images/two-room-1777448384494-0.jpg",
+        "/images/two-room-1777448405921-0.jpg",
+        "/images/two-room-1777448416950-0.jpg"
+      ],
+      "tag": "Залуу гэр бүл",
+      "description": "",
+      "location": "Тоонoт Эко Хотхон",
+      "district": "",
+      "rooms": "",
+      "floor": "",
+      "totalFloors": "",
+      "status": "available",
+      "floorPlanImage": "",
+      "amenities": [],
+      "createdAt": "2026-05-01T06:36:04.710Z",
+      "updatedAt": "2026-05-01T06:36:04.710Z"
     },
     {
       "id": "three-room",
       "title": "3 өрөө байр",
-      "area": "68-86 м²",
-      "price": "3.1 сая/м²-с",
+      "area": "68-86 м2",
+      "price": "3.1 сая/м2-с",
       "total": "210 саяас",
       "image": "/images/project-2.jpg",
-      "tag": "Гэр бүл"
+      "images": [
+        "/images/project-2.jpg",
+        "/images/project-1.jpg",
+        "/images/project-3.jpg"
+      ],
+      "tag": "Гэр бүл",
+      "description": "",
+      "location": "Тоонoт Эко Хотхон",
+      "district": "",
+      "rooms": "",
+      "floor": "",
+      "totalFloors": "",
+      "status": "available",
+      "floorPlanImage": "",
+      "amenities": [],
+      "createdAt": "2026-05-01T06:36:04.710Z",
+      "updatedAt": "2026-05-01T06:36:04.710Z"
     },
     {
       "id": "parking",
@@ -25,7 +81,23 @@
       "price": "Тусдаа үнэ",
       "total": "Дэлгэрэнгүй лавлах",
       "image": "/images/project-3.jpg",
-      "tag": "Нэмэлт сонголт"
+      "images": [
+        "/images/project-3.jpg",
+        "/images/project-1.jpg",
+        "/images/parking-1777446377741-0.jpg"
+      ],
+      "tag": "Нэмэлт сонголт",
+      "description": "",
+      "location": "Тоонoт Эко Хотхон",
+      "district": "",
+      "rooms": "",
+      "floor": "",
+      "totalFloors": "",
+      "status": "available",
+      "floorPlanImage": "",
+      "amenities": [],
+      "createdAt": "2026-05-01T06:36:04.710Z",
+      "updatedAt": "2026-05-01T06:36:04.710Z"
     }
   ]
 }
