@@ -13,8 +13,16 @@
       "name": "uriwa",
       "email": "batbatka005@gmail.com",
       "phone": "86705445",
-      "passwordHash": "53b3fa3ba2c0e34ca5dab11509d5b4b8:4ce85daafc6ed7ae549989c550942c800e5a774f02f84f38f4aa6ec804cb416f",
+      "passwordHash": "adminreset20260507:def0a7bf44a7c653ba0ad8f068b9b3e792351e8e616394665bbd9b91b9bae87b",
       "createdAt": "2026-04-28T08:47:54.936Z"
+    },
+    {
+      "id": "24481c19-baaa-4c95-925a-b79de35b0ba6",
+      "name": "bataa",
+      "email": "batbatka09@gmail.com",
+      "phone": "99999999",
+      "passwordHash": "00d2e90f1de5bb61b835a34958a715b3:d5cd93177ffbd8a4637e92d974ca657889c159c76ce66bfbbd673886519a4eff",
+      "createdAt": "2026-05-07T09:25:34.009Z"
     }
   ]
 }

@@ -1,13 +1,11 @@
 "use server"
 
-import { mkdir, writeFile } from "node:fs/promises"
-import path from "node:path"
-import { cookies } from "next/headers"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { ADMIN_COOKIE_NAME, createAdminSession, getAdminCredentials, isValidAdminSession } from "@/lib/admin-auth"
-import { getInquiries, inquiriesPath, type Inquiry } from "@/lib/inquiries"
-import { getApartmentImages, getSiteContent, siteContentPath, type Apartment } from "@/lib/site-content"
+import { getCurrentAdmin } from "@/lib/admin-auth"
+import { getInquiries, saveInquiries, type Inquiry } from "@/lib/inquiries"
+import { uploadPropertyImages } from "@/lib/property-images"
+import { deleteApartmentById, getApartmentImages, getSiteContent, saveSiteContent, type Apartment, type SiteContent } from "@/lib/site-content"
 
 function clean(value: FormDataEntryValue | null) {
   return String(value ?? "").trim()
@@ -53,31 +51,11 @@ function parseInquiryStatus(value: string): Inquiry["status"] {
   return "new"
 }
 
-async function saveContent(content: ReturnType<typeof getSiteContent>) {
-  await mkdir(path.dirname(siteContentPath), { recursive: true })
-  await writeFile(siteContentPath, JSON.stringify(content, null, 2), "utf8")
+async function saveContent(content: SiteContent) {
+  await saveSiteContent(content)
 
   revalidatePath("/")
   revalidatePath("/admin")
-}
-
-async function uploadImages(files: FormDataEntryValue[], prefix: string) {
-  const uploadedImages: string[] = []
-
-  for (const imageFile of files) {
-    if (imageFile instanceof File && imageFile.size > 0) {
-      const extension = path.extname(imageFile.name) || ".jpg"
-      const filename = `${prefix}-${Date.now()}-${uploadedImages.length}${extension}`
-      const publicPath = path.join(process.cwd(), "public", "images", filename)
-      const buffer = Buffer.from(await imageFile.arrayBuffer())
-
-      await mkdir(path.dirname(publicPath), { recursive: true })
-      await writeFile(publicPath, buffer)
-      uploadedImages.push(`/images/${filename}`)
-    }
-  }
-
-  return uploadedImages
 }
 
 function readPropertyForm(formData: FormData, current?: Apartment): Apartment {
@@ -119,46 +97,18 @@ function readPropertyForm(formData: FormData, current?: Apartment): Apartment {
 }
 
 async function requireAdmin() {
-  const cookieStore = await cookies()
-  const session = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  const admin = await getCurrentAdmin()
 
-  if (!isValidAdminSession(session)) {
-    redirect("/admin?error=1")
+  if (!admin) {
+    redirect("/login?redirect=/admin")
   }
-}
-
-export async function loginAdmin(formData: FormData) {
-  const username = clean(formData.get("username"))
-  const password = clean(formData.get("password"))
-  const credentials = getAdminCredentials()
-
-  if (username !== credentials.username || password !== credentials.password) {
-    redirect("/admin?error=1")
-  }
-
-  const cookieStore = await cookies()
-  cookieStore.set(ADMIN_COOKIE_NAME, createAdminSession(username), {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 8,
-  })
-
-  redirect("/admin")
-}
-
-export async function logoutAdmin() {
-  const cookieStore = await cookies()
-  cookieStore.delete(ADMIN_COOKIE_NAME)
-  redirect("/admin")
 }
 
 export async function updateApartment(formData: FormData) {
   await requireAdmin()
 
   const id = clean(formData.get("id"))
-  const content = getSiteContent()
+  const content = await getSiteContent()
   const apartment = content.apartments.find((item) => item.id === id)
 
   if (!apartment) {
@@ -173,7 +123,7 @@ export async function updateApartment(formData: FormData) {
     redirect("/admin?view=properties&error=validation")
   }
 
-  const uploadedImages = await uploadImages(formData.getAll("imageFiles"), apartment.id)
+  const uploadedImages = await uploadPropertyImages(formData.getAll("imageFiles"), apartment.id)
   if (uploadedImages.length > 0) {
     nextApartment.images = [...getApartmentImages(nextApartment), ...uploadedImages]
     nextApartment.image = nextApartment.images[0]
@@ -188,7 +138,7 @@ export async function updateApartment(formData: FormData) {
 export async function createApartment(formData: FormData) {
   await requireAdmin()
 
-  const content = getSiteContent()
+  const content = await getSiteContent()
   let apartment: Apartment
 
   try {
@@ -201,7 +151,7 @@ export async function createApartment(formData: FormData) {
     apartment.id = `${apartment.id}-${Date.now()}`
   }
 
-  const uploadedImages = await uploadImages(formData.getAll("imageFiles"), apartment.id)
+  const uploadedImages = await uploadPropertyImages(formData.getAll("imageFiles"), apartment.id)
   if (uploadedImages.length > 0) {
     apartment.images = uploadedImages
     apartment.image = uploadedImages[0]
@@ -216,10 +166,9 @@ export async function deleteApartment(formData: FormData) {
   await requireAdmin()
 
   const id = clean(formData.get("id"))
-  const content = getSiteContent()
-  content.apartments = content.apartments.filter((item) => item.id !== id)
-
-  await saveContent(content)
+  await deleteApartmentById(id)
+  revalidatePath("/")
+  revalidatePath("/admin")
   redirect("/admin?view=properties&saved=1")
 }
 
@@ -228,10 +177,9 @@ export async function updateInquiryStatus(formData: FormData) {
 
   const id = clean(formData.get("id"))
   const status = parseInquiryStatus(clean(formData.get("status")))
-  const inquiries = getInquiries().map((inquiry) => (inquiry.id === id ? { ...inquiry, status } : inquiry))
+  const inquiries = (await getInquiries()).map((inquiry) => (inquiry.id === id ? { ...inquiry, status } : inquiry))
 
-  await mkdir(path.dirname(inquiriesPath), { recursive: true })
-  await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), "utf8")
+  await saveInquiries(inquiries)
 
   revalidatePath("/admin")
   revalidatePath("/account")
@@ -248,7 +196,7 @@ export async function replyInquiry(formData: FormData) {
     redirect("/admin")
   }
 
-  const inquiries = getInquiries().map((inquiry) =>
+  const inquiries = (await getInquiries()).map((inquiry) =>
     inquiry.id === id
       ? {
           ...inquiry,
@@ -259,8 +207,7 @@ export async function replyInquiry(formData: FormData) {
       : inquiry,
   )
 
-  await mkdir(path.dirname(inquiriesPath), { recursive: true })
-  await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), "utf8")
+  await saveInquiries(inquiries)
 
   revalidatePath("/admin")
   revalidatePath("/account")

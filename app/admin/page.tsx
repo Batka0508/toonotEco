@@ -1,20 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
-import { cookies } from "next/headers"
-import {
-  Building2,
-  CheckCircle2,
-  ClipboardList,
-  Home,
-  LayoutDashboard,
-  LogOut,
-  Pencil,
-  Plus,
-  Save,
-  Trash2,
-  UploadCloud,
-} from "lucide-react"
-import { ADMIN_COOKIE_NAME, isValidAdminSession } from "@/lib/admin-auth"
+import { Building2, ClipboardList, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
+import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
 import { getApartmentImages, getSiteContent, type Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
@@ -22,7 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { createApartment, deleteApartment, loginAdmin, logoutAdmin, replyInquiry, updateApartment, updateInquiryStatus } from "./actions"
+import { logoutUser } from "@/app/(user-auth)/actions"
+import { createApartment, deleteApartment, replyInquiry, updateApartment, updateInquiryStatus } from "./actions"
 
 type AdminView = "dashboard" | "properties" | "add" | "requests"
 
@@ -52,34 +40,30 @@ const emptyProperty: Apartment = {
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   const params = await searchParams
-  const cookieStore = await cookies()
-  const isLoggedIn = isValidAdminSession(cookieStore.get(ADMIN_COOKIE_NAME)?.value)
+  const admin = await getCurrentAdmin()
 
-  if (!isLoggedIn) {
-    return <AdminLogin hasError={params.error === "1"} />
+  if (!admin) {
+    return <AdminAccessRequired />
   }
 
   const view = parseView(params.view)
-  const { apartments } = getSiteContent()
-  const inquiries = getInquiries()
+  const { apartments } = await getSiteContent()
+  const inquiries = await getInquiries()
   const editProperty = apartments.find((property) => property.id === params.edit)
-
-  const total = apartments.length
-  const sold = apartments.filter((property) => property.status === "sold").length
-  const available = apartments.filter((property) => property.status === "available").length
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
 
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="mx-auto flex max-w-7xl flex-col lg:flex-row">
         <aside className="border-b border-slate-200 bg-white px-4 py-4 lg:min-h-screen lg:w-72 lg:border-b-0 lg:border-r lg:px-5 lg:py-6">
-          <div className="mb-5 flex items-center justify-between gap-3 lg:block">
+          <div className="mb-5 flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Админ самбар</p>
-              <h1 className="mt-1 text-xl font-bold text-slate-950">Барилгын борлуулалт</h1>
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Admin самбар</p>
+              <h1 className="mt-1 text-xl font-bold text-slate-950">Тоонот Эко Хотхон</h1>
+              <p className="mt-1 text-xs text-slate-500">{admin.email}</p>
             </div>
-            <form action={logoutAdmin} className="lg:hidden">
-              <Button type="submit" variant="outline" size="sm">
+            <form action={logoutUser}>
+              <Button type="submit" variant="outline" size="sm" className="lg:hidden">
                 <LogOut className="h-4 w-4" />
               </Button>
             </form>
@@ -99,7 +83,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                 Сайт руу
               </Link>
             </Button>
-            <form action={logoutAdmin}>
+            <form action={logoutUser}>
               <Button type="submit" variant="outline" className="w-full justify-start">
                 <LogOut className="h-4 w-4" />
                 Гарах
@@ -112,7 +96,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-bold text-slate-950">{getViewTitle(view)}</h2>
-              <p className="mt-1 text-sm text-slate-600">Байр, зураг, борлуулалтын төлөв болон хэрэглэгчийн хүсэлтийг нэг дор удирдана.</p>
+              <p className="mt-1 text-sm text-slate-600">Байр, зураг, төлөв болон хэрэглэгчийн хүсэлтийг Supabase-аас удирдана.</p>
             </div>
             {view !== "add" && (
               <Button asChild>
@@ -127,21 +111,14 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           {params.saved === "1" && <Notice tone="success">Амжилттай хадгалагдлаа.</Notice>}
           {params.error === "validation" && <Notice tone="error">Гарчиг, үнэ, талбай заавал бөглөнө үү.</Notice>}
 
-          {view === "dashboard" && (
-            <Dashboard total={total} sold={sold} available={available} requests={inquiries.length} properties={apartments} inquiries={inquiries} />
-          )}
-
+          {view === "dashboard" && <Dashboard apartments={apartments} inquiries={inquiries} />}
           {view === "properties" && (
             <div className="grid gap-6">
-              {editProperty && (
-                <PropertyForm title="Байр засах" property={editProperty} action={updateApartment} cancelHref="/admin?view=properties" />
-              )}
+              {editProperty && <PropertyForm title="Байр засах" property={editProperty} action={updateApartment} cancelHref="/admin?view=properties" />}
               <PropertiesTable properties={apartments} />
             </div>
           )}
-
           {view === "add" && <PropertyForm title="Байр нэмэх" property={emptyProperty} action={createApartment} cancelHref="/admin?view=properties" />}
-
           {view === "requests" && <RequestsTable inquiries={inquiries} properties={apartments} />}
         </section>
       </div>
@@ -149,37 +126,52 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   )
 }
 
-function Dashboard({
-  total,
-  sold,
-  available,
-  requests,
-  properties,
-  inquiries,
-}: {
-  total: number
-  sold: number
-  available: number
-  requests: number
-  properties: Apartment[]
-  inquiries: Inquiry[]
-}) {
+function AdminAccessRequired() {
+  const adminEmails = getAdminEmails()
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
+      <Card className="w-full max-w-md border-emerald-900/10 shadow-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Admin эрх шаардлагатай</CardTitle>
+          <CardDescription>Admin хэсэгт зөвхөн нэвтэрсэн, `ADMIN_EMAILS` жагсаалтад байгаа хэрэглэгч орно.</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="rounded-lg border border-emerald-900/10 bg-emerald-50 p-3 text-sm text-slate-700">
+            {adminEmails.length > 0 ? `Зөвшөөрөгдсөн admin: ${adminEmails.join(", ")}` : "ADMIN_EMAILS env хоосон байна."}
+          </div>
+          <Button asChild>
+            <Link href="/login?redirect=/admin">Нэвтрэх</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/">Сайт руу буцах</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </main>
+  )
+}
+
+function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiries: Inquiry[] }) {
+  const sold = apartments.filter((property) => property.status === "sold").length
+  const available = apartments.filter((property) => property.status === "available").length
+
   return (
     <div className="grid gap-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Нийт байр" value={total} icon={Building2} />
-        <StatCard label="Зарагдсан" value={sold} icon={CheckCircle2} />
+        <StatCard label="Нийт байр" value={apartments.length} icon={Building2} />
         <StatCard label="Сул байгаа" value={available} icon={Home} />
-        <StatCard label="Нийт хүсэлт" value={requests} icon={ClipboardList} />
+        <StatCard label="Зарагдсан" value={sold} icon={Building2} />
+        <StatCard label="Нийт хүсэлт" value={inquiries.length} icon={ClipboardList} />
       </div>
       <div className="grid gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Сүүлийн байрууд</CardTitle>
-            <CardDescription>Шинээр нэмэгдсэн байрны товч мэдээлэл</CardDescription>
+            <CardDescription>Supabase-аас уншиж байгаа байрны мэдээлэл</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
-            {properties.slice(0, 5).map((property) => (
+            {apartments.slice(0, 5).map((property) => (
               <PropertyRow key={property.id} property={property} />
             ))}
           </CardContent>
@@ -187,7 +179,7 @@ function Dashboard({
         <Card>
           <CardHeader>
             <CardTitle>Сүүлийн хүсэлтүүд</CardTitle>
-            <CardDescription>Хэрэглэгчээс ирсэн лавлагаа</CardDescription>
+            <CardDescription>Contact form-оор ирсэн лавлагаа</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
             {inquiries.slice(0, 5).map((inquiry) => (
@@ -261,24 +253,14 @@ function PropertiesTable({ properties }: { properties: Apartment[] }) {
   )
 }
 
-function PropertyForm({
-  title,
-  property,
-  action,
-  cancelHref,
-}: {
-  title: string
-  property: Apartment
-  action: (formData: FormData) => Promise<void>
-  cancelHref: string
-}) {
+function PropertyForm({ title, property, action, cancelHref }: { title: string; property: Apartment; action: (formData: FormData) => Promise<void>; cancelHref: string }) {
   const images = getApartmentImages(property).filter((image) => image !== "/placeholder.jpg")
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Зураг оруулахад бэлэн. Одоогоор `public/images` хавтас руу хадгална.</CardDescription>
+        <CardDescription>Зураг upload хийвэл Supabase Storage `property-images` bucket руу хадгалагдана.</CardDescription>
       </CardHeader>
       <CardContent>
         <form action={action} encType="multipart/form-data" className="grid gap-5">
@@ -288,7 +270,7 @@ function PropertyForm({
               <Input name="title" defaultValue={property.title} required />
             </Field>
             <Field label="Ангилал">
-              <Input name="tag" defaultValue={property.tag} placeholder="2 өрөө, Онцгой, Зогсоол..." />
+              <Input name="tag" defaultValue={property.tag} placeholder="1 өрөө, 2 өрөө..." />
             </Field>
             <Field label="Үнэ *">
               <Input name="price" defaultValue={property.price} required />
@@ -303,16 +285,16 @@ function PropertyForm({
               <Input name="district" defaultValue={property.district} />
             </Field>
             <Field label="Өрөөний тоо">
-              <Input name="rooms" defaultValue={property.rooms} inputMode="numeric" />
+              <Input name="rooms" defaultValue={property.rooms} />
             </Field>
             <Field label="Талбай *">
               <Input name="area" defaultValue={property.area} required />
             </Field>
             <Field label="Давхар">
-              <Input name="floor" defaultValue={property.floor} inputMode="numeric" />
+              <Input name="floor" defaultValue={property.floor} />
             </Field>
             <Field label="Нийт давхар">
-              <Input name="totalFloors" defaultValue={property.totalFloors} inputMode="numeric" />
+              <Input name="totalFloors" defaultValue={property.totalFloors} />
             </Field>
             <Field label="Төлөв">
               <select name="status" defaultValue={property.status ?? "available"} className="h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
@@ -330,14 +312,14 @@ function PropertyForm({
             <Textarea name="description" defaultValue={property.description} rows={4} />
           </Field>
           <Field label="Давуу талууд">
-            <Textarea name="amenities" defaultValue={(property.amenities ?? []).join("\n")} rows={4} placeholder="Фитнес&#10;Хүүхдийн талбай&#10;Дулаан зогсоол" />
+            <Textarea name="amenities" defaultValue={(property.amenities ?? []).join("\n")} rows={4} />
           </Field>
           <Field label="Зургийн замууд">
             <Textarea name="images" defaultValue={images.join("\n")} rows={4} placeholder="/images/project-1.jpg" />
           </Field>
 
           <label className="grid gap-2 text-sm font-medium text-slate-800">
-            Зураг оруулах
+            Зураг upload
             <div className="rounded-lg border border-dashed border-emerald-300 bg-emerald-50 p-4">
               <div className="mb-3 flex items-center gap-2 text-emerald-800">
                 <UploadCloud className="h-5 w-5" />
@@ -369,13 +351,11 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
     <Card>
       <CardHeader>
         <CardTitle>Холбоо барих хүсэлтүүд</CardTitle>
-        <CardDescription>Шинэ, холбогдсон, хаагдсан төлөвөөр удирдана.</CardDescription>
+        <CardDescription>Admin хариу хадгалахад хэрэглэгчийн “Миний хүсэлтүүд” хэсэгт notification болж харагдана.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {inquiries.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">
-            Одоогоор ирсэн хүсэлт алга байна.
-          </div>
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">Одоогоор ирсэн хүсэлт алга байна.</div>
         ) : (
           inquiries.map((inquiry) => (
             <div key={inquiry.id} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm shadow-slate-900/5">
@@ -399,16 +379,12 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
                       <dd className="mt-1 text-slate-900">{new Date(inquiry.createdAt).toLocaleString("mn-MN")}</dd>
                     </div>
                   </dl>
-                  <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">
-                    {inquiry.message || "Мессеж бичээгүй байна."}
-                  </div>
+                  <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">{inquiry.message || "Мессеж бичээгүй байна."}</div>
                 </div>
 
                 <form action={updateInquiryStatus} className="grid h-fit gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
                   <input type="hidden" name="id" value={inquiry.id} />
-                  <label className="text-sm font-medium text-slate-700" htmlFor={`status-${inquiry.id}`}>
-                    Төлөв
-                  </label>
+                  <label className="text-sm font-medium text-slate-700" htmlFor={`status-${inquiry.id}`}>Төлөв</label>
                   <select id={`status-${inquiry.id}`} name="status" defaultValue={normalizeInquiryStatus(inquiry.status)} className="h-9 rounded-md border border-input bg-white px-3 text-sm">
                     <option value="new">Шинэ</option>
                     <option value="contacted">Холбогдсон</option>
@@ -420,13 +396,9 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
 
               <form action={replyInquiry} className="grid gap-3 rounded-lg border border-emerald-200 bg-emerald-50/60 p-3">
                 <input type="hidden" name="id" value={inquiry.id} />
-                <label className="text-sm font-semibold text-slate-800" htmlFor={`reply-${inquiry.id}`}>
-                  Админы хариу
-                </label>
+                <label className="text-sm font-semibold text-slate-800" htmlFor={`reply-${inquiry.id}`}>Admin хариу</label>
                 <Textarea id={`reply-${inquiry.id}`} name="reply" rows={4} defaultValue={inquiry.adminReply ?? ""} placeholder="Хэрэглэгчид харагдах хариуг энд бичнэ..." className="bg-white" />
-                {inquiry.repliedAt && (
-                  <p className="text-xs text-slate-500">Сүүлд хариулсан: {new Date(inquiry.repliedAt).toLocaleString("mn-MN")}</p>
-                )}
+                {inquiry.repliedAt && <p className="text-xs text-slate-500">Сүүлд хариулсан: {new Date(inquiry.repliedAt).toLocaleString("mn-MN")}</p>}
                 <div className="flex justify-end">
                   <Button type="submit">Хариу хадгалах</Button>
                 </div>
@@ -436,31 +408,6 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
         )}
       </CardContent>
     </Card>
-  )
-}
-
-function AdminLogin({ hasError }: { hasError: boolean }) {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl">Админ нэвтрэх</CardTitle>
-          <CardDescription>Зөвхөн админ хэрэглэгч байр болон хүсэлтийг удирдана.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {hasError && <p className="mb-4 rounded bg-red-50 px-3 py-2 text-sm text-red-700">Нэвтрэх нэр эсвэл нууц үг буруу байна.</p>}
-          <form action={loginAdmin} className="grid gap-4">
-            <Field label="Нэвтрэх нэр">
-              <Input name="username" placeholder="admin" required />
-            </Field>
-            <Field label="Нууц үг">
-              <Input name="password" type="password" placeholder="admin123" required />
-            </Field>
-            <Button type="submit" size="lg">Нэвтрэх</Button>
-          </form>
-        </CardContent>
-      </Card>
-    </main>
   )
 }
 
@@ -493,12 +440,7 @@ function PropertyRow({ property, compact = false }: { property: Apartment; compa
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="grid gap-2 text-sm font-medium text-slate-800">
-      {label}
-      {children}
-    </label>
-  )
+  return <label className="grid gap-2 text-sm font-medium text-slate-800">{label}{children}</label>
 }
 
 function StatCard({ icon: Icon, label, value }: { icon: typeof Home; label: string; value: number }) {

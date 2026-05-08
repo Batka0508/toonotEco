@@ -1,27 +1,17 @@
 "use server"
 
-import { mkdir, writeFile } from "node:fs/promises"
-import path from "node:path"
-import { currentUser } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { getInquiries, inquiriesPath, type Inquiry } from "@/lib/inquiries"
+import { createInquiry, type Inquiry } from "@/lib/inquiries"
+import { getCurrentUser } from "@/lib/user-auth"
 
 function clean(value: FormDataEntryValue | null) {
   return String(value ?? "").trim()
 }
 
-async function getOptionalCurrentUser() {
-  try {
-    return await currentUser()
-  } catch {
-    return null
-  }
-}
-
 export async function submitInquiry(formData: FormData) {
-  const user = await getOptionalCurrentUser()
-  const userEmail = user?.primaryEmailAddress?.emailAddress ?? ""
+  const user = await getCurrentUser()
+  const userEmail = user?.email ?? ""
   const submittedEmail = clean(formData.get("email"))
 
   const inquiry: Inquiry = {
@@ -40,11 +30,7 @@ export async function submitInquiry(formData: FormData) {
     redirect("/#contact")
   }
 
-  const inquiries = getInquiries()
-  inquiries.unshift(inquiry)
-
-  await mkdir(path.dirname(inquiriesPath), { recursive: true })
-  await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), "utf8")
+  await createInquiry(inquiry)
 
   revalidatePath("/")
   revalidatePath("/admin")

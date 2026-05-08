@@ -1,64 +1,77 @@
-import { Building2, Car, Leaf, ShieldCheck, Sun, Trees } from "lucide-react"
+import Image from "next/image"
+import { Baby, Car, Dumbbell, ShieldCheck, Trees, Wifi } from "lucide-react"
 
-const advantages = [
+const amenities = [
   {
-    icon: Building2,
-    title: "Зөв төлөвлөлт",
-    description: "Өрөө бүрийн ашигтай талбайг нэмэгдүүлсэн, гэр бүлийн өдөр тутмын хэрэглээнд тохирсон зохион байгуулалт.",
+    icon: Dumbbell,
+    title: "Фитнес",
+    description: "Оршин суугчдад зориулсан дасгалын хэсэг, идэвхтэй амьдралын орчин.",
+    image: "/images/gym.jpg",
   },
   {
-    icon: Sun,
-    title: "Гэрэлтэй сууц",
-    description: "Цонхны байрлал, өрөөний харьцааг байгалийн гэрэл сайн авах байдлаар төлөвлөсөн.",
-  },
-  {
-    icon: Leaf,
-    title: "Эко орчин",
-    description: "Ногоон байгууламж, амрах хэсэг, алхах талбайг хотхоны үндсэн үнэ цэн болгон шийдсэн.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Аюулгүй байдал",
-    description: "Нэвтрэх хэсэг, гэрэлтүүлэг, камерын хяналттай тайван амьдрах орчин.",
-  },
-  {
-    icon: Car,
-    title: "Авто зогсоол",
-    description: "Оршин суугчдын хэрэгцээнд нийцсэн зогсоол, хөдөлгөөний ойлгомжтой зохион байгуулалт.",
+    icon: Baby,
+    title: "Хүүхдийн талбай",
+    description: "Аюулгүй тоглоомын хэсэг, гэр бүлд ээлтэй гадна орчин.",
+    image: "/images/garden.png",
   },
   {
     icon: Trees,
-    title: "Гэр бүлд ээлтэй",
-    description: "Хүүхэд, ахмад, гэр бүлийн амралтад зориулсан гадна талбай, хотхоны дотоод орчин.",
+    title: "Ногоон байгууламж",
+    description: "Амрах, алхах, цэвэр агаарт цаг өнгөрүүлэх тохижилттой талбай.",
+  },
+  {
+    icon: Car,
+    title: "Зогсоол",
+    description: "Ил болон дулаан зогсоолын сонголт, ойлгомжтой хөдөлгөөний зохион байгуулалт.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Аюулгүй орчин",
+    description: "Камерын хяналт, гэрэлтүүлэг, нэвтрэх хэсгийн зохион байгуулалт.",
+  },
+  {
+    icon: Wifi,
+    title: "Дэд бүтэц",
+    description: "Интернэт, холбоо, өдөр тутмын хэрэгцээнд нийцсэн инженерийн шийдэл.",
   },
 ]
 
 export function Services() {
   return (
-    <section id="advantages" className="bg-[linear-gradient(180deg,var(--background)_0%,oklch(0.985_0.01_145)_100%)] py-20 md:py-28">
+    <section id="amenities" className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="mx-auto mb-16 max-w-2xl text-center">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Давуу тал</p>
-          <h2 className="mb-6 font-serif text-3xl font-bold text-foreground text-balance md:text-4xl">
-            Сонголт хийхэд хэрэгтэй гол мэдээллүүд
-          </h2>
-          <p className="leading-relaxed text-muted-foreground">
-            Байр худалдан авагчдад хамгийн түрүүнд хэрэгтэй төлөвлөлт, орчин, аюулгүй байдал,
-            зогсоол, байршлын мэдээллийг товч бөгөөд ойлгомжтой харууллаа.
+        <div className="mb-10 max-w-2xl md:mb-12">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">Amenities</p>
+          <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">Хотхоны давуу талууд</h2>
+          <p className="mt-4 leading-8 text-slate-600">
+            Амьдрахад тухтай, давтамжтай ашиглах хэрэгцээнүүдийг clean card layout-аар нэг дор харууллаа.
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {advantages.map((item) => (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {amenities.map((item) => (
             <div
               key={item.title}
-              className="group rounded-lg border border-emerald-800/15 bg-card p-8 shadow-sm shadow-emerald-900/5 transition-all duration-300 hover:border-primary/35 hover:shadow-lg hover:shadow-emerald-900/10"
+              className="overflow-hidden rounded-lg border border-emerald-900/10 bg-slate-50 shadow-sm shadow-emerald-900/5 transition-all hover:border-primary/30 hover:bg-white hover:shadow-lg hover:shadow-emerald-900/10"
             >
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
-                <item.icon className="h-7 w-7 text-primary" />
+              {item.image && (
+                <div className="relative aspect-[16/10] w-full bg-emerald-50">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-6">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                  <item.icon className="h-6 w-6" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-950">{item.title}</h3>
+                <p className="mt-3 leading-7 text-slate-600">{item.description}</p>
               </div>
-              <h3 className="mb-3 text-xl font-semibold text-foreground">{item.title}</h3>
-              <p className="leading-relaxed text-muted-foreground">{item.description}</p>
             </div>
           ))}
         </div>

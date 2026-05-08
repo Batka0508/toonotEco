@@ -43,16 +43,18 @@ export async function registerUser(formData: FormData) {
   const email = getString(formData, "email").toLowerCase()
   const phone = getString(formData, "phone")
   const password = String(formData.get("password") || "")
+  const redirectTo = getString(formData, "redirect")
+  const registerPath = redirectTo ? `/register?redirect=${encodeURIComponent(redirectTo)}` : "/register"
 
   if (!name || !email || !phone || password.length < 6) {
-    redirect("/register?error=invalid")
+    redirect(`${registerPath}${registerPath.includes("?") ? "&" : "?"}error=invalid`)
   }
 
   const data = getUsersData()
   const exists = data.users.some((user) => user.email.toLowerCase() === email)
 
   if (exists) {
-    redirect("/register?error=exists")
+    redirect(`${registerPath}${registerPath.includes("?") ? "&" : "?"}error=exists`)
   }
 
   data.users.push({
@@ -75,16 +77,18 @@ export async function registerUser(formData: FormData) {
     maxAge: 60 * 60 * 24 * 7,
   })
 
-  redirect("/#apartments")
+  redirect(redirectTo || "/#apartments")
 }
 
 export async function loginUser(formData: FormData) {
   const email = getString(formData, "email").toLowerCase()
   const password = String(formData.get("password") || "")
+  const redirectTo = getString(formData, "redirect")
+  const loginPath = redirectTo ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login"
   const user = findUserByEmail(email)
 
   if (!user || !verifyPassword(password, user.passwordHash)) {
-    redirect("/login?error=1")
+    redirect(`${loginPath}${loginPath.includes("?") ? "&" : "?"}error=1`)
   }
 
   const cookieStore = await cookies()
@@ -96,12 +100,18 @@ export async function loginUser(formData: FormData) {
     maxAge: 60 * 60 * 24 * 7,
   })
 
-  redirect("/#apartments")
+  redirect(redirectTo || "/#apartments")
 }
 
 export async function logoutUser() {
   const cookieStore = await cookies()
-  cookieStore.delete(USER_COOKIE_NAME)
+  cookieStore.set(USER_COOKIE_NAME, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  })
 
   redirect("/login")
 }

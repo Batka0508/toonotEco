@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 import path from "node:path"
+import { cookies } from "next/headers"
 
 export const USER_COOKIE_NAME = "toonot_user_session"
 export const usersPath = path.join(process.cwd(), "data", "users.json")
@@ -108,4 +109,15 @@ export function findUserByEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase()
 
   return getUsersData().users.find((user) => user.email.toLowerCase() === normalizedEmail) || null
+}
+
+export async function getCurrentUser() {
+  const cookieStore = await cookies()
+  const email = getUserEmailFromSession(cookieStore.get(USER_COOKIE_NAME)?.value)
+
+  if (!email) {
+    return null
+  }
+
+  return findUserByEmail(email)
 }

@@ -2,17 +2,17 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { LockKeyhole, Menu, MessageSquareText, Phone, X } from "lucide-react"
-import { Show, UserButton } from "@clerk/nextjs"
-import { Button } from "@/components/ui/button"
+import { Building2, Leaf, LogOut, Menu, Phone, X } from "lucide-react"
+import { logoutUser } from "@/app/(user-auth)/actions"
 
 const navLinks = [
   { href: "#home", label: "Нүүр" },
+  { href: "#vr-tour", label: "VR tour" },
   { href: "#about", label: "Төслийн тухай" },
-  { href: "#advantages", label: "Давуу тал" },
-  { href: "#apartments", label: "Байрны сонголт" },
-  { href: "#price", label: "Үнэ" },
   { href: "#location", label: "Байршил" },
+  { href: "#apartments", label: "Загварууд" },
+  { href: "#amenities", label: "Давуу тал" },
+  { href: "#gallery", label: "Мэдээ" },
   { href: "#contact", label: "Холбоо барих" },
 ]
 
@@ -26,114 +26,89 @@ export function Header() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-emerald-900/10 bg-slate-50/95 shadow-sm shadow-emerald-950/5 backdrop-blur-xl">
-      <div className="mx-auto max-w-[1900px] px-4 sm:px-5">
-        <div className="flex h-[102px] items-center justify-between gap-4">
-          <Link href="/" onClick={() => handleNavClick("#home")} className="flex min-w-0 items-center gap-4">
-            <div className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-primary shadow-md shadow-emerald-900/25">
-              <span className="text-3xl font-bold leading-none text-primary-foreground">T</span>
-            </div>
-            <div className="min-w-0">
-              <span className="block truncate font-serif text-2xl font-bold leading-tight text-emerald-950 sm:text-3xl">
-                Тоонот Эко Хотхон
+    <header className="relative z-40 border-b border-slate-900/10 bg-white/94 backdrop-blur-xl">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+        <div className="flex h-24 items-center justify-between gap-6">
+          <Link href="/" onClick={() => handleNavClick("#home")} className="flex min-w-0 items-center gap-3">
+            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950">
+              <Building2 className="h-7 w-7" />
+              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-emerald-700">
+                <Leaf className="h-3 w-3" />
               </span>
-              <p className="mt-1 truncate text-base text-emerald-950/70">Toonot Eco Hothon</p>
+            </div>
+            <div className="min-w-0 leading-none">
+              <span className="block truncate text-xl font-black tracking-wide text-emerald-950">Монгол од</span>
+              <span className="mt-1 block truncate text-sm font-bold uppercase tracking-[0.16em] text-emerald-950">Company</span>
             </div>
           </Link>
 
-          <div className="flex shrink-0 items-center gap-2.5">
-            <a
-              href="tel:+97611111111"
-              className="hidden h-12 items-center gap-3 rounded-lg border border-emerald-900/10 bg-white px-5 text-base font-bold text-emerald-950 shadow-sm shadow-emerald-900/5 transition-colors hover:border-primary/30 hover:text-primary lg:flex"
-            >
-              <Phone className="h-5 w-5 text-primary" />
-              +976 1111-1111
-            </a>
-            <Show when="signed-in">
-              <Button
-                asChild
-                variant="outline"
-                className="hidden h-12 rounded-lg border-primary/25 bg-white px-4 text-base font-semibold text-primary shadow-sm shadow-emerald-900/5 hover:bg-primary/10 lg:flex"
+          <nav className="hidden items-center gap-7 xl:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => handleNavClick(link.href)}
+                className="text-sm font-semibold text-slate-800 transition-colors hover:text-emerald-700"
               >
-                <Link href="/account">
-                  <MessageSquareText className="h-5 w-5" />
-                  Миний хүсэлт
-                </Link>
-              </Button>
-            </Show>
-            <Button
-              asChild
-              variant="outline"
-              className="hidden h-12 rounded-lg border-primary/25 bg-white px-5 text-base font-semibold text-primary shadow-sm shadow-emerald-900/5 hover:bg-primary/10 md:flex"
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-3">
+            <a
+              href="tel:+97675071234"
+              className="hidden h-14 items-center gap-3 rounded-full bg-emerald-800 px-7 text-base font-bold text-white shadow-sm shadow-emerald-950/15 transition-colors hover:bg-emerald-900 lg:flex"
             >
-              <Link href="/admin">
-                <LockKeyhole className="h-5 w-5" />
-                Admin
-              </Link>
-            </Button>
-            <Button asChild className="hidden h-12 rounded-lg px-6 text-base font-bold shadow-sm shadow-emerald-900/15 hover:bg-emerald-700 sm:flex">
-              <Link href="#contact" onClick={() => handleNavClick("#contact")}>
-                Холбогдох
-              </Link>
-            </Button>
-            <Show when="signed-in">
-              <UserButton afterSignOutUrl="/sign-in" />
-            </Show>
+              <Phone className="h-5 w-5" />
+              7507-1234
+            </a>
+            <form action={logoutUser}>
+              <button
+                type="submit"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                aria-label="Гарах"
+                title="Гарах"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            </form>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="flex h-12 w-12 items-center justify-center rounded-lg border border-emerald-900/10 bg-white text-emerald-950 shadow-sm shadow-emerald-900/5 transition-colors hover:bg-emerald-100 hover:text-primary"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 xl:hidden"
               aria-label="Цэс нээх"
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
         {isMenuOpen && (
-          <nav className="absolute right-4 top-[calc(100%+0.5rem)] w-[min(19rem,calc(100vw-2rem))] overflow-hidden rounded-xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15 sm:right-5">
-            <div className="border-b border-emerald-900/10 px-4 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-primary">Цэс</p>
-            </div>
+          <nav className="absolute right-5 top-[calc(100%+0.5rem)] w-[min(22rem,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15">
             <div className="p-2">
-              {navLinks.map((link) => {
-                const isActive = activeHref === link.href
-
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => handleNavClick(link.href)}
-                    className={[
-                      "block rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors",
-                      isActive ? "bg-primary text-primary-foreground" : "text-emerald-950/75 hover:bg-emerald-50 hover:text-primary",
-                    ].join(" ")}
-                  >
-                    {link.label}
-                  </Link>
-                )
-              })}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className={[
+                    "block rounded-xl px-4 py-3 text-sm font-semibold transition-colors",
+                    activeHref === link.href ? "bg-emerald-800 text-white" : "text-slate-700 hover:bg-emerald-50 hover:text-emerald-800",
+                  ].join(" ")}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
-            <div className="grid gap-2 border-t border-emerald-900/10 p-3">
-              <Show when="signed-in">
-                <Button asChild variant="outline" className="w-full border-primary/30 text-primary hover:bg-primary/10">
-                  <Link href="/account" onClick={() => setIsMenuOpen(false)}>
-                    <MessageSquareText className="h-4 w-4" />
-                    Миний хүсэлт
-                  </Link>
-                </Button>
-              </Show>
-              <Button asChild className="w-full sm:hidden">
-                <Link href="#contact" onClick={() => handleNavClick("#contact")}>
-                  Холбогдох
-                </Link>
-              </Button>
-              <Button asChild variant="outline" className="w-full border-primary/30 text-primary hover:bg-primary/10 md:hidden">
-                <Link href="/admin" onClick={() => setIsMenuOpen(false)}>
-                  <LockKeyhole className="h-4 w-4" />
-                  Admin
-                </Link>
-              </Button>
+            <div className="border-t border-emerald-900/10 p-3">
+              <a
+                href="tel:+97675071234"
+                className="flex h-12 items-center justify-center gap-3 rounded-full bg-emerald-800 px-5 text-sm font-bold text-white"
+              >
+                <Phone className="h-4 w-4" />
+                7507-1234
+              </a>
             </div>
           </nav>
         )}

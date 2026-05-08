@@ -7,129 +7,100 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 const contactInfo = [
-  {
-    icon: Phone,
-    title: "Борлуулалтын утас",
-    value: "+976 1111-1111",
-    href: "tel:+97611111111",
-  },
-  {
-    icon: Mail,
-    title: "И-мэйл",
-    value: "info@toonot-eco.mn",
-    href: "mailto:info@toonot-eco.mn",
-  },
-  {
-    icon: MapPin,
-    title: "Байршил",
-    value: "Улаанбаатар хот",
-    href: "#location",
-  },
-  {
-    icon: Clock,
-    title: "Ажлын цаг",
-    value: "Даваа - Бямба: 09:00 - 18:00",
-    href: "#contact",
-  },
+  { icon: Phone, title: "Борлуулалтын утас", value: "+976 1111-1111", href: "tel:+97611111111" },
+  { icon: Mail, title: "И-мэйл", value: "info@ecotown.mn", href: "mailto:info@ecotown.mn" },
+  { icon: MapPin, title: "Байршил", value: "Улаанбаатар хот", href: "#location" },
+  { icon: Clock, title: "Ажлын цаг", value: "Даваа-Бямба: 09:00-18:00", href: "#contact" },
 ]
 
 export function Contact() {
   return (
-    <section id="contact" className="bg-[linear-gradient(180deg,var(--background)_0%,oklch(0.985_0.012_145)_100%)] py-16 md:py-28">
+    <section id="contact" className="bg-slate-50 py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-20">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <p className="mb-4 text-sm font-semibold uppercase tracking-wide text-primary">Борлуулалтын алба</p>
-            <h2 className="mb-5 font-serif text-3xl font-bold text-foreground text-balance md:mb-6 md:text-4xl">
-              Байрны сонголт, үнэ, төлбөрийн нөхцөлийн талаар лавлах
-            </h2>
-            <p className="mb-8 leading-relaxed text-muted-foreground md:mb-10">
-              Та сонирхож буй өрөөний сонголт, м2, давхар, төлбөрийн нөхцөлөө үлдээгээрэй.
-              Илгээсэн хүсэлт admin хэсэгт шинэ notification болж очно.
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">Contact</p>
+            <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">Захиалга өгөх, дэлгэрэнгүй мэдээлэл авах</h2>
+            <p className="mt-5 leading-8 text-slate-600">
+              Сонгосон өрөөний төрөл, талбай, төлбөрийн нөхцөлөө үлдээгээрэй. Борлуулалтын баг таны хүсэлтийг Supabase дээр
+              хүлээн авч, admin хэсгээс хариу өгнө.
             </p>
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
               {contactInfo.map((info) => (
-                <a key={info.title} href={info.href} className="group flex items-start gap-4 rounded-lg border border-emerald-800/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
-                    <info.icon className="h-5 w-5 text-primary" />
+                <a key={info.title} href={info.href} className="flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <info.icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm text-muted-foreground">{info.title}</p>
-                    <p className="break-words font-medium text-foreground transition-colors group-hover:text-primary">{info.value}</p>
+                    <p className="text-sm font-medium text-slate-500">{info.title}</p>
+                    <p className="mt-1 break-words font-bold text-slate-950">{info.value}</p>
                   </div>
                 </a>
               ))}
             </div>
 
-            <div id="location" className="mt-8 rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 md:mt-10 md:p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <MapPin className="h-6 w-6 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground sm:text-xl">Байршлын мэдээлэл</h3>
+            <div id="location" className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
+              <div className="flex items-center gap-3 border-b border-slate-200 p-4">
+                <MapPin className="h-5 w-5 text-primary" />
+                <h3 className="font-bold text-slate-950">Location map</h3>
               </div>
-              <div className="flex min-h-48 items-center justify-center rounded-md border border-dashed border-emerald-800/25 bg-emerald-50 text-center sm:min-h-56">
-                <div className="max-w-sm px-5">
-                  <p className="font-semibold text-foreground">Газрын зураг / байршлын зураг</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    Энд Google Map embed эсвэл байршлын зураг байрлуулах боломжтой.
-                  </p>
-                </div>
-              </div>
+              <iframe
+                title="Тоонот Эко Хотхон байршил"
+                src="https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                className="h-72 w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
 
-          <div className="rounded-lg border border-emerald-800/15 bg-card p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
-            <h3 className="mb-6 text-xl font-semibold text-foreground">Мэдээлэл авах хүсэлт</h3>
-            <form action={submitInquiry} className="space-y-5 sm:space-y-6">
+          <div className="rounded-lg border border-emerald-900/10 bg-white p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
+            <h3 className="mb-6 text-2xl font-bold text-slate-950">Захиалгын form</h3>
+            <form action={submitInquiry} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="mb-2 block text-sm font-medium text-foreground">
-                    Нэр
-                  </label>
+                <Field label="Нэр">
                   <Input id="name" name="name" placeholder="Таны нэр" required />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="mb-2 block text-sm font-medium text-foreground">
-                    Утас
-                  </label>
+                </Field>
+                <Field label="Утас">
                   <Input id="phone" name="phone" type="tel" placeholder="Утасны дугаар" required />
-                </div>
+                </Field>
               </div>
-              <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
-                  И-мэйл
-                </label>
+              <Field label="И-мэйл">
                 <Input id="email" name="email" type="email" placeholder="example@mail.com" />
-              </div>
-              <div>
-                <label htmlFor="apartment" className="mb-2 block text-sm font-medium text-foreground">
-                  Сонирхож буй сонголт
-                </label>
+              </Field>
+              <Field label="Сонирхож буй байр">
                 <select
                   id="apartment"
                   name="apartment"
-                  className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <option value="">Сонгох...</option>
+                  <option value="1 өрөө байр">1 өрөө байр</option>
                   <option value="2 өрөө байр">2 өрөө байр</option>
                   <option value="3 өрөө байр">3 өрөө байр</option>
-                  <option value="Зогсоол">Зогсоол</option>
                   <option value="Төлбөрийн нөхцөл">Төлбөрийн нөхцөл</option>
                 </select>
-              </div>
-              <div>
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-foreground">
-                  Нэмэлт мэдээлэл
-                </label>
-                <Textarea id="message" name="message" rows={4} placeholder="Жишээ: 2 өрөө, 50 м2 орчим, төлбөрийн нөхцөл..." />
-              </div>
+              </Field>
+              <Field label="Нэмэлт мэдээлэл">
+                <Textarea id="message" name="message" rows={5} placeholder="Жишээ: 2 өрөө, 50 м² орчим, урьдчилгаа төлбөрийн нөхцөл..." />
+              </Field>
               <Button className="w-full" size="lg" type="submit">
-                Хүсэлт илгээх
+                Захиалга илгээх
               </Button>
             </form>
           </div>
         </div>
       </div>
     </section>
+  )
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-slate-800">
+      {label}
+      {children}
+    </label>
   )
 }

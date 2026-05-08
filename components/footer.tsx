@@ -99,7 +99,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 md:flex-row">
           <p className="text-sm text-background/50">
-            © {new Date().getFullYear()} Toonot Eco Hothon. Бүх эрх хуулиар хамгаалагдсан.
+            © {new Date().getFullYear()} Тоонот Эко Хотхон. Бүх эрх хуулиар хамгаалагдсан.
           </p>
           <div className="flex gap-6 text-sm text-background/50">
             <Link href="#contact" className="transition-colors hover:text-background">
