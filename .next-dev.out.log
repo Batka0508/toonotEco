@@ -411,3 +411,11 @@ Creating turbopack project {
 ✓ Compiled in 7.9s
  GET / 200 in 28.5s (compile: 11.1s, proxy.ts: 179ms, render: 17.2s)
  GET / 200 in 4.9s (compile: 197ms, proxy.ts: 349ms, render: 4.4s)
+✓ Compiled in 6s
+✓ Finished filesystem cache database compaction in 25.2s
+✓ Compiled in 1289ms
+ GET / 200 in 3.0s (compile: 1285ms, proxy.ts: 66ms, render: 1681ms)
+✓ Compiled in 1039ms
+✓ Compiled in 1405ms
+✓ Finished filesystem cache database compaction in 18.0s
+✓ Compiled in 1364ms

@@ -26,19 +26,21 @@ export function Header() {
   }
 
   return (
-    <header className="relative z-40 border-b border-slate-900/10 bg-white/94 backdrop-blur-xl">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-        <div className="flex h-24 items-center justify-between gap-6">
-          <Link href="/" onClick={() => handleNavClick("#home")} className="flex min-w-0 items-center gap-3">
-            <div className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950">
-              <Building2 className="h-7 w-7" />
-              <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-emerald-700">
-                <Leaf className="h-3 w-3" />
+    <header className="relative z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between gap-3 sm:h-24 sm:gap-6">
+          <Link href="/" onClick={() => handleNavClick("#home")} className="flex min-w-0 items-center gap-2 sm:gap-3">
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950 sm:h-14 sm:w-14">
+              <Building2 className="h-5 w-5 sm:h-7 sm:w-7" />
+              <span className="absolute right-0.5 top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white text-emerald-700 sm:right-1 sm:top-1 sm:h-4 sm:w-4">
+                <Leaf className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
               </span>
             </div>
             <div className="min-w-0 leading-none">
-              <span className="block truncate text-xl font-black tracking-wide text-emerald-950">Монгол од</span>
-              <span className="mt-1 block truncate text-sm font-bold uppercase tracking-[0.16em] text-emerald-950">Company</span>
+              <span className="block truncate text-base font-black tracking-wide text-emerald-950 sm:text-xl">Монгол од</span>
+              <span className="mt-1 block truncate text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-950 sm:text-sm sm:tracking-[0.16em]">
+                Company
+              </span>
             </div>
           </Link>
 
@@ -55,7 +57,7 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <a
               href="tel:+97675071234"
               className="hidden h-14 items-center gap-3 rounded-full bg-emerald-800 px-7 text-base font-bold text-white shadow-sm shadow-emerald-950/15 transition-colors hover:bg-emerald-900 lg:flex"
@@ -66,27 +68,27 @@ export function Header() {
             <form action={logoutUser}>
               <button
                 type="submit"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 sm:h-11 sm:w-11"
                 aria-label="Гарах"
                 title="Гарах"
               >
-                <LogOut className="h-5 w-5" />
+                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
             </form>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 xl:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 xl:hidden sm:h-11 sm:w-11"
               aria-label="Цэс нээх"
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
             </button>
           </div>
         </div>
 
         {isMenuOpen && (
-          <nav className="absolute right-5 top-[calc(100%+0.5rem)] w-[min(22rem,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15">
-            <div className="p-2">
+          <nav className="absolute left-4 right-4 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15 sm:left-auto sm:right-6 sm:w-[22rem]">
+            <div className="grid grid-cols-1 gap-1 p-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -102,10 +104,7 @@ export function Header() {
               ))}
             </div>
             <div className="border-t border-emerald-900/10 p-3">
-              <a
-                href="tel:+97675071234"
-                className="flex h-12 items-center justify-center gap-3 rounded-full bg-emerald-800 px-5 text-sm font-bold text-white"
-              >
+              <a href="tel:+97675071234" className="flex h-12 items-center justify-center gap-3 rounded-full bg-emerald-800 px-5 text-sm font-bold text-white">
                 <Phone className="h-4 w-4" />
                 7507-1234
               </a>

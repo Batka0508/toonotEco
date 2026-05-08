@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Bath, BedDouble, ChefHat, Home, Leaf, Maximize2, Sofa } from "lucide-react"
+import { Bath, BedDouble, ChefHat, Leaf, Sofa } from "lucide-react"
 import * as THREE from "three"
 
 const rooms = [
@@ -11,7 +11,7 @@ const rooms = [
     icon: Sofa,
     position: new THREE.Vector3(0, 1.7, 6),
     lookAt: new THREE.Vector3(0, 1.4, 0),
-    info: "Панорам шилэн цонх, eco city view, warm modern тавилга.",
+    info: "Панорам шилэн цонх, eco city view, дулаан мэдрэмжтэй modern тавилга.",
   },
   {
     id: "kitchen",
@@ -101,10 +101,7 @@ export function VrApartmentTour() {
       const texture = textureLoader.load(src)
       texture.colorSpace = THREE.SRGBColorSpace
       texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
-      const panel = new THREE.Mesh(
-        new THREE.PlaneGeometry(size[0], size[1]),
-        new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }),
-      )
+      const panel = new THREE.Mesh(new THREE.PlaneGeometry(size[0], size[1]), new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }))
       panel.name = name
       panel.position.set(...pos)
       panel.rotation.set(...rot)
@@ -180,6 +177,7 @@ export function VrApartmentTour() {
     const targetLookAt = rooms[0].lookAt.clone()
     const currentLookAt = rooms[0].lookAt.clone()
     let frame = 0
+    let animationId = 0
 
     function moveToRoom(roomId: string) {
       const next = rooms.find((room) => room.id === roomId)
@@ -189,22 +187,22 @@ export function VrApartmentTour() {
       setActiveRoom(next)
     }
 
-    function onPointerMove(event: PointerEvent) {
+    function updatePointer(event: PointerEvent) {
       const rect = renderer.domElement.getBoundingClientRect()
       pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
       pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
       raycaster.setFromCamera(pointer, camera)
-      const hit = raycaster.intersectObjects(hotspots)[0]
+      return raycaster.intersectObjects(hotspots)[0]
+    }
+
+    function onPointerMove(event: PointerEvent) {
+      const hit = updatePointer(event)
       renderer.domElement.style.cursor = hit ? "pointer" : "grab"
       setHoverLabel(hit?.object.userData.label ?? "")
     }
 
     function onClick(event: PointerEvent) {
-      const rect = renderer.domElement.getBoundingClientRect()
-      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1
-      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1
-      raycaster.setFromCamera(pointer, camera)
-      const hit = raycaster.intersectObjects(hotspots)[0]
+      const hit = updatePointer(event)
       if (hit) moveToRoom(hit.object.userData.roomId)
     }
 
@@ -217,12 +215,10 @@ export function VrApartmentTour() {
     }
 
     function onRoomChange(event: Event) {
-      const roomId = (event as CustomEvent<string>).detail
-      moveToRoom(roomId)
+      moveToRoom((event as CustomEvent<string>).detail)
     }
 
     function onResize() {
-      if (!mount) return
       camera.aspect = mount.clientWidth / mount.clientHeight
       camera.updateProjectionMatrix()
       renderer.setSize(mount.clientWidth, mount.clientHeight)
@@ -259,12 +255,13 @@ export function VrApartmentTour() {
       currentLookAt.lerp(targetLookAt, 0.045)
       camera.lookAt(currentLookAt)
       renderer.render(scene, camera)
-      requestAnimationFrame(animate)
+      animationId = requestAnimationFrame(animate)
     }
 
     animate()
 
     return () => {
+      cancelAnimationFrame(animationId)
       renderer.domElement.removeEventListener("pointermove", onPointerMove)
       renderer.domElement.removeEventListener("click", onClick)
       window.removeEventListener("keydown", onKeyDown)
@@ -279,60 +276,60 @@ export function VrApartmentTour() {
   const ActiveIcon = activeRoom.icon
 
   return (
-    <section id="vr-tour" className="bg-slate-950 py-16 text-white md:py-24">
-      <div className="container mx-auto px-4">
+    <section id="vr-tour" className="overflow-hidden bg-slate-950 py-12 text-white sm:py-16 md:py-24">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm font-bold uppercase tracking-wide text-emerald-300">
-              <Leaf className="h-4 w-4" />
-              Toonot Eco Town VR Tour
+            <p className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wide text-emerald-300 sm:px-4 sm:text-sm">
+              <Leaf className="h-4 w-4 shrink-0" />
+              <span className="truncate">Toonot Eco Town VR Tour</span>
             </p>
-            <h2 className="text-3xl font-black leading-tight text-white text-balance md:text-5xl">
+            <h2 className="text-2xl font-black leading-tight text-white text-balance sm:text-3xl md:text-5xl">
               Premium 3D apartment walkthrough experience
             </h2>
-            <p className="mt-4 max-w-2xl leading-8 text-slate-300">
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base sm:leading-8">
               Зочны өрөө, гал тогоо, унтлагын өрөө, ариун цэврийн өрөөг immersive VR-like tour хэлбэрээр үзээрэй.
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-slate-200 backdrop-blur">
             <p className="font-bold text-white">Controls</p>
-            <p className="mt-1">Hotspot дээр дарна. WASD ашиглаж алхана.</p>
+            <p className="mt-1">Hotspot дээр дарна. Desktop дээр WASD ашиглаж алхана.</p>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-emerald-950/30">
-          <div className="grid min-h-[44rem] lg:grid-cols-[1fr_21rem]">
-            <div className="relative min-h-[36rem]">
+        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-emerald-950/30 sm:rounded-3xl">
+          <div className="grid lg:min-h-[44rem] lg:grid-cols-[1fr_21rem]">
+            <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
               <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">
-                <div className="rounded-2xl border border-emerald-300/20 bg-white/10 px-6 py-4 backdrop-blur">
-                  <p className="text-sm font-bold uppercase tracking-wide text-emerald-300">Loading 3D VR tour</p>
+                <div className="mx-4 rounded-2xl border border-emerald-300/20 bg-white/10 px-5 py-4 backdrop-blur sm:px-6">
+                  <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 sm:text-sm">Loading 3D VR tour</p>
                   <p className="mt-2 text-xs text-slate-300">WebGL apartment scene ачаалж байна...</p>
                 </div>
               </div>
-              <div ref={mountRef} className="relative h-full min-h-[36rem] w-full" />
+              <div ref={mountRef} className="relative h-full min-h-[24rem] w-full sm:min-h-[32rem] lg:min-h-[36rem]" />
 
               {hoverLabel && (
-                <div className="pointer-events-none absolute left-6 top-6 rounded-full border border-emerald-300/25 bg-slate-950/65 px-4 py-2 text-sm font-bold text-emerald-200 backdrop-blur">
+                <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-emerald-300/25 bg-slate-950/65 px-3 py-2 text-xs font-bold text-emerald-200 backdrop-blur sm:left-6 sm:top-6 sm:px-4 sm:text-sm">
                   {hoverLabel}
                 </div>
               )}
 
-              <div className="absolute bottom-6 left-6 right-6 grid gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4 backdrop-blur-xl sm:grid-cols-3">
+              <div className="absolute bottom-4 left-4 right-4 hidden gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4 backdrop-blur-xl md:grid md:grid-cols-3 lg:bottom-6 lg:left-6 lg:right-6">
                 <InfoPill label="Материал" value="Glass, stone, warm wood" />
                 <InfoPill label="Гэрэл" value="Natural sunlight" />
                 <InfoPill label="Орчин" value="Eco city + green park" />
               </div>
             </div>
 
-            <aside className="border-t border-white/10 bg-slate-950/90 p-5 backdrop-blur lg:border-l lg:border-t-0">
+            <aside className="border-t border-white/10 bg-slate-950/90 p-4 backdrop-blur sm:p-5 lg:border-l lg:border-t-0">
               <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-white">
-                    <ActiveIcon className="h-6 w-6" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white sm:h-12 sm:w-12">
+                    <ActiveIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">Current room</p>
-                    <h3 className="text-xl font-black text-white">{activeRoom.label}</h3>
+                    <h3 className="truncate text-lg font-black text-white sm:text-xl">{activeRoom.label}</h3>
                   </div>
                 </div>
                 <p className="mt-4 text-sm leading-7 text-slate-300">{activeRoom.info}</p>
@@ -350,18 +347,17 @@ export function VrApartmentTour() {
                         type="button"
                         onClick={() => {
                           setActiveRoom(room)
-                          const event = new CustomEvent("room-change", { detail: room.id })
-                          window.dispatchEvent(event)
+                          window.dispatchEvent(new CustomEvent("room-change", { detail: room.id }))
                         }}
                         className={[
-                          "rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5",
+                          "min-h-20 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5",
                           isActive
                             ? "border-emerald-400 bg-emerald-500 text-white"
                             : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10",
                         ].join(" ")}
                       >
                         <Icon className="h-5 w-5" />
-                        <span className="mt-2 block text-xs font-bold">{room.label}</span>
+                        <span className="mt-2 block text-xs font-bold leading-4">{room.label}</span>
                       </button>
                     )
                   })}
@@ -398,7 +394,7 @@ function PanelRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-2 last:border-0 last:pb-0">
       <dt className="text-slate-400">{label}</dt>
-      <dd className="font-bold text-white">{value}</dd>
+      <dd className="text-right font-bold text-white">{value}</dd>
     </div>
   )
 }
