@@ -16,13 +16,13 @@ const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
 
 export function Contact({ content }: { content: HomepageContent["contact"] }) {
   return (
-    <section id="contact" className="bg-slate-50 py-16 md:py-24">
+    <section id="contact" className="bg-slate-50 py-12 sm:py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+        <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">{content.eyebrow}</p>
-            <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">{content.title}</h2>
-            <p className="mt-5 leading-8 text-slate-600">
+            <h2 className="text-2xl font-bold text-slate-950 text-balance sm:text-3xl md:text-4xl">{content.title}</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600 sm:mt-5 sm:text-base sm:leading-8">
               {content.description}
             </p>
 
@@ -59,8 +59,8 @@ export function Contact({ content }: { content: HomepageContent["contact"] }) {
             </div>
           </div>
 
-          <div className="rounded-lg border border-emerald-900/10 bg-white p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
-            <h3 className="mb-6 text-2xl font-bold text-slate-950">{content.formTitle}</h3>
+          <div className="rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
+            <h3 className="mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl">{content.formTitle}</h3>
             <form action={submitInquiry} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Нэр">

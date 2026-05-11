@@ -13,7 +13,7 @@ export default async function Home() {
   const content = await getHomepageContent()
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen overflow-x-hidden">
       <Header />
       <Hero content={content.hero} />
       <VrApartmentTour content={content.vrTour} />

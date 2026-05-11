@@ -56,7 +56,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
       <div className="relative">
         <div
           ref={carouselRef}
-          className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden"
         >
           {apartments.map((apartment) => {
             const images = getImages(apartment)
@@ -64,7 +64,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
             return (
               <article
                 key={apartment.id}
-                className="w-[88%] shrink-0 snap-start overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 sm:w-[23rem] lg:w-[25rem]"
+                className="w-[84vw] shrink-0 snap-start overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 min-[420px]:w-[21rem] sm:w-[23rem] lg:w-[25rem]"
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
                   <Image
@@ -82,10 +82,10 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
                   </span>
                 </div>
 
-                <div className="p-5">
+                <div className="p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-slate-950">{apartment.title}</h3>
+                      <h3 className="text-xl font-bold text-slate-950 sm:text-2xl">{apartment.title}</h3>
                       <p className="mt-1 text-sm text-slate-500">{apartment.location || "Тоонот Эко Хотхон"}</p>
                     </div>
                     <Home className="h-6 w-6 shrink-0 text-primary" />
@@ -138,9 +138,9 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
       <PriceCalculator apartments={apartments} />
       <CompareApartments apartments={compareApartments} />
 
-      <div id="price" className="mt-10 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
+      <div id="price" className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 sm:mt-10">
         <div className="border-b border-slate-200 p-5 sm:p-6">
-          <h3 className="text-2xl font-bold text-slate-950">Үнэ, м² товч мэдээлэл</h3>
+          <h3 className="text-xl font-bold text-slate-950 sm:text-2xl">Үнэ, м² товч мэдээлэл</h3>
           <p className="mt-2 text-slate-600">Үнэ нь давхар, цонхны харц, төлбөрийн нөхцөлөөс хамаарч өөрчлөгдөж болно.</p>
         </div>
         <div className="grid divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
@@ -172,8 +172,8 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
           Дэлгэрэнгүй харах
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[92svh] overflow-y-auto p-0 sm:max-w-4xl">
-        <div className="relative aspect-[16/10] min-h-[280px] bg-slate-950">
+      <DialogContent className="max-h-[92svh] w-[calc(100vw-1rem)] overflow-y-auto p-0 sm:max-w-4xl">
+        <div className="relative aspect-[4/3] min-h-[220px] bg-slate-950 sm:aspect-[16/10] sm:min-h-[280px]">
           <Image src={images[activeImage]} alt={apartment.title} fill sizes="(min-width: 768px) 896px, 100vw" className="object-contain" />
           {images.length > 1 && (
             <>
@@ -247,13 +247,13 @@ function PriceCalculator({ apartments }: { apartments: Apartment[] }) {
   const monthly = months > 0 ? loan / months : 0
 
   return (
-    <section className="mt-10 rounded-lg border border-emerald-900/10 bg-white p-5 shadow-sm shadow-emerald-900/5 sm:p-6">
+    <section className="mt-8 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:mt-10 sm:p-6">
       <div className="mb-5 flex items-center gap-3">
         <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
           <Calculator className="h-5 w-5" />
         </div>
         <div>
-          <h3 className="text-2xl font-bold text-slate-950">Үнэ тооцоолуур</h3>
+          <h3 className="text-xl font-bold text-slate-950 sm:text-2xl">Үнэ тооцоолуур</h3>
           <p className="mt-1 text-sm text-slate-600">Ойролцоогоор төлбөрийн зураг гаргана.</p>
         </div>
       </div>
@@ -292,9 +292,9 @@ function CompareApartments({ apartments }: { apartments: Apartment[] }) {
   }
 
   return (
-    <section className="mt-10 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
+    <section className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 sm:mt-10">
       <div className="border-b border-slate-200 p-5 sm:p-6">
-        <h3 className="flex items-center gap-2 text-2xl font-bold text-slate-950">
+        <h3 className="flex items-center gap-2 text-xl font-bold text-slate-950 sm:text-2xl">
           <GitCompare className="h-5 w-5 text-primary" />
           Байр харьцуулах
         </h3>

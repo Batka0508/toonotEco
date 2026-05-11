@@ -12,24 +12,24 @@ const highlightIcons: Partial<Record<IconKey, typeof Ruler>> = {
 
 export function Hero({ content }: { content: HomepageContent["hero"] }) {
   return (
-    <section id="home" className="relative min-h-[calc(100svh-5rem)] overflow-hidden sm:min-h-[calc(100svh-6rem)]">
+    <section id="home" className="relative min-h-[calc(100svh-4rem)] overflow-hidden sm:min-h-[calc(100svh-6rem)]">
       <div className="absolute inset-0 z-0">
         <Image src={content.backgroundImage} alt={content.title} fill className="object-cover" priority />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,20,18,0.82)_0%,rgba(5,20,18,0.58)_52%,rgba(5,20,18,0.22)_100%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] max-w-[1440px] items-center px-4 py-12 sm:min-h-[calc(100svh-6rem)] sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-4rem)] max-w-[1440px] items-center px-4 py-10 sm:min-h-[calc(100svh-6rem)] sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="w-full max-w-4xl">
           <p className="mb-4 inline-flex max-w-full items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-2 text-xs font-bold text-white shadow-lg backdrop-blur-md sm:mb-5 sm:px-4 sm:text-sm">
             <MapPin className="h-4 w-4 shrink-0 text-emerald-300" />
             <span className="truncate">{content.badge}</span>
           </p>
 
-          <h1 className="max-w-4xl text-4xl font-bold leading-[1.06] text-white text-balance sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-4xl text-3xl font-bold leading-[1.08] text-white text-balance min-[380px]:text-4xl sm:text-6xl lg:text-7xl">
             {content.title}
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/88 sm:mt-6 sm:text-xl sm:leading-8">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-white/88 sm:mt-6 sm:text-xl sm:leading-8">
             {content.description}
           </p>
 
@@ -62,15 +62,15 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
             </Button>
           </div>
 
-          <div className="mt-8 grid max-w-3xl gap-3 sm:mt-10 sm:grid-cols-3">
+          <div className="mt-6 grid max-w-3xl gap-3 min-[420px]:grid-cols-3 sm:mt-10">
             {content.highlights.map((item) => {
               const Icon = highlightIcons[item.icon] ?? Ruler
 
               return (
-              <div key={item.label} className="rounded-lg border border-white/15 bg-black/28 p-4 shadow-lg backdrop-blur-md">
+              <div key={item.label} className="rounded-lg border border-white/15 bg-black/28 p-3 shadow-lg backdrop-blur-md sm:p-4">
                 <Icon className="mb-3 h-5 w-5 text-emerald-300" />
                 <p className="text-sm font-semibold text-white/65">{item.label}</p>
-                <p className="mt-1 text-2xl font-bold text-white">{item.value}</p>
+                <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{item.value}</p>
               </div>
               )
             })}

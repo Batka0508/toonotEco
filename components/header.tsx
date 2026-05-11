@@ -27,18 +27,18 @@ export function Header() {
 
   return (
     <header className="relative z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between gap-3 sm:h-24 sm:gap-6">
+      <div className="mx-auto max-w-[1440px] px-3 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between gap-2 sm:h-24 sm:gap-6">
           <Link href="/" onClick={() => handleNavClick("#home")} className="flex min-w-0 items-center gap-2 sm:gap-3">
-            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950 dark:border-emerald-300/70 dark:text-emerald-100 sm:h-14 sm:w-14">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950 dark:border-emerald-300/70 dark:text-emerald-100 sm:h-14 sm:w-14">
               <Building2 className="h-5 w-5 sm:h-7 sm:w-7" />
               <span className="absolute right-0.5 top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white text-emerald-700 dark:bg-slate-950 dark:text-emerald-300 sm:right-1 sm:top-1 sm:h-4 sm:w-4">
                 <Leaf className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
               </span>
             </div>
             <div className="min-w-0 leading-none">
-              <span className="block truncate text-base font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-xl">Монгол од</span>
-              <span className="mt-1 block truncate text-[0.68rem] font-bold uppercase tracking-[0.14em] text-emerald-950 dark:text-emerald-200 sm:text-sm sm:tracking-[0.16em]">
+              <span className="block max-w-[6.5rem] truncate text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 xs:max-w-none sm:text-xl">Монгол од</span>
+              <span className="mt-1 block max-w-[6.5rem] truncate text-[0.62rem] font-bold uppercase tracking-[0.1em] text-emerald-950 dark:text-emerald-200 xs:max-w-none sm:text-sm sm:tracking-[0.16em]">
                 Компани
               </span>
             </div>
@@ -57,11 +57,11 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
             <ThemeToggle />
             <Link
               href="/login?redirect=/admin"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 sm:h-11 sm:w-11"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 sm:h-11 sm:w-11"
               aria-label="Admin нэвтрэх"
               title="Admin нэвтрэх"
             >
@@ -76,7 +76,7 @@ export function Header() {
             </a>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-11 sm:w-11"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-11 sm:w-11"
               aria-label="Цэс нээх"
               aria-expanded={isMenuOpen}
             >
@@ -86,7 +86,7 @@ export function Header() {
         </div>
 
         {isMenuOpen && (
-          <nav className="absolute left-4 right-4 top-[calc(100%+0.5rem)] overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15 dark:border-white/10 dark:bg-slate-950 sm:left-auto sm:right-6 sm:w-[22rem]">
+          <nav className="absolute left-3 right-3 top-[calc(100%+0.5rem)] max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15 dark:border-white/10 dark:bg-slate-950 sm:left-auto sm:right-6 sm:w-[22rem]">
             <div className="grid grid-cols-1 gap-1 p-2">
               {navLinks.map((link) => (
                 <Link
