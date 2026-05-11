@@ -2,8 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Building2, Leaf, LogOut, Menu, Phone, X } from "lucide-react"
-import { logoutUser } from "@/app/(user-auth)/actions"
+import { Building2, Leaf, Menu, Phone, X } from "lucide-react"
 
 const navLinks = [
   { href: "#home", label: "Нүүр" },
@@ -65,16 +64,6 @@ export function Header() {
               <Phone className="h-5 w-5" />
               7507-1234
             </a>
-            <form action={logoutUser}>
-              <button
-                type="submit"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 sm:h-11 sm:w-11"
-                aria-label="Гарах"
-                title="Гарах"
-              >
-                <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
-            </form>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 xl:hidden sm:h-11 sm:w-11"
