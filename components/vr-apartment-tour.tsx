@@ -1,17 +1,18 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Bath, BedDouble, ChefHat, Leaf, Sofa } from "lucide-react"
 import * as THREE from "three"
+import type { HomepageContent } from "@/lib/homepage-content"
 
-const rooms = [
+const baseRooms = [
   {
     id: "living",
     label: "Зочны өрөө",
     icon: Sofa,
     position: new THREE.Vector3(0, 1.7, 6),
     lookAt: new THREE.Vector3(0, 1.4, 0),
-    info: "Панорам шилэн цонх, eco city view, дулаан мэдрэмжтэй modern тавилга.",
+    info: "Панорам шилэн цонх, хотхоны харагдац, дулаан мэдрэмжтэй орчин үеийн тавилга.",
   },
   {
     id: "kitchen",
@@ -19,7 +20,7 @@ const rooms = [
     icon: ChefHat,
     position: new THREE.Vector3(-6, 1.7, 0),
     lookAt: new THREE.Vector3(-2.5, 1.2, 0),
-    info: "Luxury kitchen island, stone countertop, premium гэрэлтүүлэг.",
+    info: "Аралтай гал тогоо, чулуун тавцан, чанартай гэрэлтүүлэг.",
   },
   {
     id: "bedroom",
@@ -27,7 +28,7 @@ const rooms = [
     icon: BedDouble,
     position: new THREE.Vector3(5.5, 1.7, -4.5),
     lookAt: new THREE.Vector3(2.5, 1.2, -2.6),
-    info: "Тайван ambiance, soft gray palette, том wardrobe бүхий master room.",
+    info: "Тайван өнгөний шийдэл, том шүүгээтэй мастер өрөө.",
   },
   {
     id: "bathroom",
@@ -35,14 +36,31 @@ const rooms = [
     icon: Bath,
     position: new THREE.Vector3(-5.8, 1.7, -5),
     lookAt: new THREE.Vector3(-3.3, 1.2, -3.2),
-    info: "Premium tiles, glass shower, realistic reflection detail.",
+    info: "Чанартай плита, шилэн душ, бодит тусгалтай интерьер.",
   },
 ]
 
-export function VrApartmentTour() {
+export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"] }) {
   const mountRef = useRef<HTMLDivElement | null>(null)
+  const rooms = useMemo(
+    () =>
+      baseRooms.map((room) => {
+        const roomContent = content.rooms.find((item) => item.id === room.id)
+
+        return {
+          ...room,
+          label: roomContent?.label ?? room.label,
+          info: roomContent?.info ?? room.info,
+        }
+      }),
+    [content.rooms],
+  )
   const [activeRoom, setActiveRoom] = useState(rooms[0])
   const [hoverLabel, setHoverLabel] = useState("")
+
+  useEffect(() => {
+    setActiveRoom(rooms[0])
+  }, [rooms])
 
   useEffect(() => {
     const mount = mountRef.current
@@ -134,14 +152,20 @@ export function VrApartmentTour() {
     box("sofa back", [3.2, 1.05, 0.22], [0, 0.85, 2.65], darkMat)
     box("coffee table", [1.8, 0.22, 0.9], [0, 0.28, 0.55], woodMat)
     box("media wall", [2.8, 1.5, 0.12], [0, 1.2, -1.2], greenMat)
+    imagePanel("living room real photo", "/images/bair.jpg", [3.2, 2.0], [0, 1.85, -1.12], [0, 0, 0])
+    imagePanel("project exterior photo", "/images/project-1.jpg", [4.6, 2.5], [-4.5, 1.95, -6.38], [0, 0, 0])
+    imagePanel("construction photo", "/images/asa.jpg", [3.9, 2.35], [2.9, 1.95, -6.37], [0, 0, 0])
     box("kitchen island", [2.5, 0.9, 1.05], [-4.8, 0.45, 0.8], woodMat)
     box("countertop", [2.6, 0.12, 1.12], [-4.8, 0.95, 0.8], darkMat)
     box("kitchen cabinets", [2.8, 1.9, 0.5], [-6.7, 1.0, -0.8], greenMat)
     imagePanel("kitchen.webp visual", "/images/kitchen.webp", [2.9, 1.75], [-6.58, 1.85, 1.65], [0, Math.PI / 2, 0])
+    imagePanel("interior detail photo", "/images/dsdasdasdasf.jpg", [3.2, 2.0], [-7.38, 1.85, -3.8], [0, Math.PI / 2, 0])
     box("bed base", [2.8, 0.55, 2.15], [4.7, 0.32, -4.5], woodMat)
     box("mattress", [2.65, 0.32, 2], [4.7, 0.75, -4.5], wallMat)
     box("headboard", [3, 1.25, 0.22], [4.7, 1.15, -5.65], darkMat)
     imagePanel("bedroom.jpg visual", "/images/bedroom.jpg", [3.6, 2.15], [4.7, 1.85, -6.38], [0, 0, 0])
+    imagePanel("apartment plan photo", "/images/two-room-1777448384494-0.jpg", [2.4, 1.7], [7.38, 1.75, -2.3], [0, -Math.PI / 2, 0])
+    imagePanel("green garden photo", "/images/garden.png", [3.4, 2.0], [7.38, 1.8, 2.2], [0, -Math.PI / 2, 0])
     box("bath vanity", [1.8, 0.8, 0.6], [-5.8, 0.45, -4.4], woodMat)
     box("shower glass", [0.08, 2, 1.8], [-4.2, 1.1, -5.35], glassMat, false)
 
@@ -176,6 +200,13 @@ export function VrApartmentTour() {
     const targetPosition = rooms[0].position.clone()
     const targetLookAt = rooms[0].lookAt.clone()
     const currentLookAt = rooms[0].lookAt.clone()
+    let isDraggingView = false
+    let didDragView = false
+    let lastPointerX = 0
+    let lastPointerY = 0
+    let yaw = 0
+    let pitch = 0
+    let manualLook = false
     let frame = 0
     let animationId = 0
 
@@ -184,6 +215,9 @@ export function VrApartmentTour() {
       if (!next) return
       targetPosition.copy(next.position)
       targetLookAt.copy(next.lookAt)
+      manualLook = false
+      yaw = 0
+      pitch = 0
       setActiveRoom(next)
     }
 
@@ -196,22 +230,67 @@ export function VrApartmentTour() {
     }
 
     function onPointerMove(event: PointerEvent) {
+      if (isDraggingView) {
+        const deltaX = event.clientX - lastPointerX
+        const deltaY = event.clientY - lastPointerY
+        lastPointerX = event.clientX
+        lastPointerY = event.clientY
+        didDragView = didDragView || Math.abs(deltaX) + Math.abs(deltaY) > 2
+        yaw -= deltaX * 0.0045
+        pitch = THREE.MathUtils.clamp(pitch - deltaY * 0.0035, -0.7, 0.7)
+        manualLook = true
+        renderer.domElement.style.cursor = "grabbing"
+        return
+      }
+
       const hit = updatePointer(event)
       renderer.domElement.style.cursor = hit ? "pointer" : "grab"
       setHoverLabel(hit?.object.userData.label ?? "")
     }
 
     function onClick(event: PointerEvent) {
+      if (didDragView) {
+        didDragView = false
+        return
+      }
+
       const hit = updatePointer(event)
       if (hit) moveToRoom(hit.object.userData.roomId)
     }
 
+    function onPointerDown(event: PointerEvent) {
+      if (!manualLook) {
+        const direction = currentLookAt.clone().sub(camera.position).normalize()
+        yaw = Math.atan2(direction.x, -direction.z)
+        pitch = Math.asin(THREE.MathUtils.clamp(direction.y, -1, 1))
+      }
+
+      isDraggingView = true
+      didDragView = false
+      lastPointerX = event.clientX
+      lastPointerY = event.clientY
+      renderer.domElement.setPointerCapture(event.pointerId)
+      renderer.domElement.style.cursor = "grabbing"
+    }
+
+    function onPointerUp(event: PointerEvent) {
+      isDraggingView = false
+      if (renderer.domElement.hasPointerCapture(event.pointerId)) {
+        renderer.domElement.releasePointerCapture(event.pointerId)
+      }
+      renderer.domElement.style.cursor = "grab"
+    }
+
     function onKeyDown(event: KeyboardEvent) {
-      keys.add(event.key.toLowerCase())
+      if (typeof event.key === "string") {
+        keys.add(event.key.toLowerCase())
+      }
     }
 
     function onKeyUp(event: KeyboardEvent) {
-      keys.delete(event.key.toLowerCase())
+      if (typeof event.key === "string") {
+        keys.delete(event.key.toLowerCase())
+      }
     }
 
     function onRoomChange(event: Event) {
@@ -224,7 +303,10 @@ export function VrApartmentTour() {
       renderer.setSize(mount.clientWidth, mount.clientHeight)
     }
 
+    renderer.domElement.addEventListener("pointerdown", onPointerDown)
     renderer.domElement.addEventListener("pointermove", onPointerMove)
+    renderer.domElement.addEventListener("pointerup", onPointerUp)
+    renderer.domElement.addEventListener("pointercancel", onPointerUp)
     renderer.domElement.addEventListener("click", onClick)
     window.addEventListener("keydown", onKeyDown)
     window.addEventListener("keyup", onKeyUp)
@@ -253,7 +335,12 @@ export function VrApartmentTour() {
 
       camera.position.lerp(targetPosition, 0.035)
       currentLookAt.lerp(targetLookAt, 0.045)
-      camera.lookAt(currentLookAt)
+      if (manualLook) {
+        const lookDirection = new THREE.Vector3(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), -Math.cos(yaw) * Math.cos(pitch))
+        camera.lookAt(camera.position.clone().add(lookDirection.multiplyScalar(10)))
+      } else {
+        camera.lookAt(currentLookAt)
+      }
       renderer.render(scene, camera)
       animationId = requestAnimationFrame(animate)
     }
@@ -262,7 +349,10 @@ export function VrApartmentTour() {
 
     return () => {
       cancelAnimationFrame(animationId)
+      renderer.domElement.removeEventListener("pointerdown", onPointerDown)
       renderer.domElement.removeEventListener("pointermove", onPointerMove)
+      renderer.domElement.removeEventListener("pointerup", onPointerUp)
+      renderer.domElement.removeEventListener("pointercancel", onPointerUp)
       renderer.domElement.removeEventListener("click", onClick)
       window.removeEventListener("keydown", onKeyDown)
       window.removeEventListener("keyup", onKeyUp)
@@ -271,7 +361,7 @@ export function VrApartmentTour() {
       renderer.dispose()
       mount.removeChild(renderer.domElement)
     }
-  }, [])
+  }, [rooms])
 
   const ActiveIcon = activeRoom.icon
 
@@ -282,18 +372,18 @@ export function VrApartmentTour() {
           <div className="max-w-3xl">
             <p className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wide text-emerald-300 sm:px-4 sm:text-sm">
               <Leaf className="h-4 w-4 shrink-0" />
-              <span className="truncate">Toonot Eco Town VR Tour</span>
+              <span className="truncate">{content.badge}</span>
             </p>
             <h2 className="text-2xl font-black leading-tight text-white text-balance sm:text-3xl md:text-5xl">
-              Premium 3D apartment walkthrough experience
+              {content.title}
             </h2>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base sm:leading-8">
-              Зочны өрөө, гал тогоо, унтлагын өрөө, ариун цэврийн өрөөг immersive VR-like tour хэлбэрээр үзээрэй.
+              {content.description}
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-slate-200 backdrop-blur">
-            <p className="font-bold text-white">Controls</p>
-            <p className="mt-1">Hotspot дээр дарна. Desktop дээр WASD ашиглаж алхана.</p>
+            <p className="font-bold text-white">{content.controlsTitle}</p>
+            <p className="mt-1">{content.controlsDescription}</p>
           </div>
         </div>
 
@@ -302,8 +392,8 @@ export function VrApartmentTour() {
             <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
               <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">
                 <div className="mx-4 rounded-2xl border border-emerald-300/20 bg-white/10 px-5 py-4 backdrop-blur sm:px-6">
-                  <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 sm:text-sm">Loading 3D VR tour</p>
-                  <p className="mt-2 text-xs text-slate-300">WebGL apartment scene ачаалж байна...</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 sm:text-sm">{content.loadingTitle}</p>
+                  <p className="mt-2 text-xs text-slate-300">{content.loadingDescription}</p>
                 </div>
               </div>
               <div ref={mountRef} className="relative h-full min-h-[24rem] w-full sm:min-h-[32rem] lg:min-h-[36rem]" />
@@ -315,9 +405,9 @@ export function VrApartmentTour() {
               )}
 
               <div className="absolute bottom-4 left-4 right-4 hidden gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4 backdrop-blur-xl md:grid md:grid-cols-3 lg:bottom-6 lg:left-6 lg:right-6">
-                <InfoPill label="Материал" value="Glass, stone, warm wood" />
-                <InfoPill label="Гэрэл" value="Natural sunlight" />
-                <InfoPill label="Орчин" value="Eco city + green park" />
+                {content.infoPills.map((item) => (
+                  <InfoPill key={item.label} label={item.label} value={item.value} />
+                ))}
               </div>
             </div>
 
@@ -328,7 +418,7 @@ export function VrApartmentTour() {
                     <ActiveIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">Current room</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">Одоогийн өрөө</p>
                     <h3 className="truncate text-lg font-black text-white sm:text-xl">{activeRoom.label}</h3>
                   </div>
                 </div>
@@ -336,7 +426,7 @@ export function VrApartmentTour() {
               </div>
 
               <div className="mt-5">
-                <p className="text-sm font-bold uppercase tracking-wide text-slate-400">Floor navigation</p>
+                <p className="text-sm font-bold uppercase tracking-wide text-slate-400">Өрөө сонгох</p>
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   {rooms.map((room) => {
                     const Icon = room.icon
@@ -365,12 +455,11 @@ export function VrApartmentTour() {
               </div>
 
               <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm font-bold text-white">Apartment panel</p>
+                <p className="text-sm font-bold text-white">{content.panelTitle}</p>
                 <dl className="mt-4 grid gap-3 text-sm">
-                  <PanelRow label="Зэрэглэл" value="Business luxury" />
-                  <PanelRow label="Өрөө" value="2-3 өрөө" />
-                  <PanelRow label="Experience" value="360 panoramic" />
-                  <PanelRow label="Style" value="Eco futuristic" />
+                  {content.panelRows.map((item) => (
+                    <PanelRow key={item.label} label={item.label} value={item.value} />
+                  ))}
                 </dl>
               </div>
             </aside>

@@ -1,15 +1,15 @@
 "use server"
 
-import { mkdir, writeFile } from "node:fs/promises"
-import path from "node:path"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { writeBackendJson } from "@/lib/backend-json"
 import {
   createResetCode,
   findResetCode,
   getPasswordResetData,
   hashResetCode,
   passwordResetPath,
+  passwordResetStoragePath,
   type PasswordResetData,
 } from "@/lib/password-reset"
 import { sendSms } from "@/lib/sms"
@@ -20,6 +20,7 @@ import {
   getUsersData,
   hashPassword,
   usersPath,
+  usersStoragePath,
   verifyPassword,
   type UsersData,
 } from "@/lib/user-auth"
@@ -29,13 +30,11 @@ function getString(formData: FormData, key: string) {
 }
 
 async function saveUsers(data: UsersData) {
-  await mkdir(path.dirname(usersPath), { recursive: true })
-  await writeFile(usersPath, `${JSON.stringify(data, null, 2)}\n`, "utf8")
+  await writeBackendJson(usersStoragePath, usersPath, data)
 }
 
 async function saveResetCodes(data: PasswordResetData) {
-  await mkdir(path.dirname(passwordResetPath), { recursive: true })
-  await writeFile(passwordResetPath, `${JSON.stringify(data, null, 2)}\n`, "utf8")
+  await writeBackendJson(passwordResetStoragePath, passwordResetPath, data)
 }
 
 export async function registerUser(formData: FormData) {
@@ -50,7 +49,7 @@ export async function registerUser(formData: FormData) {
     redirect(`${registerPath}${registerPath.includes("?") ? "&" : "?"}error=invalid`)
   }
 
-  const data = getUsersData()
+  const data = await getUsersData()
   const exists = data.users.some((user) => user.email.toLowerCase() === email)
 
   if (exists) {
@@ -85,7 +84,7 @@ export async function loginUser(formData: FormData) {
   const password = String(formData.get("password") || "")
   const redirectTo = getString(formData, "redirect")
   const loginPath = redirectTo ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login"
-  const user = findUserByEmail(email)
+  const user = await findUserByEmail(email)
 
   if (!user || !verifyPassword(password, user.passwordHash)) {
     redirect(`${loginPath}${loginPath.includes("?") ? "&" : "?"}error=1`)
@@ -124,14 +123,14 @@ export async function requestPasswordReset(formData: FormData) {
     redirect("/forgot-password?error=invalid")
   }
 
-  const user = findUserByEmail(email)
+  const user = await findUserByEmail(email)
 
   if (!user || user.phone.trim() !== phone.trim()) {
     redirect("/forgot-password?error=not-found")
   }
 
   const code = createResetCode()
-  const resetData = getPasswordResetData()
+  const resetData = await getPasswordResetData()
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
   const smsResult = await sendSms(phone, `Toonot Eco Hothon nuuts ug sergeeh code: ${code}. 10 minut huchintei.`)
 
@@ -168,13 +167,13 @@ export async function resetUserPassword(formData: FormData) {
     redirect(`/reset-password?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&error=invalid`)
   }
 
-  const resetCode = findResetCode(email, phone)
+  const resetCode = await findResetCode(email, phone)
 
   if (!resetCode || resetCode.codeHash !== hashResetCode(code)) {
     redirect(`/reset-password?email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&error=code`)
   }
 
-  const data = getUsersData()
+  const data = await getUsersData()
   const userIndex = data.users.findIndex((user) => user.email.toLowerCase() === email)
   const user = data.users[userIndex]
 
@@ -187,7 +186,7 @@ export async function resetUserPassword(formData: FormData) {
     passwordHash: hashPassword(password),
   }
 
-  const resetData = getPasswordResetData()
+  const resetData = await getPasswordResetData()
   await saveResetCodes({
     codes: resetData.codes.filter(
       (item) => !(item.email.toLowerCase() === email && item.phone.trim() === phone.trim()),

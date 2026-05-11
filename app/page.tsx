@@ -7,18 +7,21 @@ import { Projects } from "@/components/projects"
 import { Gallery } from "@/components/gallery"
 import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
+import { getHomepageContent } from "@/lib/homepage-content"
 
-export default function Home() {
+export default async function Home() {
+  const content = await getHomepageContent()
+
   return (
     <main className="min-h-screen">
       <Header />
-      <Hero />
-      <VrApartmentTour />
-      <About />
-      <Services />
+      <Hero content={content.hero} />
+      <VrApartmentTour content={content.vrTour} />
+      <About content={content.about} />
+      <Services content={content.amenities} />
       <Projects />
-      <Gallery />
-      <Contact />
+      <Gallery content={content.gallery} />
+      <Contact content={content.contact} />
       <Footer />
     </main>
   )

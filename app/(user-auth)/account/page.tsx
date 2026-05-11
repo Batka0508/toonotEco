@@ -79,7 +79,7 @@ export default async function AccountPage() {
           <CardContent className="grid gap-4">
             {replies.length === 0 ? (
               <div className="rounded-lg border border-dashed border-emerald-900/20 bg-emerald-50/70 p-6 text-sm text-slate-600">
-                Одоогоор admin-аас ирсэн хариу алга байна.
+                Одоогоор админаас ирсэн хариу алга байна.
               </div>
             ) : (
               replies.map((inquiry) => (
@@ -106,7 +106,7 @@ export default async function AccountPage() {
               <MessageSquareText className="h-5 w-5 text-primary" />
               Илгээсэн бүх хүсэлт
             </CardTitle>
-            <CardDescription>Таны contact form-оор илгээсэн хүсэлтүүд болон төлөв.</CardDescription>
+            <CardDescription>Таны холбоо барих маягтаар илгээсэн хүсэлтүүд болон төлөв.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             {inquiries.length === 0 ? (

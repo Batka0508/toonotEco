@@ -78,7 +78,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
           {isAdminMode && (
             <div className="mt-4 rounded-lg border border-emerald-900/10 bg-emerald-50 p-3 text-xs leading-5 text-slate-700">
-              {adminEmails.length > 0 ? `Зөвшөөрөгдсөн admin: ${adminEmails.join(", ")}` : "ADMIN_EMAILS тохиргоо хоосон байна."}
+              {adminEmails.length > 0 ? `Зөвшөөрөгдсөн админ: ${adminEmails.join(", ")}` : "ADMIN_EMAILS тохиргоо хоосон байна."}
             </div>
           )}
 

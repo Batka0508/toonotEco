@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000 --webpack",
     "build": "next build",
     "start": "next start",
     "seed:supabase": "node scripts/seed-supabase.mjs",
+    "seed:homepage": "node scripts/seed-homepage-content.mjs",
+    "seed:auth": "node scripts/seed-auth-data.mjs",
     "lint": "eslint ."
   },
   "dependencies": {

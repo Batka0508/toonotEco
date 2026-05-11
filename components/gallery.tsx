@@ -1,26 +1,18 @@
 import Image from "next/image"
+import type { HomepageContent } from "@/lib/homepage-content"
 
-const galleryItems = [
-  { src: "/images/asa.jpg", title: "Барилгын явц", label: "Construction" },
-  { src: "/images/project-1.jpg", title: "Гадна фасад", label: "Exterior" },
-  { src: "/images/dsdasdasdasf.jpg", title: "Интерьер шийдэл", label: "Interior" },
-  { src: "/images/project-3.jpg", title: "Орчны зураг", label: "Environment" },
-  { src: "/images/two-room-1777448384494-0.jpg", title: "2 өрөө layout", label: "Layout" },
-  { src: "/images/5-1777617364714-0.jpg", title: "Том талбай", label: "Apartment" },
-]
-
-export function Gallery() {
+export function Gallery({ content }: { content: HomepageContent["gallery"] }) {
   return (
     <section id="gallery" className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="mb-10 max-w-2xl">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">Gallery</p>
-          <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">Барилга, интерьер, орчны зураг</h2>
-          <p className="mt-4 leading-8 text-slate-600">Төслийн төрх, layout болон орчны мэдрэмжийг том зурагтай clean grid хэлбэрээр харууллаа.</p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">{content.eyebrow}</p>
+          <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">{content.title}</h2>
+          <p className="mt-4 leading-8 text-slate-600">{content.description}</p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-4 md:auto-rows-[220px]">
-          {galleryItems.map((item, index) => (
+          {content.items.map((item, index) => (
             <figure
               key={item.src}
               className={[

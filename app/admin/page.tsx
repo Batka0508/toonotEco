@@ -1,18 +1,20 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Building2, ClipboardList, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
+import { BarChart3, Building2, ClipboardList, FilePenLine, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
 import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
+import { getHomepageContent } from "@/lib/homepage-content"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
 import { getApartmentImages, getSiteContent, type Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ConfirmSubmitButton } from "@/components/confirm-submit-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { logoutUser } from "@/app/(user-auth)/actions"
-import { createApartment, deleteApartment, replyInquiry, updateApartment, updateInquiryStatus } from "./actions"
+import { createApartment, deleteApartment, deleteInquiry, replyInquiry, updateApartment, updateHomepageContent, updateInquiryStatus } from "./actions"
 
-type AdminView = "dashboard" | "properties" | "add" | "requests"
+type AdminView = "dashboard" | "properties" | "add" | "requests" | "content"
 
 type AdminPageProps = {
   searchParams: Promise<{ view?: string; edit?: string; error?: string; saved?: string }>
@@ -49,6 +51,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const view = parseView(params.view)
   const { apartments } = await getSiteContent()
   const inquiries = await getInquiries()
+  const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
 
@@ -74,6 +77,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <NavItem href="/admin?view=properties" icon={Building2} active={view === "properties"} label="Байрууд" />
             <NavItem href="/admin?view=add" icon={Plus} active={view === "add"} label="Байр нэмэх" />
             <NavItem href="/admin?view=requests" icon={ClipboardList} active={view === "requests"} label="Хүсэлтүүд" count={newRequests} />
+            <NavItem href="/admin?view=content" icon={FilePenLine} active={view === "content"} label="Сайт засах" />
           </nav>
 
           <div className="mt-6 hidden gap-2 lg:grid">
@@ -96,7 +100,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-bold text-slate-950">{getViewTitle(view)}</h2>
-              <p className="mt-1 text-sm text-slate-600">Байр, зураг, төлөв болон хэрэглэгчийн хүсэлтийг Supabase-аас удирдана.</p>
+              <p className="mt-1 text-sm text-slate-600">Байр, зураг, төлөв болон хэрэглэгчийн хүсэлтийг өгөгдлийн сангаас удирдана.</p>
             </div>
             {view !== "add" && (
               <Button asChild>
@@ -120,6 +124,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           )}
           {view === "add" && <PropertyForm title="Байр нэмэх" property={emptyProperty} action={createApartment} cancelHref="/admin?view=properties" />}
           {view === "requests" && <RequestsTable inquiries={inquiries} properties={apartments} />}
+          {view === "content" && homepageContent && <HomepageContentEditor content={homepageContent} />}
         </section>
       </div>
     </main>
@@ -138,7 +143,7 @@ function AdminAccessRequired() {
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="rounded-lg border border-emerald-900/10 bg-emerald-50 p-3 text-sm text-slate-700">
-            {adminEmails.length > 0 ? `Зөвшөөрөгдсөн admin: ${adminEmails.join(", ")}` : "ADMIN_EMAILS env хоосон байна."}
+            {adminEmails.length > 0 ? `Зөвшөөрөгдсөн админ: ${adminEmails.join(", ")}` : "ADMIN_EMAILS тохиргоо хоосон байна."}
           </div>
           <Button asChild>
             <Link href="/login?redirect=/admin">Нэвтрэх</Link>
@@ -155,20 +160,65 @@ function AdminAccessRequired() {
 function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiries: Inquiry[] }) {
   const sold = apartments.filter((property) => property.status === "sold").length
   const available = apartments.filter((property) => property.status === "available").length
+  const reserved = apartments.filter((property) => property.status === "reserved").length
+  const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
+  const contactedRequests = inquiries.filter((inquiry) => inquiry.status === "contacted" || inquiry.status === "read").length
+  const closedRequests = inquiries.filter((inquiry) => inquiry.status === "closed").length
+  const maxApartmentRequests = Math.max(1, ...apartments.map((property) => inquiries.filter((inquiry) => inquiry.apartment === property.id || inquiry.apartment === property.title).length))
 
   return (
     <div className="grid gap-6">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Нийт байр" value={apartments.length} icon={Building2} />
         <StatCard label="Сул байгаа" value={available} icon={Home} />
-        <StatCard label="Зарагдсан" value={sold} icon={Building2} />
+        <StatCard label="Захиалгатай/зарагдсан" value={reserved + sold} icon={Building2} />
         <StatCard label="Нийт хүсэлт" value={inquiries.length} icon={ClipboardList} />
+      </div>
+      <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              Байрны сонирхол
+            </CardTitle>
+            <CardDescription>Хүсэлтүүдэд хамгийн их сонгогдсон байрнууд</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            {apartments.map((property) => {
+              const count = inquiries.filter((inquiry) => inquiry.apartment === property.id || inquiry.apartment === property.title).length
+              const width = `${Math.max(8, Math.round((count / maxApartmentRequests) * 100))}%`
+
+              return (
+                <div key={property.id} className="grid gap-2">
+                  <div className="flex items-center justify-between gap-3 text-sm">
+                    <span className="font-semibold text-slate-800">{property.title}</span>
+                    <span className="text-slate-500">{count} хүсэлт</span>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
+                    <div className="h-full rounded-full bg-emerald-600" style={{ width }} />
+                  </div>
+                </div>
+              )
+            })}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Хүсэлтийн төлөв</CardTitle>
+            <CardDescription>Борлуулалтын явцын товч зураг</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            <StatusMetric label="Шинэ" value={newRequests} className="bg-amber-100 text-amber-800" />
+            <StatusMetric label="Холбогдсон" value={contactedRequests} className="bg-emerald-100 text-emerald-800" />
+            <StatusMetric label="Хаагдсан" value={closedRequests} className="bg-slate-200 text-slate-700" />
+          </CardContent>
+        </Card>
       </div>
       <div className="grid gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Сүүлийн байрууд</CardTitle>
-            <CardDescription>Supabase-аас уншиж байгаа байрны мэдээлэл</CardDescription>
+            <CardDescription>Өгөгдлийн сангаас уншиж байгаа байрны мэдээлэл</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
             {apartments.slice(0, 5).map((property) => (
@@ -179,7 +229,7 @@ function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiri
         <Card>
           <CardHeader>
             <CardTitle>Сүүлийн хүсэлтүүд</CardTitle>
-            <CardDescription>Contact form-оор ирсэн лавлагаа</CardDescription>
+            <CardDescription>Холбоо барих маягтаар ирсэн лавлагаа</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3">
             {inquiries.slice(0, 5).map((inquiry) => (
@@ -195,6 +245,31 @@ function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiri
         </Card>
       </div>
     </div>
+  )
+}
+
+function HomepageContentEditor({ content }: { content: Awaited<ReturnType<typeof getHomepageContent>> }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Нүүр хуудасны content засах</CardTitle>
+        <CardDescription>Hero, давуу тал, gallery, contact, 3D tour зэрэг хэсгүүд backend JSON-оос уншина.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form action={updateHomepageContent} className="grid gap-4">
+          <Textarea name="content" defaultValue={JSON.stringify(content, null, 2)} rows={28} className="font-mono text-xs leading-5" />
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+            JSON бүтэц эвдэрвэл хадгалахгүй. Зураг солихдоо `/images/...` эсвэл Supabase public URL ашиглаж болно.
+          </div>
+          <div className="flex justify-end">
+            <Button type="submit">
+              <Save className="h-4 w-4" />
+              Сайт шинэчлэх
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -260,10 +335,10 @@ function PropertyForm({ title, property, action, cancelHref }: { title: string; 
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Зураг upload хийвэл Supabase Storage `property-images` bucket руу хадгалагдана.</CardDescription>
+        <CardDescription>Зураг оруулбал өгөгдлийн сангийн зургийн сан руу хадгалагдана.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={action} encType="multipart/form-data" className="grid gap-5">
+        <form action={action} className="grid gap-5">
           {property.id && <input type="hidden" name="id" value={property.id} />}
           <div className="grid gap-4 md:grid-cols-2">
             <Field label="Гарчиг *">
@@ -382,16 +457,31 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
                   <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">{inquiry.message || "Мессеж бичээгүй байна."}</div>
                 </div>
 
-                <form action={updateInquiryStatus} className="grid h-fit gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                  <input type="hidden" name="id" value={inquiry.id} />
-                  <label className="text-sm font-medium text-slate-700" htmlFor={`status-${inquiry.id}`}>Төлөв</label>
-                  <select id={`status-${inquiry.id}`} name="status" defaultValue={normalizeInquiryStatus(inquiry.status)} className="h-9 rounded-md border border-input bg-white px-3 text-sm">
-                    <option value="new">Шинэ</option>
-                    <option value="contacted">Холбогдсон</option>
-                    <option value="closed">Хаагдсан</option>
-                  </select>
-                  <Button type="submit" size="sm" variant="outline">Төлөв шинэчлэх</Button>
-                </form>
+                <div className="grid h-fit gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                  <form action={updateInquiryStatus} className="grid gap-2">
+                    <input type="hidden" name="id" value={inquiry.id} />
+                    <label className="text-sm font-medium text-slate-700" htmlFor={`status-${inquiry.id}`}>Төлөв</label>
+                    <select id={`status-${inquiry.id}`} name="status" defaultValue={normalizeInquiryStatus(inquiry.status)} className="h-9 rounded-md border border-input bg-white px-3 text-sm">
+                      <option value="new">Шинэ</option>
+                      <option value="contacted">Холбогдсон</option>
+                      <option value="closed">Хаагдсан</option>
+                    </select>
+                    <Button type="submit" size="sm" variant="outline">Төлөв шинэчлэх</Button>
+                  </form>
+                  <form action={deleteInquiry}>
+                    <input type="hidden" name="id" value={inquiry.id} />
+                    <ConfirmSubmitButton
+                      type="submit"
+                      size="sm"
+                      variant="outline"
+                      message="Энэ хүсэлтийг устгах уу?"
+                      className="w-full border-red-200 text-red-700 hover:bg-red-50 hover:text-red-800"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Хүсэлт устгах
+                    </ConfirmSubmitButton>
+                  </form>
+                </div>
               </div>
 
               <form action={replyInquiry} className="grid gap-3 rounded-lg border border-emerald-200 bg-emerald-50/60 p-3">
@@ -459,6 +549,15 @@ function StatCard({ icon: Icon, label, value }: { icon: typeof Home; label: stri
   )
 }
 
+function StatusMetric({ label, value, className }: { label: string; value: number; className: string }) {
+  return (
+    <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-3">
+      <span className="text-sm font-semibold text-slate-700">{label}</span>
+      <span className={`rounded px-2 py-1 text-sm font-bold ${className}`}>{value}</span>
+    </div>
+  )
+}
+
 function Notice({ tone, children }: { tone: "success" | "error"; children: React.ReactNode }) {
   const classes = tone === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-red-50 text-red-800"
   return <div className={`mb-5 rounded-lg border px-4 py-3 text-sm font-medium ${classes}`}>{children}</div>
@@ -499,7 +598,7 @@ function normalizeInquiryStatus(status: Inquiry["status"]) {
 }
 
 function parseView(view?: string): AdminView {
-  if (view === "properties" || view === "add" || view === "requests") {
+  if (view === "properties" || view === "add" || view === "requests" || view === "content") {
     return view
   }
 
@@ -512,5 +611,6 @@ function getViewTitle(view: AdminView) {
     properties: "Байруудын удирдлага",
     add: "Байр нэмэх",
     requests: "Хүсэлтүүд",
+    content: "Сайт засах",
   }[view]
 }

@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { BedDouble, CheckCircle2, ChevronLeft, ChevronRight, Home, MessageCircle, Ruler, Wallet } from "lucide-react"
+import { BedDouble, Calculator, CheckCircle2, ChevronLeft, ChevronRight, GitCompare, Home, MessageCircle, Ruler, Wallet } from "lucide-react"
 import type { Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -26,54 +26,117 @@ function getStatusLabel(status?: Apartment["status"]) {
 }
 
 export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) {
+  const carouselRef = useRef<HTMLDivElement | null>(null)
+  const [selectedCompareIds, setSelectedCompareIds] = useState<string[]>(apartments.slice(0, 2).map((apartment) => apartment.id))
+  const compareApartments = apartments.filter((apartment) => selectedCompareIds.includes(apartment.id))
+
+  const toggleCompare = (id: string) => {
+    setSelectedCompareIds((value) => {
+      if (value.includes(id)) {
+        return value.filter((item) => item !== id)
+      }
+
+      return [...value, id].slice(-3)
+    })
+  }
+
+  const scrollCarousel = (direction: "previous" | "next") => {
+    const carousel = carouselRef.current
+    if (!carousel) return
+
+    const amount = carousel.clientWidth * 0.86
+    carousel.scrollBy({
+      left: direction === "next" ? amount : -amount,
+      behavior: "smooth",
+    })
+  }
+
   return (
     <>
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {apartments.map((apartment) => {
-          const images = getImages(apartment)
+      <div className="relative">
+        <div
+          ref={carouselRef}
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {apartments.map((apartment) => {
+            const images = getImages(apartment)
 
-          return (
-            <article
-              key={apartment.id}
-              className="overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
-                <Image
-                  src={images[0]}
-                  alt={apartment.title}
-                  fill
-                  sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  className="object-cover transition-transform duration-500 hover:scale-105"
-                />
-                <span className="absolute left-4 top-4 rounded-md bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
-                  {apartment.tag}
-                </span>
-                <span className="absolute right-4 top-4 rounded-md bg-white/90 px-3 py-1 text-xs font-bold text-emerald-900">
-                  {getStatusLabel(apartment.status)}
-                </span>
-              </div>
+            return (
+              <article
+                key={apartment.id}
+                className="w-[88%] shrink-0 snap-start overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 sm:w-[23rem] lg:w-[25rem]"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                  <Image
+                    src={images[0]}
+                    alt={apartment.title}
+                    fill
+                    sizes="(min-width: 1024px) 400px, (min-width: 640px) 368px, 88vw"
+                    className="object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <span className="absolute left-4 top-4 rounded-md bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">
+                    {apartment.tag}
+                  </span>
+                  <span className="absolute right-4 top-4 rounded-md bg-white/90 px-3 py-1 text-xs font-bold text-emerald-900">
+                    {getStatusLabel(apartment.status)}
+                  </span>
+                </div>
 
-              <div className="p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-slate-950">{apartment.title}</h3>
-                    <p className="mt-1 text-sm text-slate-500">{apartment.location || "Тоонот Эко Хотхон"}</p>
+                <div className="p-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="text-2xl font-bold text-slate-950">{apartment.title}</h3>
+                      <p className="mt-1 text-sm text-slate-500">{apartment.location || "Тоонот Эко Хотхон"}</p>
+                    </div>
+                    <Home className="h-6 w-6 shrink-0 text-primary" />
                   </div>
-                  <Home className="h-6 w-6 shrink-0 text-primary" />
-                </div>
 
-                <div className="mt-5 grid gap-3">
-                  <Fact icon={Ruler} label="Талбай" value={apartment.area} />
-                  <Fact icon={Wallet} label="1 м² үнэ" value={apartment.price} />
-                  <Fact icon={BedDouble} label="Нийт үнэ" value={apartment.total} highlight />
-                </div>
+                  <div className="mt-5 grid gap-3">
+                    <Fact icon={Ruler} label="Талбай" value={apartment.area} />
+                    <Fact icon={Wallet} label="1 м² үнэ" value={apartment.price} />
+                    <Fact icon={BedDouble} label="Нийт үнэ" value={apartment.total} highlight />
+                  </div>
 
-                <ApartmentDialog apartment={apartment} />
-              </div>
-            </article>
-          )
-        })}
+                  <div className="mt-6 grid gap-2 sm:grid-cols-2">
+                    <Button
+                      type="button"
+                      variant={selectedCompareIds.includes(apartment.id) ? "default" : "outline"}
+                      onClick={() => toggleCompare(apartment.id)}
+                      className="w-full border-2 border-emerald-700/45 shadow-sm dark:border-emerald-300/45"
+                    >
+                      <GitCompare className="h-4 w-4" />
+                      Харьцуулах
+                    </Button>
+                    <ApartmentDialog apartment={apartment} />
+                  </div>
+                </div>
+              </article>
+            )
+          })}
+        </div>
+
+        <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between md:flex">
+          <button
+            type="button"
+            onClick={() => scrollCarousel("previous")}
+            className="pointer-events-auto -ml-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-lg shadow-emerald-950/15 transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800"
+            aria-label="Өмнөх байр"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollCarousel("next")}
+            className="pointer-events-auto -mr-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-lg shadow-emerald-950/15 transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800"
+            aria-label="Дараах байр"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
+
+      <PriceCalculator apartments={apartments} />
+      <CompareApartments apartments={compareApartments} />
 
       <div id="price" className="mt-10 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
         <div className="border-b border-slate-200 p-5 sm:p-6">
@@ -104,7 +167,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="mt-6 w-full">
+        <Button className="w-full">
           <MessageCircle className="h-4 w-4" />
           Дэлгэрэнгүй харах
         </Button>
@@ -147,7 +210,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
           </div>
 
           <div className="rounded-lg border border-emerald-900/10 bg-emerald-50 p-4">
-            <h4 className="font-bold text-slate-950">Layout мэдээлэл</h4>
+            <h4 className="font-bold text-slate-950">План зургийн мэдээлэл</h4>
             <ul className="mt-3 grid gap-2 text-sm leading-7 text-slate-700">
               {(apartment.amenities?.length ? apartment.amenities : ["Зөв зохион байгуулалт", "Гэрэл сайн тусах цонх", "Төлбөрийн нөхцөл лавлах боломжтой"]).map(
                 (item) => (
@@ -169,6 +232,129 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
       </DialogContent>
     </Dialog>
   )
+}
+
+function PriceCalculator({ apartments }: { apartments: Apartment[] }) {
+  const [apartmentId, setApartmentId] = useState(apartments[0]?.id ?? "")
+  const [area, setArea] = useState(50)
+  const [pricePerSquare, setPricePerSquare] = useState(3200000)
+  const [downPayment, setDownPayment] = useState(30)
+  const [months, setMonths] = useState(120)
+
+  const apartment = apartments.find((item) => item.id === apartmentId)
+  const total = area * pricePerSquare
+  const loan = total * (1 - downPayment / 100)
+  const monthly = months > 0 ? loan / months : 0
+
+  return (
+    <section className="mt-10 rounded-lg border border-emerald-900/10 bg-white p-5 shadow-sm shadow-emerald-900/5 sm:p-6">
+      <div className="mb-5 flex items-center gap-3">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <Calculator className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold text-slate-950">Үнэ тооцоолуур</h3>
+          <p className="mt-1 text-sm text-slate-600">Ойролцоогоор төлбөрийн зураг гаргана.</p>
+        </div>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[1fr_0.8fr]">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="grid gap-2 text-sm font-semibold text-slate-700">
+            Байр
+            <select value={apartmentId} onChange={(event) => setApartmentId(event.target.value)} className="h-10 rounded-md border-2 border-emerald-700/45 bg-white px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-emerald-700 focus-visible:ring-2 focus-visible:ring-emerald-500/30 dark:border-emerald-300/45">
+              {apartments.map((item) => (
+                <option key={item.id} value={item.id}>{item.title}</option>
+              ))}
+            </select>
+          </label>
+          <NumberField label="Талбай м²" value={area} min={20} max={200} step={1} onChange={setArea} />
+          <NumberField label="1 м² үнэ" value={pricePerSquare} min={1000000} max={10000000} step={50000} onChange={setPricePerSquare} />
+          <NumberField label="Урьдчилгаа %" value={downPayment} min={0} max={100} step={5} onChange={setDownPayment} />
+          <NumberField label="Хугацаа / сар" value={months} min={1} max={360} step={12} onChange={setMonths} />
+        </div>
+
+        <div className="grid gap-3 rounded-lg bg-emerald-50 p-4">
+          <p className="text-sm font-semibold text-emerald-900">{apartment?.title ?? "Сонгосон байр"}</p>
+          <CalcRow label="Нийт үнэ" value={formatMoney(total)} />
+          <CalcRow label="Урьдчилгаа" value={formatMoney(total * (downPayment / 100))} />
+          <CalcRow label="Зээлийн дүн" value={formatMoney(loan)} />
+          <CalcRow label="Сарын төлөлт" value={formatMoney(monthly)} strong />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function CompareApartments({ apartments }: { apartments: Apartment[] }) {
+  if (apartments.length === 0) {
+    return null
+  }
+
+  return (
+    <section className="mt-10 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
+      <div className="border-b border-slate-200 p-5 sm:p-6">
+        <h3 className="flex items-center gap-2 text-2xl font-bold text-slate-950">
+          <GitCompare className="h-5 w-5 text-primary" />
+          Байр харьцуулах
+        </h3>
+        <p className="mt-2 text-sm text-slate-600">Дээд талын “Харьцуулах” товчоор 3 хүртэл байр сонгоно.</p>
+      </div>
+      <div className="grid divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
+        {apartments.map((apartment) => (
+          <div key={apartment.id} className="grid gap-3 p-5 sm:p-6">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-100">
+              <Image
+                src={getImages(apartment)[0]}
+                alt={apartment.title}
+                fill
+                sizes="(min-width: 768px) 33vw, 100vw"
+                className="object-cover"
+              />
+              <span className="absolute left-3 top-3 rounded-md bg-black/65 px-2 py-1 text-xs font-bold text-white">
+                {apartment.tag || getStatusLabel(apartment.status)}
+              </span>
+            </div>
+            <p className="text-lg font-bold text-slate-950">{apartment.title}</p>
+            <InfoBox label="Талбай" value={apartment.area} />
+            <InfoBox label="Үнэ" value={apartment.price} />
+            <InfoBox label="Нийт" value={apartment.total} />
+            <InfoBox label="Төлөв" value={getStatusLabel(apartment.status)} />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function NumberField({ label, value, min, max, step, onChange }: { label: string; value: number; min: number; max: number; step: number; onChange: (value: number) => void }) {
+  return (
+    <label className="grid gap-2 text-sm font-semibold text-slate-700">
+      {label}
+      <input
+        type="number"
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="h-10 rounded-md border-2 border-emerald-700/45 bg-white px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-emerald-700 focus-visible:ring-2 focus-visible:ring-emerald-500/30 dark:border-emerald-300/45"
+      />
+    </label>
+  )
+}
+
+function CalcRow({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-emerald-900/10 pb-2 last:border-0 last:pb-0">
+      <span className="text-sm text-slate-600">{label}</span>
+      <span className={strong ? "text-lg font-black text-emerald-800" : "font-bold text-slate-950"}>{value}</span>
+    </div>
+  )
+}
+
+function formatMoney(value: number) {
+  return `${Math.round(value).toLocaleString("mn-MN")} ₮`
 }
 
 function Fact({ icon: Icon, label, value, highlight }: { icon: typeof Ruler; label: string; value: string; highlight?: boolean }) {

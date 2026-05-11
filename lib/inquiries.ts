@@ -128,6 +128,22 @@ export async function createInquiry(inquiry: Inquiry) {
   }
 }
 
+export async function deleteInquiryById(id: string) {
+  const supabase = getSupabaseAdminClient()
+
+  if (!supabase) {
+    const inquiries = readLocalInquiries().filter((inquiry) => inquiry.id !== id)
+    await saveInquiries(inquiries)
+    return
+  }
+
+  const { error } = await supabase.from("inquiries").delete().eq("id", id)
+
+  if (error) {
+    throw new Error(`Failed to delete inquiry: ${error.message}`)
+  }
+}
+
 export async function getInquiriesByEmail(email?: string) {
   if (!email) {
     return []

@@ -5,49 +5,53 @@ import { submitInquiry } from "@/app/contact-actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import type { HomepageContent, IconKey } from "@/lib/homepage-content"
 
-const contactInfo = [
-  { icon: Phone, title: "Борлуулалтын утас", value: "+976 1111-1111", href: "tel:+97611111111" },
-  { icon: Mail, title: "И-мэйл", value: "info@ecotown.mn", href: "mailto:info@ecotown.mn" },
-  { icon: MapPin, title: "Байршил", value: "Улаанбаатар хот", href: "#location" },
-  { icon: Clock, title: "Ажлын цаг", value: "Даваа-Бямба: 09:00-18:00", href: "#contact" },
-]
+const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
+  clock: Clock,
+  mail: Mail,
+  map: MapPin,
+  phone: Phone,
+}
 
-export function Contact() {
+export function Contact({ content }: { content: HomepageContent["contact"] }) {
   return (
     <section id="contact" className="bg-slate-50 py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">Contact</p>
-            <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">Захиалга өгөх, дэлгэрэнгүй мэдээлэл авах</h2>
+            <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-primary">{content.eyebrow}</p>
+            <h2 className="text-3xl font-bold text-slate-950 text-balance md:text-4xl">{content.title}</h2>
             <p className="mt-5 leading-8 text-slate-600">
-              Сонгосон өрөөний төрөл, талбай, төлбөрийн нөхцөлөө үлдээгээрэй. Борлуулалтын баг таны хүсэлтийг Supabase дээр
-              хүлээн авч, admin хэсгээс хариу өгнө.
+              {content.description}
             </p>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {contactInfo.map((info) => (
+              {content.info.map((info) => {
+                const Icon = contactIcons[info.icon] ?? Phone
+
+                return (
                 <a key={info.title} href={info.href} className="flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                    <info.icon className="h-5 w-5" />
+                    <Icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-slate-500">{info.title}</p>
                     <p className="mt-1 break-words font-bold text-slate-950">{info.value}</p>
                   </div>
                 </a>
-              ))}
+                )
+              })}
             </div>
 
             <div id="location" className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
               <div className="flex items-center gap-3 border-b border-slate-200 p-4">
                 <MapPin className="h-5 w-5 text-primary" />
-                <h3 className="font-bold text-slate-950">Location map</h3>
+                <h3 className="font-bold text-slate-950">{content.mapTitle}</h3>
               </div>
               <iframe
                 title="Тоонот Эко Хотхон байршил"
-                src="https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                src={content.mapEmbedUrl}
                 className="h-72 w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -56,7 +60,7 @@ export function Contact() {
           </div>
 
           <div className="rounded-lg border border-emerald-900/10 bg-white p-5 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
-            <h3 className="mb-6 text-2xl font-bold text-slate-950">Захиалгын form</h3>
+            <h3 className="mb-6 text-2xl font-bold text-slate-950">{content.formTitle}</h3>
             <form action={submitInquiry} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Нэр">

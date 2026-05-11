@@ -1,10 +1,11 @@
-import { existsSync, readFileSync } from "node:fs"
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 import path from "node:path"
 import { cookies } from "next/headers"
+import { readBackendJson } from "@/lib/backend-json"
 
 export const USER_COOKIE_NAME = "toonot_user_session"
 export const usersPath = path.join(process.cwd(), "data", "users.json")
+const usersStoragePath = "auth/users.json"
 
 export type User = {
   id: string
@@ -93,22 +94,15 @@ export function getUserEmailFromSession(session?: string) {
   return payload.split(":")[0] || null
 }
 
-export function getUsersData(): UsersData {
-  if (!existsSync(usersPath)) {
-    return { users: [] }
-  }
-
-  try {
-    return JSON.parse(readFileSync(usersPath, "utf8")) as UsersData
-  } catch {
-    return { users: [] }
-  }
+export async function getUsersData(): Promise<UsersData> {
+  return readBackendJson(usersStoragePath, usersPath, { users: [] })
 }
 
-export function findUserByEmail(email: string) {
+export async function findUserByEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase()
+  const data = await getUsersData()
 
-  return getUsersData().users.find((user) => user.email.toLowerCase() === normalizedEmail) || null
+  return data.users.find((user) => user.email.toLowerCase() === normalizedEmail) || null
 }
 
 export async function getCurrentUser() {
@@ -121,3 +115,5 @@ export async function getCurrentUser() {
 
   return findUserByEmail(email)
 }
+
+export { usersStoragePath }
