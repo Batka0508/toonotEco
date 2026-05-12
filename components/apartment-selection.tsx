@@ -135,24 +135,8 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
         </div>
       </div>
 
-      <PriceCalculator apartments={apartments} />
+      <PriceCalculator />
       <CompareApartments apartments={compareApartments} />
-
-      <div id="price" className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 sm:mt-10">
-        <div className="border-b border-slate-200 p-5 sm:p-6">
-          <h3 className="text-xl font-bold text-slate-950 sm:text-2xl">Үнэ, м² товч мэдээлэл</h3>
-          <p className="mt-2 text-slate-600">Үнэ нь давхар, цонхны харц, төлбөрийн нөхцөлөөс хамаарч өөрчлөгдөж болно.</p>
-        </div>
-        <div className="grid divide-y divide-slate-200 md:grid-cols-3 md:divide-x md:divide-y-0">
-          {apartments.slice(0, 3).map((apartment) => (
-            <div key={apartment.id} className="p-5 sm:p-6">
-              <p className="text-sm font-medium text-slate-500">{apartment.title}</p>
-              <p className="mt-2 text-2xl font-bold text-slate-950">{apartment.price}</p>
-              <p className="mt-1 text-sm text-slate-600">{apartment.area}</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </>
   )
 }
@@ -240,14 +224,19 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
   )
 }
 
-function PriceCalculator({ apartments }: { apartments: Apartment[] }) {
-  const [apartmentId, setApartmentId] = useState(apartments[0]?.id ?? "")
+const calculatorApartments = [
+  { id: "two-room", title: "2 өрөө байр" },
+  { id: "three-room", title: "3 өрөө байр" },
+]
+
+function PriceCalculator() {
+  const [apartmentId, setApartmentId] = useState(calculatorApartments[0].id)
   const [area, setArea] = useState(50)
   const [pricePerSquare, setPricePerSquare] = useState(3200000)
   const [downPayment, setDownPayment] = useState(30)
   const [months, setMonths] = useState(120)
 
-  const apartment = apartments.find((item) => item.id === apartmentId)
+  const apartment = calculatorApartments.find((item) => item.id === apartmentId)
   const total = area * pricePerSquare
   const loan = total * (1 - downPayment / 100)
   const monthly = months > 0 ? loan / months : 0
@@ -269,7 +258,7 @@ function PriceCalculator({ apartments }: { apartments: Apartment[] }) {
           <label className="grid gap-2 text-sm font-semibold text-slate-700">
             Байр
             <select value={apartmentId} onChange={(event) => setApartmentId(event.target.value)} className="h-10 rounded-md border-2 border-emerald-700/45 bg-white px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-emerald-700 focus-visible:ring-2 focus-visible:ring-emerald-500/30 dark:border-emerald-300/45">
-              {apartments.map((item) => (
+              {calculatorApartments.map((item) => (
                 <option key={item.id} value={item.id}>{item.title}</option>
               ))}
             </select>

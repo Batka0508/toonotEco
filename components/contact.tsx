@@ -80,7 +80,6 @@ export function Contact({ content }: { content: HomepageContent["contact"] }) {
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <option value="">Сонгох...</option>
-                  <option value="1 өрөө байр">1 өрөө байр</option>
                   <option value="2 өрөө байр">2 өрөө байр</option>
                   <option value="3 өрөө байр">3 өрөө байр</option>
                   <option value="Төлбөрийн нөхцөл">Төлбөрийн нөхцөл</option>

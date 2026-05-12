@@ -138,10 +138,10 @@ export const defaultHomepageContent: HomepageContent = {
     items: [
       { icon: "dumbbell", title: "Фитнес", description: "Оршин суугчдад зориулсан дасгалын хэсэг, идэвхтэй амьдралын орчин.", image: "/images/gym.jpg" },
       { icon: "baby", title: "Хүүхдийн талбай", description: "Аюулгүй тоглоомын хэсэг, гэр бүлд ээлтэй гадна орчин.", image: "/images/garden.png" },
-      { icon: "baby", title: "Хүүхдийн цэцэрлэг", description: "Хотхон дотороо хүүхдийн цэцэрлэгтэй." },
-      { icon: "car", title: "Зогсоол", description: "Ил болон дулаан зогсоолын сонголт, ойлгомжтой хөдөлгөөний зохион байгуулалт." },
-      { icon: "shield", title: "Аюулгүй орчин", description: "Камерын хяналт, гэрэлтүүлэг, нэвтрэх хэсгийн зохион байгуулалт." },
-      { icon: "wifi", title: "Дэд бүтэц", description: "Интернэт, холбоо, өдөр тутмын хэрэгцээнд нийцсэн инженерийн шийдэл." },
+      { icon: "baby", title: "Хүүхдийн цэцэрлэг", description: "Хотхон дотороо хүүхдийн цэцэрлэгтэй.", image: "/garten.jpg" },
+      { icon: "car", title: "Зогсоол", description: "Ил болон дулаан зогсоолын сонголт, ойлгомжтой хөдөлгөөний зохион байгуулалт.", image: "/zogsool.jpg" },
+      { icon: "shield", title: "Аюулгүй орчин", description: "Камерын хяналт, гэрэлтүүлэг, нэвтрэх хэсгийн зохион байгуулалт.", image: "/dada.png" },
+      { icon: "dumbbell", title: "Спорт заал", description: "Оршин суугчдад зориулсан спорт заал, идэвхтэй амьдралын орчин.", image: "/zaal.jpg" },
     ],
   },
   gallery: {
@@ -216,13 +216,32 @@ function mergeArray<T>(value: unknown, fallback: T[]) {
   return Array.isArray(value) && value.length > 0 ? (value as T[]) : fallback
 }
 
+function mergeAmenityItems(value: unknown) {
+  const items = mergeArray(value, defaultHomepageContent.amenities.items)
+
+  return items.map((item) => {
+    if (item.title === "Дэд бүтэц") {
+      return {
+        ...item,
+        icon: "dumbbell" as const,
+        title: "Спорт заал",
+        description: "Оршин суугчдад зориулсан спорт заал, идэвхтэй амьдралын орчин.",
+        image: "/zaal.jpg",
+      }
+    }
+
+    const fallback = defaultHomepageContent.amenities.items.find((defaultItem) => defaultItem.title === item.title)
+    return fallback ? { ...fallback, ...item } : item
+  })
+}
+
 export function mergeHomepageContent(value: unknown): HomepageContent {
   const input = typeof value === "object" && value ? (value as Partial<HomepageContent>) : {}
 
   return {
     hero: { ...defaultHomepageContent.hero, ...input.hero, highlights: mergeArray(input.hero?.highlights, defaultHomepageContent.hero.highlights) },
     about: { ...defaultHomepageContent.about, ...input.about, paragraphs: mergeArray(input.about?.paragraphs, defaultHomepageContent.about.paragraphs), facts: mergeArray(input.about?.facts, defaultHomepageContent.about.facts) },
-    amenities: { ...defaultHomepageContent.amenities, ...input.amenities, items: mergeArray(input.amenities?.items, defaultHomepageContent.amenities.items) },
+    amenities: { ...defaultHomepageContent.amenities, ...input.amenities, items: mergeAmenityItems(input.amenities?.items) },
     gallery: { ...defaultHomepageContent.gallery, ...input.gallery, items: mergeArray(input.gallery?.items, defaultHomepageContent.gallery.items) },
     contact: { ...defaultHomepageContent.contact, ...input.contact, info: mergeArray(input.contact?.info, defaultHomepageContent.contact.info) },
     vrTour: {

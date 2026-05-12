@@ -11,7 +11,7 @@ export function getSupabaseAdminClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-  if (isPlaceholder(url) || isPlaceholder(key)) {
+  if (!url || !key || isPlaceholder(url) || isPlaceholder(key)) {
     return null
   }
 

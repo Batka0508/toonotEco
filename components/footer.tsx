@@ -6,7 +6,7 @@ const footerLinks = {
     { label: "Төслийн тухай", href: "#about" },
     { label: "Давуу тал", href: "#advantages" },
     { label: "Байрны сонголт", href: "#apartments" },
-    { label: "Үнэ", href: "#price" },
+    { label: "Үнэ", href: "#apartments" },
     { label: "Байршил", href: "#location" },
   ],
   apartments: [
@@ -26,17 +26,17 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-[linear-gradient(180deg,oklch(0.2_0.07_154)_0%,oklch(0.14_0.055_154)_100%)] text-background">
+    <footer className="bg-emerald-700 text-white">
       <div className="container mx-auto px-4 py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="mb-6 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-                <span className="text-xl font-bold text-primary-foreground">T</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
+                <span className="text-xl font-bold text-emerald-700">T</span>
               </div>
-              <span className="font-serif text-xl font-bold text-background">Тоонот Эко Хотхон</span>
+              <span className="font-serif text-xl font-bold text-white">Тоонот Эко Хотхон</span>
             </Link>
-            <p className="mb-6 leading-relaxed text-background/70">
+            <p className="mb-6 leading-relaxed text-emerald-50">
               Байрны сонголт, м2 үнэ, зураг, байршил, борлуулалтын мэдээллийг нэг дороос авах орон сууцны төсөл.
             </p>
             <div className="flex gap-4">
@@ -46,7 +46,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50/10 transition-colors hover:bg-primary hover:text-primary-foreground"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/15 text-white transition-colors hover:bg-white hover:text-emerald-700"
                   aria-label={social.label}
                 >
                   <social.icon className="h-5 w-5" />
@@ -60,7 +60,7 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.menu.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-background/70 transition-colors hover:text-background">
+                  <Link href={link.href} className="text-emerald-50 transition-colors hover:text-white">
                     {link.label}
                   </Link>
                 </li>
@@ -73,7 +73,7 @@ export function Footer() {
             <ul className="space-y-3">
               {footerLinks.apartments.map((link) => (
                 <li key={link.label}>
-                  <Link href={link.href} className="text-background/70 transition-colors hover:text-background">
+                  <Link href={link.href} className="text-emerald-50 transition-colors hover:text-white">
                     {link.label}
                   </Link>
                 </li>
@@ -83,15 +83,15 @@ export function Footer() {
 
           <div>
             <h4 className="mb-6 text-lg font-semibold">Холбоо барих</h4>
-            <ul className="space-y-3 text-background/70">
+            <ul className="space-y-3 text-emerald-50">
               <li>Улаанбаатар хот</li>
               <li>
-                <a href="tel:+97611111111" className="transition-colors hover:text-background">
+                <a href="tel:+97611111111" className="transition-colors hover:text-white">
                   +976 1111-1111
                 </a>
               </li>
               <li>
-                <a href="mailto:info@toonot-eco.mn" className="transition-colors hover:text-background">
+                <a href="mailto:info@toonot-eco.mn" className="transition-colors hover:text-white">
                   info@toonot-eco.mn
                 </a>
               </li>
@@ -99,15 +99,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-background/10 pt-8 md:flex-row">
-          <p className="text-sm text-background/50">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/20 pt-8 md:flex-row">
+          <p className="text-sm text-emerald-50/85">
             © {new Date().getFullYear()} Тоонот Эко Хотхон. Бүх эрх хуулиар хамгаалагдсан.
           </p>
-          <div className="flex gap-6 text-sm text-background/50">
-            <Link href="#contact" className="transition-colors hover:text-background">
+          <div className="flex gap-6 text-sm text-emerald-50/85">
+            <Link href="#contact" className="transition-colors hover:text-white">
               Борлуулалтын алба
             </Link>
-            <Link href="#price" className="transition-colors hover:text-background">
+            <Link href="#apartments" className="transition-colors hover:text-white">
               Үнийн мэдээлэл
             </Link>
           </div>

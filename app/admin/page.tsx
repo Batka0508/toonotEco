@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { BadgeDollarSign, BarChart3, Building2, ClipboardList, FilePenLine, Home, Info, Layers3, LayoutDashboard, LogOut, MapPin, Pencil, Plus, Ruler, Save, Tags, Trash2, UploadCloud } from "lucide-react"
+import { BarChart3, Building2, ClipboardList, FilePenLine, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
 import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
@@ -341,76 +341,58 @@ function PropertyForm({ title, property, action, cancelHref }: { title: string; 
       <CardContent>
         <form action={action} className="grid gap-5">
           {property.id && <input type="hidden" name="id" value={property.id} />}
-          <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
-            <FormPanel icon={Info} title="Товч мэдээлэл" description="Сайт дээр харагдах үндсэн гарчиг, ангилал, төлөв.">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Гарчиг *">
-                  <Input name="title" defaultValue={property.title} required className="h-11 bg-white" placeholder="A блок, 2 өрөө байр" />
-                </Field>
-                <Field label="Ангилал">
-                  <Input name="tag" defaultValue={property.tag} className="h-11 bg-white" placeholder="1 өрөө, 2 өрөө..." />
-                </Field>
-                <Field label="Төлөв">
-                  <select name="status" defaultValue={property.status ?? "available"} className="h-11 rounded-md border border-input bg-white px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
-                    <option value="available">Сул байгаа</option>
-                    <option value="reserved">Захиалгатай</option>
-                    <option value="sold">Зарагдсан</option>
-                  </select>
-                </Field>
-                <Field label="План зураг">
-                  <Input name="floorPlanImage" defaultValue={property.floorPlanImage} className="h-11 bg-white" placeholder="/images/floor-plan.jpg" />
-                </Field>
-              </div>
-            </FormPanel>
-
-            <FormPanel icon={BadgeDollarSign} title="Үнэ ба талбай" description="Үнэ, нийт үнэ, м² болон өрөөний мэдээлэл.">
-              <div className="grid gap-3 sm:grid-cols-2">
-                <MetricField icon={BadgeDollarSign} label="Үнэ *">
-                  <Input name="price" defaultValue={property.price} required className="h-12 border-emerald-200 bg-white text-base font-semibold" placeholder="₮ 3.2 сая/м²" />
-                </MetricField>
-                <MetricField icon={Tags} label="Нийт үнэ">
-                  <Input name="total" defaultValue={property.total} className="h-12 bg-white text-base font-semibold" placeholder="₮ 180 сая" />
-                </MetricField>
-                <MetricField icon={Ruler} label="Талбай *">
-                  <Input name="area" defaultValue={property.area} required className="h-12 border-emerald-200 bg-white text-base font-semibold" placeholder="56 м²" />
-                </MetricField>
-                <MetricField icon={Building2} label="Өрөөний тоо">
-                  <Input name="rooms" defaultValue={property.rooms} className="h-12 bg-white text-base font-semibold" placeholder="2" />
-                </MetricField>
-              </div>
-            </FormPanel>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Field label="Гарчиг *">
+              <Input name="title" defaultValue={property.title} required />
+            </Field>
+            <Field label="Ангилал">
+              <Input name="tag" defaultValue={property.tag} placeholder="1 өрөө, 2 өрөө..." />
+            </Field>
+            <Field label="Үнэ *">
+              <Input name="price" defaultValue={property.price} required />
+            </Field>
+            <Field label="Нийт үнэ">
+              <Input name="total" defaultValue={property.total} />
+            </Field>
+            <Field label="Байршил">
+              <Input name="location" defaultValue={property.location} />
+            </Field>
+            <Field label="Дүүрэг">
+              <Input name="district" defaultValue={property.district} />
+            </Field>
+            <Field label="Өрөөний тоо">
+              <Input name="rooms" defaultValue={property.rooms} />
+            </Field>
+            <Field label="Талбай *">
+              <Input name="area" defaultValue={property.area} required />
+            </Field>
+            <Field label="Давхар">
+              <Input name="floor" defaultValue={property.floor} />
+            </Field>
+            <Field label="Нийт давхар">
+              <Input name="totalFloors" defaultValue={property.totalFloors} />
+            </Field>
+            <Field label="Төлөв">
+              <select name="status" defaultValue={property.status ?? "available"} className="h-9 rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
+                <option value="available">Сул байгаа</option>
+                <option value="reserved">Захиалгатай</option>
+                <option value="sold">Зарагдсан</option>
+              </select>
+            </Field>
+            <Field label="План зураг">
+              <Input name="floorPlanImage" defaultValue={property.floorPlanImage} placeholder="/images/floor-plan.jpg" />
+            </Field>
           </div>
 
-          <FormPanel icon={MapPin} title="Байршил ба давхар" description="Байрны байршил, дүүрэг, давхрын мэдээлэл.">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Field label="Байршил">
-                <Input name="location" defaultValue={property.location} className="h-11 bg-white" />
-              </Field>
-              <Field label="Дүүрэг">
-                <Input name="district" defaultValue={property.district} className="h-11 bg-white" />
-              </Field>
-              <Field label="Давхар">
-                <Input name="floor" defaultValue={property.floor} className="h-11 bg-white" />
-              </Field>
-              <Field label="Нийт давхар">
-                <Input name="totalFloors" defaultValue={property.totalFloors} className="h-11 bg-white" />
-              </Field>
-            </div>
-          </FormPanel>
-
-          <FormPanel icon={Layers3} title="Дэлгэрэнгүй текст" description="Дэлгэрэнгүй дээр харагдах тайлбар, давуу тал, зурагны замууд.">
-            <div className="grid gap-4 lg:grid-cols-3">
-              <Field label="Тайлбар">
-                <Textarea name="description" defaultValue={property.description} rows={5} className="bg-white" placeholder="Байрны товч тайлбар..." />
-              </Field>
-              <Field label="Давуу талууд">
-                <Textarea name="amenities" defaultValue={(property.amenities ?? []).join("\n")} rows={5} className="bg-white" placeholder="Мөр бүрт нэг давуу тал" />
-              </Field>
-              <Field label="Зургийн замууд">
-                <Textarea name="images" defaultValue={images.join("\n")} rows={5} className="bg-white" placeholder="/images/project-1.jpg" />
-              </Field>
-            </div>
-          </FormPanel>
+          <Field label="Тайлбар">
+            <Textarea name="description" defaultValue={property.description} rows={4} />
+          </Field>
+          <Field label="Давуу талууд">
+            <Textarea name="amenities" defaultValue={(property.amenities ?? []).join("\n")} rows={4} />
+          </Field>
+          <Field label="Зургийн замууд">
+            <Textarea name="images" defaultValue={images.join("\n")} rows={4} placeholder="/images/project-1.jpg" />
+          </Field>
 
           <label className="grid gap-2 text-sm font-medium text-slate-800">
             Зураг upload
@@ -419,14 +401,7 @@ function PropertyForm({ title, property, action, cancelHref }: { title: string; 
                 <UploadCloud className="h-5 w-5" />
                 <span className="font-semibold">Олон зураг сонгож болно</span>
               </div>
-              <p className="mb-3 text-xs text-slate-600">Windows дээр Ctrl эсвэл Shift дарж олон зураг зэрэг сонгоно.</p>
-              <input
-                name="imageFiles"
-                type="file"
-                accept="image/*"
-                multiple
-                className="block w-full rounded-md border border-input bg-white px-3 py-2 text-xs shadow-sm file:mr-3 file:rounded-md file:border-0 file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white dark:bg-slate-900"
-              />
+              <Input name="imageFiles" type="file" accept="image/*" multiple className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
             </div>
           </label>
 
@@ -552,37 +527,6 @@ function PropertyRow({ property, compact = false }: { property: Apartment; compa
         <p className="truncate text-sm text-slate-600">{property.area} · {property.floor || "-"} / {property.totalFloors || "-"}</p>
       </div>
     </div>
-  )
-}
-
-function FormPanel({ icon: Icon, title, description, children }: { icon: typeof Home; title: string; description: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm shadow-slate-900/5">
-      <div className="mb-4 flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="min-w-0">
-          <h3 className="text-sm font-bold text-slate-950">{title}</h3>
-          <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
-        </div>
-      </div>
-      {children}
-    </section>
-  )
-}
-
-function MetricField({ icon: Icon, label, children }: { icon: typeof Home; label: string; children: React.ReactNode }) {
-  return (
-    <label className="grid gap-2 rounded-lg border border-slate-200 bg-white p-3 text-sm font-semibold text-slate-800 shadow-xs">
-      <span className="flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-slate-100 text-slate-700">
-          <Icon className="h-4 w-4" />
-        </span>
-        {label}
-      </span>
-      {children}
-    </label>
   )
 }
 
