@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { assertWritableBackend } from "@/lib/backend-json"
 import { getSupabaseAdminClient } from "@/lib/supabase"
 
 const BUCKET_NAME = "property-images"
@@ -61,6 +62,7 @@ export async function uploadPropertyImages(files: FormDataEntryValue[], prefix: 
       continue
     }
 
+    assertWritableBackend()
     const publicPath = path.join(process.cwd(), "public", "images", filename)
     await mkdir(path.dirname(publicPath), { recursive: true })
     await writeFile(publicPath, buffer)

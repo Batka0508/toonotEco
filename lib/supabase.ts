@@ -1,5 +1,9 @@
 import { createClient } from "@supabase/supabase-js"
 
+function isPlaceholder(value?: string) {
+  return !value || value.includes("your-project") || value.startsWith("your-")
+}
+
 export function getSupabaseAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key =
@@ -7,7 +11,7 @@ export function getSupabaseAdminClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
-  if (!url || !key) {
+  if (isPlaceholder(url) || isPlaceholder(key)) {
     return null
   }
 

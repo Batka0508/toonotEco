@@ -5,6 +5,20 @@ import { getSupabaseAdminClient } from "@/lib/supabase"
 
 const BUCKET_NAME = "site-content"
 
+export function canWriteLocalFiles() {
+  return process.env.NODE_ENV !== "production" && process.env.VERCEL !== "1"
+}
+
+export function assertWritableBackend() {
+  if (canWriteLocalFiles()) {
+    return
+  }
+
+  throw new Error(
+    "Persistent storage is not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in Vercel.",
+  )
+}
+
 export function readLocalJson<T>(localPath: string, fallback: T): T {
   if (!existsSync(localPath)) {
     return fallback
@@ -41,10 +55,10 @@ export async function writeBackendJson<T>(storagePath: string, localPath: string
   const json = `${JSON.stringify(data, null, 2)}\n`
   const supabase = getSupabaseAdminClient()
 
-  await mkdir(path.dirname(localPath), { recursive: true })
-  await writeFile(localPath, json, "utf8")
-
   if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    assertWritableBackend()
+    await mkdir(path.dirname(localPath), { recursive: true })
+    await writeFile(localPath, json, "utf8")
     return
   }
 
@@ -65,5 +79,10 @@ export async function writeBackendJson<T>(storagePath: string, localPath: string
 
   if (error) {
     throw new Error(`Failed to save ${storagePath}: ${error.message}`)
+  }
+
+  if (canWriteLocalFiles()) {
+    await mkdir(path.dirname(localPath), { recursive: true })
+    await writeFile(localPath, json, "utf8")
   }
 }

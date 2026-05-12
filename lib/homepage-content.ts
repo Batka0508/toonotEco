@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { assertWritableBackend, canWriteLocalFiles } from "@/lib/backend-json"
 import { getSupabaseAdminClient } from "@/lib/supabase"
 
 export type IconKey =
@@ -260,6 +261,7 @@ export async function saveHomepageContent(content: HomepageContent) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    assertWritableBackend()
     await mkdir(path.dirname(homepageContentPath), { recursive: true })
     await writeFile(homepageContentPath, json, "utf8")
     return
@@ -282,5 +284,10 @@ export async function saveHomepageContent(content: HomepageContent) {
 
   if (error) {
     throw new Error(`Failed to save homepage content: ${error.message}`)
+  }
+
+  if (canWriteLocalFiles()) {
+    await mkdir(path.dirname(homepageContentPath), { recursive: true })
+    await writeFile(homepageContentPath, json, "utf8")
   }
 }

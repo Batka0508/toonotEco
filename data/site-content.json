@@ -1,33 +1,29 @@
 {
   "apartments": [
     {
-      "id": "one-room",
-      "title": "1 өрөө байр",
-      "description": "Ганц хүн болон залуу хосуудад тохиромжтой compact layout.",
-      "price": "3.4 сая/м²-с",
-      "location": "Тоонот Эко Хотхон",
-      "district": "Улаанбаатар хот",
-      "rooms": "1",
-      "area": "38-42 м²",
-      "floor": "3-16 давхар",
-      "totalFloors": "16",
+      "id": "dwq",
+      "title": "dwq",
+      "description": "eqw",
+      "price": "4,7 сая/м2-с",
+      "location": "Нисэх",
+      "district": "Хан уул дүүрэг",
+      "rooms": "5өрөө",
+      "area": "70м2",
+      "floor": "12давхар",
+      "totalFloors": "1",
       "status": "available",
       "images": [
-        "/images/project-1.jpg",
-        "/images/apartment-two-room-1777368424773.jpg",
-        "/images/project-2.jpg"
+        "/images/dwq-1778567130695-0.png"
       ],
-      "image": "/images/project-1.jpg",
+      "image": "/images/dwq-1778567130695-0.png",
       "floorPlanImage": "",
       "amenities": [
-        "Нээлттэй гал тогоо, зочны хэсэг",
-        "Compact боловч ашигтай талбайтай",
-        "Анхны байр худалдан авагчдад тохиромжтой"
+        "eqeqw"
       ],
-      "total": "129 саяас",
-      "tag": "1 өрөө",
-      "createdAt": "2026-05-07T00:00:00.000Z",
-      "updatedAt": "2026-05-07T00:00:00.000Z"
+      "total": "275сая",
+      "tag": "wq",
+      "createdAt": "2026-05-12T06:25:30.693Z",
+      "updatedAt": "2026-05-12T06:25:30.693Z"
     },
     {
       "id": "two-room",

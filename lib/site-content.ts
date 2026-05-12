@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { assertWritableBackend } from "@/lib/backend-json"
 import { getSupabaseAdminClient } from "@/lib/supabase"
 
 export type Apartment = {
@@ -205,6 +206,7 @@ export async function saveSiteContent(content: SiteContent) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
+    assertWritableBackend()
     await mkdir(path.dirname(siteContentPath), { recursive: true })
     await writeFile(siteContentPath, JSON.stringify(content, null, 2), "utf8")
     return
@@ -222,6 +224,7 @@ export async function deleteApartmentById(id: string) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
+    assertWritableBackend()
     const content = readLocalSiteContent()
     content.apartments = content.apartments.filter((item) => item.id !== id)
     await saveSiteContent(content)

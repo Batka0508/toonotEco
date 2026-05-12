@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
+import { assertWritableBackend } from "@/lib/backend-json"
 import { getSupabaseAdminClient } from "@/lib/supabase"
 
 export type Inquiry = {
@@ -99,6 +100,7 @@ export async function saveInquiries(inquiries: Inquiry[]) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
+    assertWritableBackend()
     await mkdir(path.dirname(inquiriesPath), { recursive: true })
     await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), "utf8")
     return
@@ -115,6 +117,7 @@ export async function createInquiry(inquiry: Inquiry) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
+    assertWritableBackend()
     const inquiries = readLocalInquiries()
     inquiries.unshift(inquiry)
     await saveInquiries(inquiries)
@@ -132,6 +135,7 @@ export async function deleteInquiryById(id: string) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
+    assertWritableBackend()
     const inquiries = readLocalInquiries().filter((inquiry) => inquiry.id !== id)
     await saveInquiries(inquiries)
     return
