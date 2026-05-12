@@ -28,6 +28,34 @@ function getUserSessionSecret() {
   return process.env.USER_SESSION_SECRET || "toonot-eco-user-dev-secret"
 }
 
+function getAdminEmails() {
+  return (process.env.ADMIN_EMAILS ?? "")
+    .split(",")
+    .map((email) => email.trim().toLowerCase())
+    .filter(Boolean)
+}
+
+function getAdminPassword() {
+  return process.env.ADMIN_PASSWORD || "admin123"
+}
+
+function getBootstrapAdminUser(email: string): User | null {
+  const normalizedEmail = email.trim().toLowerCase()
+
+  if (!getAdminEmails().includes(normalizedEmail)) {
+    return null
+  }
+
+  return {
+    id: `admin-${normalizedEmail}`,
+    name: "Admin",
+    email: normalizedEmail,
+    phone: "",
+    passwordHash: hashPassword(getAdminPassword()),
+    createdAt: new Date(0).toISOString(),
+  }
+}
+
 function sign(value: string) {
   return createHmac("sha256", getUserSessionSecret()).update(value).digest("hex")
 }
@@ -108,7 +136,7 @@ export async function findUserByEmail(email: string) {
   const normalizedEmail = email.trim().toLowerCase()
   const data = await getUsersData()
 
-  return data.users.find((user) => user.email.toLowerCase() === normalizedEmail) || null
+  return data.users.find((user) => user.email.toLowerCase() === normalizedEmail) || getBootstrapAdminUser(normalizedEmail)
 }
 
 export async function getCurrentUser() {

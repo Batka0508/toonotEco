@@ -36,6 +36,10 @@ function getAdminEmails() {
     .filter(Boolean)
 }
 
+function getAdminPassword() {
+  return process.env.ADMIN_PASSWORD || "admin123"
+}
+
 async function saveUsers(data: UsersData) {
   await writeBackendJson(usersStoragePath, usersPath, data)
 }
@@ -93,7 +97,7 @@ export async function loginUser(formData: FormData) {
   const loginPath = redirectTo ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login"
   let user = await findUserByEmail(email)
 
-  if (!user && redirectTo === "/admin" && getAdminEmails().includes(email) && password === "admin123") {
+  if (!user && redirectTo === "/admin" && getAdminEmails().includes(email) && password === getAdminPassword()) {
     const data = await getUsersData()
     user = {
       id: crypto.randomUUID(),
@@ -107,7 +111,9 @@ export async function loginUser(formData: FormData) {
     await saveUsers(data)
   }
 
-  if (!user || !verifyPassword(password, user.passwordHash)) {
+  const isAdminPasswordLogin = redirectTo === "/admin" && getAdminEmails().includes(email) && password === getAdminPassword()
+
+  if (!user || (!isAdminPasswordLogin && !verifyPassword(password, user.passwordHash))) {
     redirect(`${loginPath}${loginPath.includes("?") ? "&" : "?"}error=1`)
   }
 
