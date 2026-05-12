@@ -27,6 +27,10 @@ function parseAmenities(value: string) {
     .filter(Boolean)
 }
 
+function getUploadedImageFiles(formData: FormData) {
+  return [...formData.getAll("imageFiles"), ...formData.getAll("imageFiles[]")]
+}
+
 function slugify(value: string) {
   const slug = value
     .toLowerCase()
@@ -125,7 +129,7 @@ export async function updateApartment(formData: FormData) {
     redirect("/admin?view=properties&error=validation")
   }
 
-  const uploadedImages = await uploadPropertyImages(formData.getAll("imageFiles"), apartment.id)
+  const uploadedImages = await uploadPropertyImages(getUploadedImageFiles(formData), apartment.id)
   if (uploadedImages.length > 0) {
     nextApartment.images = [...getApartmentImages(nextApartment), ...uploadedImages]
     nextApartment.image = nextApartment.images[0]
@@ -153,7 +157,7 @@ export async function createApartment(formData: FormData) {
     apartment.id = `${apartment.id}-${Date.now()}`
   }
 
-  const uploadedImages = await uploadPropertyImages(formData.getAll("imageFiles"), apartment.id)
+  const uploadedImages = await uploadPropertyImages(getUploadedImageFiles(formData), apartment.id)
   if (uploadedImages.length > 0) {
     apartment.images = uploadedImages
     apartment.image = uploadedImages[0]

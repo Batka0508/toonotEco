@@ -41,9 +41,10 @@ export async function writeBackendJson<T>(storagePath: string, localPath: string
   const json = `${JSON.stringify(data, null, 2)}\n`
   const supabase = getSupabaseAdminClient()
 
+  await mkdir(path.dirname(localPath), { recursive: true })
+  await writeFile(localPath, json, "utf8")
+
   if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    await mkdir(path.dirname(localPath), { recursive: true })
-    await writeFile(localPath, json, "utf8")
     return
   }
 

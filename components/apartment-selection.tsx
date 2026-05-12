@@ -3,7 +3,7 @@
 import { useRef, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { BedDouble, Calculator, CheckCircle2, ChevronLeft, ChevronRight, GitCompare, Home, MessageCircle, Ruler, Wallet } from "lucide-react"
+import { Banknote, BedDouble, Calculator, CheckCircle2, ChevronLeft, ChevronRight, GitCompare, Home, MessageCircle, Percent, Ruler, TrendingUp, Wallet } from "lucide-react"
 import type { Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -160,6 +160,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
 function ApartmentDialog({ apartment }: { apartment: Apartment }) {
   const images = getImages(apartment)
   const [activeImage, setActiveImage] = useState(0)
+  const activeImageUrl = images[activeImage]?.replace(/"/g, "%22") ?? "/placeholder.jpg"
 
   const goPrevious = () => setActiveImage((value) => (value === 0 ? images.length - 1 : value - 1))
   const goNext = () => setActiveImage((value) => (value === images.length - 1 ? 0 : value + 1))
@@ -174,7 +175,12 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
       </DialogTrigger>
       <DialogContent className="max-h-[92svh] w-[calc(100vw-1rem)] overflow-y-auto p-0 sm:max-w-4xl">
         <div className="relative aspect-[4/3] min-h-[220px] bg-slate-950 sm:aspect-[16/10] sm:min-h-[280px]">
-          <Image src={images[activeImage]} alt={apartment.title} fill sizes="(min-width: 768px) 896px, 100vw" className="object-contain" />
+          <div
+            role="img"
+            aria-label={apartment.title}
+            className="absolute inset-0 bg-contain bg-center bg-no-repeat"
+            style={{ backgroundImage: `url("${activeImageUrl}")` }}
+          />
           {images.length > 1 && (
             <>
               <button
@@ -274,12 +280,35 @@ function PriceCalculator({ apartments }: { apartments: Apartment[] }) {
           <NumberField label="Хугацаа / сар" value={months} min={1} max={360} step={12} onChange={setMonths} />
         </div>
 
-        <div className="grid gap-3 rounded-lg bg-emerald-50 p-4">
-          <p className="text-sm font-semibold text-emerald-900">{apartment?.title ?? "Сонгосон байр"}</p>
-          <CalcRow label="Нийт үнэ" value={formatMoney(total)} />
-          <CalcRow label="Урьдчилгаа" value={formatMoney(total * (downPayment / 100))} />
-          <CalcRow label="Зээлийн дүн" value={formatMoney(loan)} />
-          <CalcRow label="Сарын төлөлт" value={formatMoney(monthly)} strong />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <CalcMetricCard
+            title="Нийт үнэ"
+            value={formatMoney(total)}
+            note={apartment?.title ?? "Сонгосон байр"}
+            icon={Banknote}
+            tone="dark"
+          />
+          <CalcMetricCard
+            title="Урьдчилгаа"
+            value={formatMoney(total * (downPayment / 100))}
+            note={`${downPayment}% төлбөр`}
+            icon={Percent}
+            accent="text-blue-600"
+          />
+          <CalcMetricCard
+            title="Зээлийн дүн"
+            value={formatMoney(loan)}
+            note={`${months} сарын хугацаа`}
+            icon={Wallet}
+            accent="text-amber-500"
+          />
+          <CalcMetricCard
+            title="Сарын төлөлт"
+            value={formatMoney(monthly)}
+            note="Ойролцоогоор"
+            icon={TrendingUp}
+            accent="text-emerald-600"
+          />
         </div>
       </div>
     </section>
@@ -344,11 +373,52 @@ function NumberField({ label, value, min, max, step, onChange }: { label: string
   )
 }
 
-function CalcRow({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
+function CalcMetricCard({
+  title,
+  value,
+  note,
+  icon: Icon,
+  tone,
+  accent = "text-sky-600",
+}: {
+  title: string
+  value: string
+  note: string
+  icon: typeof Wallet
+  tone?: "dark"
+  accent?: string
+}) {
+  const dark = tone === "dark"
+
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-emerald-900/10 pb-2 last:border-0 last:pb-0">
-      <span className="text-sm text-slate-600">{label}</span>
-      <span className={strong ? "text-lg font-black text-emerald-800" : "font-bold text-slate-950"}>{value}</span>
+    <div
+      className={[
+        "min-h-[10.5rem] rounded-2xl border p-4 shadow-sm",
+        dark
+          ? "border-slate-950 bg-slate-900 text-white shadow-slate-900/20"
+          : "border-slate-200 bg-[#f0eef8] text-slate-950 shadow-slate-900/10 dark:border-white/10 dark:bg-slate-900",
+      ].join(" ")}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <h4 className={dark ? "max-w-[8rem] text-lg font-black leading-tight text-white" : "max-w-[8rem] text-lg font-black leading-tight text-slate-950 dark:text-white"}>
+          {title}
+        </h4>
+        <Icon className={dark ? "h-8 w-8 text-lime-300" : `h-8 w-8 ${accent}`} />
+      </div>
+
+      <div className="mt-6 flex justify-end">
+        <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-black text-emerald-700">
+          ↑ 100.0%
+        </span>
+      </div>
+
+      <p className={dark ? "mt-3 text-right text-2xl font-black text-lime-300" : `mt-3 text-right text-2xl font-black ${accent}`}>
+        {value}
+      </p>
+
+      <div className={dark ? "mt-4 border-t border-white/70 pt-3 text-right text-sm font-bold text-white" : "mt-4 border-t border-slate-200 pt-3 text-right text-sm font-bold text-slate-950 dark:border-white/10 dark:text-white"}>
+        {note}
+      </div>
     </div>
   )
 }

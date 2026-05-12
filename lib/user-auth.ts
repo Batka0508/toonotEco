@@ -1,7 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 import path from "node:path"
 import { cookies } from "next/headers"
-import { readBackendJson } from "@/lib/backend-json"
+import { readBackendJson, readLocalJson } from "@/lib/backend-json"
 
 export const USER_COOKIE_NAME = "toonot_user_session"
 export const usersPath = path.join(process.cwd(), "data", "users.json")
@@ -95,6 +95,12 @@ export function getUserEmailFromSession(session?: string) {
 }
 
 export async function getUsersData(): Promise<UsersData> {
+  const localUsers = readLocalJson<UsersData>(usersPath, { users: [] })
+
+  if (localUsers.users.length > 0) {
+    return localUsers
+  }
+
   return readBackendJson(usersStoragePath, usersPath, { users: [] })
 }
 
