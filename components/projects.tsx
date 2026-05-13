@@ -2,10 +2,13 @@ import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getSiteContent } from "@/lib/site-content"
+import { getGarages } from "@/lib/garages"
 import { ApartmentSelection } from "@/components/apartment-selection"
+import { GarageSales } from "@/components/garage-sales"
 
 export async function Projects() {
   const { apartments } = await getSiteContent()
+  const garages = await getGarages()
 
   return (
     <section id="apartments" className="bg-slate-50 py-16 md:py-24">
@@ -25,6 +28,7 @@ export async function Projects() {
         </div>
 
         <ApartmentSelection apartments={apartments} />
+        <GarageSales garages={garages} />
       </div>
     </section>
   )

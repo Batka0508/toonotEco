@@ -3,6 +3,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { BarChart3, Building2, ClipboardList, FilePenLine, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
 import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
+import { garageBlocks, getGarages, type Garage } from "@/lib/garages"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
 import { getApartmentImages, getSiteContent, type Apartment } from "@/lib/site-content"
@@ -13,9 +14,9 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { logoutUser } from "@/app/(user-auth)/actions"
-import { createApartment, deleteApartment, deleteInquiry, replyInquiry, updateApartment, updateHomepageContent, updateInquiryStatus } from "./actions"
+import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, replyInquiry, updateApartment, updateGarage, updateHomepageContent, updateInquiryStatus } from "./actions"
 
-type AdminView = "dashboard" | "properties" | "add" | "requests" | "content"
+type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "content"
 
 type AdminPageProps = {
   searchParams: Promise<{ view?: string; edit?: string; error?: string; saved?: string }>
@@ -51,6 +52,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const view = parseView(params.view)
   const { apartments } = await getSiteContent()
+  const garages = await getGarages()
   const inquiries = await getInquiries()
   const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
@@ -77,6 +79,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <NavItem href="/admin" icon={LayoutDashboard} active={view === "dashboard"} label="Хянах самбар" />
             <NavItem href="/admin?view=properties" icon={Building2} active={view === "properties"} label="Байрууд" />
             <NavItem href="/admin?view=add" icon={Plus} active={view === "add"} label="Байр нэмэх" />
+            <NavItem href="/admin?view=garages" icon={Home} active={view === "garages"} label="Гарааш" />
             <NavItem href="/admin?view=requests" icon={ClipboardList} active={view === "requests"} label="Хүсэлтүүд" count={newRequests} />
             <NavItem href="/admin?view=content" icon={FilePenLine} active={view === "content"} label="Сайт засах" />
           </nav>
@@ -115,6 +118,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
           {params.saved === "1" && <Notice tone="success">Амжилттай хадгалагдлаа.</Notice>}
           {params.error === "validation" && <Notice tone="error">Гарчиг, үнэ, талбай заавал бөглөнө үү.</Notice>}
+          {params.error === "storage" && <Notice tone="error">Supabase тохиргоо эсвэл garages хүснэгт бэлэн биш байна.</Notice>}
 
           {view === "dashboard" && <Dashboard apartments={apartments} inquiries={inquiries} />}
           {view === "properties" && (
@@ -124,6 +128,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             </div>
           )}
           {view === "add" && <PropertyForm title="Байр нэмэх" property={emptyProperty} action={createApartment} cancelHref="/admin?view=properties" />}
+          {view === "garages" && <GaragesAdmin garages={garages} editGarageId={params.edit} />}
           {view === "requests" && <RequestsTable inquiries={inquiries} properties={apartments} />}
           {view === "content" && homepageContent && <HomepageContentEditor content={homepageContent} />}
         </section>
@@ -324,6 +329,169 @@ function PropertiesTable({ properties }: { properties: Apartment[] }) {
             ))}
           </TableBody>
         </Table>
+      </CardContent>
+    </Card>
+  )
+}
+
+function GaragesAdmin({ garages, editGarageId }: { garages: Garage[]; editGarageId?: string }) {
+  const nextGarageNumber = getNextGarageNumber(garages)
+  const editGarage = garages.find((garage) => garage.id === editGarageId)
+
+  return (
+    <div className="grid gap-6">
+      {editGarage && <GarageForm title="Гарааш засах" garage={editGarage} action={updateGarage} cancelHref="/admin?view=garages" />}
+      <GarageForm
+        title="Гарааш нэмэх"
+        garage={{
+          id: "",
+          block: "A блок",
+          number: nextGarageNumber,
+          floor: "B1 давхар",
+          area: "18 м²",
+          price: "45 сая ₮",
+          status: "available",
+          image: "/zogsool.jpg",
+        }}
+        action={createGarage}
+        cancelHref="/admin?view=garages"
+      />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Гараашны жагсаалт</CardTitle>
+          <CardDescription>Гарааш худалдаа хэсэгт харагдах A, B, C блокийн card-ууд.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Дугаар</TableHead>
+                <TableHead>Блок</TableHead>
+                <TableHead>Давхар</TableHead>
+                <TableHead>Талбай</TableHead>
+                <TableHead>Үнэ</TableHead>
+                <TableHead>Төлөв</TableHead>
+                <TableHead className="text-right">Үйлдэл</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {garages.map((garage) => (
+                <TableRow key={garage.id}>
+                  <TableCell className="font-semibold">{garage.number}</TableCell>
+                  <TableCell>{garage.block}</TableCell>
+                  <TableCell>{garage.floor}</TableCell>
+                  <TableCell>{garage.area}</TableCell>
+                  <TableCell>{garage.price}</TableCell>
+                  <TableCell>
+                    <GarageStatusBadge status={garage.status} />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex justify-end gap-2">
+                      <Button asChild size="sm" variant="outline">
+                        <Link href={`/admin?view=garages&edit=${garage.id}`}>
+                          <Pencil className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <form action={deleteGarage}>
+                        <input type="hidden" name="id" value={garage.id} />
+                        <Button type="submit" size="sm" variant="outline" className="text-red-700 hover:text-red-800">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </form>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
+function getNextGarageNumber(garages: Garage[]) {
+  const nextIndex =
+    garages
+      .filter((garage) => garage.block === "A блок")
+      .map((garage) => Number(garage.number.match(/\d+$/)?.[0] ?? 0))
+      .reduce((max, value) => Math.max(max, value), 0) + 1
+
+  return `A-G${String(nextIndex).padStart(2, "0")}`
+}
+
+function GarageForm({ title, garage, action, cancelHref }: { title: string; garage: Garage; action: (formData: FormData) => Promise<void>; cancelHref: string }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>Зураг upload хийвэл гараашны “Харах” modal дээр харагдана.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form action={action} autoComplete="off" className="grid gap-4">
+          {garage.id && (
+            <>
+              <input type="hidden" name="id" value={garage.id} />
+              <input type="hidden" name="currentImage" value={garage.image} />
+              <input type="hidden" name="createdAt" value={garage.createdAt ?? ""} />
+            </>
+          )}
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Field label="Блок">
+              <select name="block" defaultValue={garage.block} autoComplete="off" className="h-10 rounded-md border border-input bg-white px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
+                {garageBlocks.map((block) => (
+                  <option key={block} value={block}>{block}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Гараашны дугаар *">
+              <Input name="number" required defaultValue={garage.number} autoComplete="off" placeholder="A-G03" />
+            </Field>
+            <Field label="Давхар *">
+              <Input name="floor" required defaultValue={garage.floor} autoComplete="off" placeholder="B1 давхар" />
+            </Field>
+            <Field label="Талбай *">
+              <Input name="area" required defaultValue={garage.area} autoComplete="off" placeholder="18 м²" />
+            </Field>
+            <Field label="Үнэ *">
+              <Input name="price" required defaultValue={garage.price} autoComplete="off" placeholder="45 сая ₮" />
+            </Field>
+            <Field label="Төлөв">
+              <select name="status" defaultValue={garage.status} autoComplete="off" className="h-10 rounded-md border border-input bg-white px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50">
+                <option value="available">Сул</option>
+                <option value="reserved">Захиалгатай</option>
+                <option value="sold">Зарагдсан</option>
+              </select>
+            </Field>
+            <Field label="Зургийн зам">
+              <Input name="image" defaultValue={garage.image} autoComplete="off" placeholder="/zogsool.jpg" />
+            </Field>
+          </div>
+
+          <label className="grid gap-2 text-sm font-medium text-slate-800">
+            Зураг upload
+            <div className="rounded-lg border border-dashed border-emerald-300 bg-emerald-50 p-4">
+              <div className="mb-3 flex items-center gap-2 text-emerald-800">
+                <UploadCloud className="h-5 w-5" />
+                <span className="font-semibold">Гараашны зураг сонгох</span>
+              </div>
+              <Input name="imageFiles" type="file" accept="image/*" className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
+            </div>
+          </label>
+
+          <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+            {garage.id && (
+              <Button asChild type="button" variant="outline">
+                <Link href={cancelHref}>Болих</Link>
+              </Button>
+            )}
+            <Button type="submit">
+              <Save className="h-4 w-4" />
+              Гарааш хадгалах
+            </Button>
+          </div>
+        </form>
       </CardContent>
     </Card>
   )
@@ -579,6 +747,21 @@ function PropertyStatusBadge({ status }: { status: NonNullable<Apartment["status
   return <span className={`rounded px-2 py-1 text-xs font-semibold ${classes}`}>{labels[status]}</span>
 }
 
+function GarageStatusBadge({ status }: { status: Garage["status"] }) {
+  const classes = {
+    available: "bg-emerald-100 text-emerald-800",
+    reserved: "bg-amber-100 text-amber-800",
+    sold: "bg-red-100 text-red-800",
+  }[status]
+  const labels = {
+    available: "Сул",
+    reserved: "Захиалгатай",
+    sold: "Зарагдсан",
+  }[status]
+
+  return <span className={`rounded px-2 py-1 text-xs font-semibold ${classes}`}>{labels}</span>
+}
+
 function StatusBadge({ status }: { status: "new" | "contacted" | "closed" }) {
   const classes = {
     new: "bg-emerald-100 text-emerald-800",
@@ -599,7 +782,7 @@ function normalizeInquiryStatus(status: Inquiry["status"]) {
 }
 
 function parseView(view?: string): AdminView {
-  if (view === "properties" || view === "add" || view === "requests" || view === "content") {
+  if (view === "properties" || view === "add" || view === "garages" || view === "requests" || view === "content") {
     return view
   }
 
@@ -611,6 +794,7 @@ function getViewTitle(view: AdminView) {
     dashboard: "Хянах самбар",
     properties: "Байруудын удирдлага",
     add: "Байр нэмэх",
+    garages: "Гарааш худалдаа",
     requests: "Хүсэлтүүд",
     content: "Сайт засах",
   }[view]

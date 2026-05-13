@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/admin-auth"
 import { sendEmail } from "@/lib/email"
+import { deleteGarageById, saveGarage, type Garage, type GarageBlock, type GarageStatus } from "@/lib/garages"
 import { mergeHomepageContent, saveHomepageContent } from "@/lib/homepage-content"
 import { deleteInquiryById, getInquiries, saveInquiries, type Inquiry } from "@/lib/inquiries"
 import { uploadPropertyImages } from "@/lib/property-images"
@@ -57,6 +58,22 @@ function parseInquiryStatus(value: string): Inquiry["status"] {
   return "new"
 }
 
+function parseGarageBlock(value: string): GarageBlock {
+  if (value === "B блок" || value === "C блок") {
+    return value
+  }
+
+  return "A блок"
+}
+
+function parseGarageStatus(value: string): GarageStatus {
+  if (value === "reserved" || value === "sold") {
+    return value
+  }
+
+  return "available"
+}
+
 async function saveContent(content: SiteContent) {
   await saveSiteContent(content)
 
@@ -97,6 +114,31 @@ function readPropertyForm(formData: FormData, current?: Apartment): Apartment {
     amenities: parseAmenities(clean(formData.get("amenities"))),
     total: total || current?.total || price,
     tag: clean(formData.get("tag")) || current?.tag || "Байр",
+    createdAt: current?.createdAt ?? now,
+    updatedAt: now,
+  }
+}
+
+function readGarageForm(formData: FormData, current?: Garage): Garage {
+  const now = new Date().toISOString()
+  const number = clean(formData.get("number"))
+  const floor = clean(formData.get("floor"))
+  const area = clean(formData.get("area"))
+  const price = clean(formData.get("price"))
+
+  if (!number || !floor || !area || !price) {
+    throw new Error("required")
+  }
+
+  return {
+    id: current?.id ?? slugify(number),
+    block: parseGarageBlock(clean(formData.get("block"))),
+    number,
+    floor,
+    area,
+    price,
+    status: parseGarageStatus(clean(formData.get("status"))),
+    image: clean(formData.get("image")) || current?.image || "/zogsool.jpg",
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   }
@@ -176,6 +218,93 @@ export async function deleteApartment(formData: FormData) {
   revalidatePath("/")
   revalidatePath("/admin")
   redirect("/admin?view=properties&saved=1")
+}
+
+export async function createGarage(formData: FormData) {
+  await requireAdmin()
+
+  let garage: Garage
+
+  try {
+    garage = readGarageForm(formData)
+  } catch {
+    redirect("/admin?view=garages&error=validation")
+  }
+
+  const uploadedImages = await uploadPropertyImages(getUploadedImageFiles(formData), garage.id)
+  if (uploadedImages[0]) {
+    garage.image = uploadedImages[0]
+  }
+
+  try {
+    await saveGarage(garage)
+  } catch (error) {
+    console.error("Failed to save garage", error)
+    redirect("/admin?view=garages&error=storage")
+  }
+
+  revalidatePath("/")
+  revalidatePath("/admin")
+  redirect("/admin?view=garages&saved=1")
+}
+
+export async function updateGarage(formData: FormData) {
+  await requireAdmin()
+
+  const id = clean(formData.get("id"))
+  let garage: Garage
+
+  try {
+    garage = readGarageForm(formData, {
+      id,
+      block: parseGarageBlock(clean(formData.get("block"))),
+      number: clean(formData.get("number")),
+      floor: clean(formData.get("floor")),
+      area: clean(formData.get("area")),
+      price: clean(formData.get("price")),
+      status: parseGarageStatus(clean(formData.get("status"))),
+      image: clean(formData.get("currentImage")) || "/zogsool.jpg",
+      createdAt: clean(formData.get("createdAt")) || undefined,
+    })
+  } catch {
+    redirect("/admin?view=garages&error=validation")
+  }
+
+  const uploadedImages = await uploadPropertyImages(getUploadedImageFiles(formData), garage.id)
+  if (uploadedImages[0]) {
+    garage.image = uploadedImages[0]
+  }
+
+  try {
+    await saveGarage(garage)
+  } catch (error) {
+    console.error("Failed to update garage", error)
+    redirect("/admin?view=garages&error=storage")
+  }
+
+  revalidatePath("/")
+  revalidatePath("/admin")
+  redirect("/admin?view=garages&saved=1")
+}
+
+export async function deleteGarage(formData: FormData) {
+  await requireAdmin()
+
+  const id = clean(formData.get("id"))
+  if (!id) {
+    redirect("/admin?view=garages")
+  }
+
+  try {
+    await deleteGarageById(id)
+  } catch (error) {
+    console.error("Failed to delete garage", error)
+    redirect("/admin?view=garages&error=storage")
+  }
+
+  revalidatePath("/")
+  revalidatePath("/admin")
+  redirect("/admin?view=garages&saved=1")
 }
 
 export async function updateInquiryStatus(formData: FormData) {

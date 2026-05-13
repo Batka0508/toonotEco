@@ -1,0 +1,74 @@
+[
+  {
+    "id": "a-g01",
+    "block": "A блок",
+    "number": "A-G01",
+    "floor": "B1 давхар",
+    "area": "18 м²",
+    "price": "45 сая ₮",
+    "status": "available",
+    "image": "/zogsool.jpg",
+    "createdAt": "2026-05-13T00:00:00.000Z",
+    "updatedAt": "2026-05-13T00:00:00.000Z"
+  },
+  {
+    "id": "a-g02",
+    "block": "A блок",
+    "number": "A-G02",
+    "floor": "B1 давхар",
+    "area": "16 м²",
+    "price": "39 сая ₮",
+    "status": "reserved",
+    "image": "/images/parking-1777446377741-0.jpg",
+    "createdAt": "2026-05-13T00:00:01.000Z",
+    "updatedAt": "2026-05-13T00:00:01.000Z"
+  },
+  {
+    "id": "b-g01",
+    "block": "B блок",
+    "number": "B-G01",
+    "floor": "B2 давхар",
+    "area": "15 м²",
+    "price": "36 сая ₮",
+    "status": "available",
+    "image": "/zogsool.jpg",
+    "createdAt": "2026-05-13T00:00:02.000Z",
+    "updatedAt": "2026-05-13T00:00:02.000Z"
+  },
+  {
+    "id": "b-g02",
+    "block": "B блок",
+    "number": "B-G02",
+    "floor": "B2 давхар",
+    "area": "19 м²",
+    "price": "48 сая ₮",
+    "status": "sold",
+    "image": "/images/parking-1777446377741-0.jpg",
+    "createdAt": "2026-05-13T00:00:03.000Z",
+    "updatedAt": "2026-05-13T00:00:03.000Z"
+  },
+  {
+    "id": "c-g01",
+    "block": "C блок",
+    "number": "C-G01",
+    "floor": "B1 давхар",
+    "area": "17 м²",
+    "price": "42 сая ₮",
+    "status": "available",
+    "image": "/zogsool.jpg",
+    "createdAt": "2026-05-13T00:00:04.000Z",
+    "updatedAt": "2026-05-13T00:00:04.000Z"
+  },
+  {
+    "id": "c-g02",
+    "block": "C блок",
+    "number": "C-G02",
+    "floor": "B2 давхар",
+    "area": "20 м²",
+    "price": "51 сая ₮",
+    "status": "available",
+    "image": "/images/parking-1777446377741-0.jpg",
+    "createdAt": "2026-05-13T00:00:05.000Z",
+    "updatedAt": "2026-05-13T00:00:05.000Z"
+  }
+]

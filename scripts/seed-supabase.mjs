@@ -52,6 +52,21 @@ function toInquiryRow(inquiry) {
   }
 }
 
+function toGarageRow(garage) {
+  return {
+    id: garage.id,
+    block: garage.block,
+    number: garage.number,
+    floor: garage.floor,
+    area: garage.area,
+    price: garage.price,
+    status: garage.status ?? "available",
+    image: garage.image ?? "/zogsool.jpg",
+    created_at: garage.createdAt ?? new Date().toISOString(),
+    updated_at: garage.updatedAt ?? new Date().toISOString(),
+  }
+}
+
 async function main() {
   const env = await readEnv()
   const url = env.NEXT_PUBLIC_SUPABASE_URL
@@ -70,9 +85,11 @@ async function main() {
 
   const siteContent = JSON.parse(await readFile("data/site-content.json", "utf8"))
   const inquiries = JSON.parse(await readFile("data/inquiries.json", "utf8"))
+  const garages = JSON.parse(await readFile("data/garages.json", "utf8"))
 
   const apartmentRows = siteContent.apartments.map(toApartmentRow)
   const inquiryRows = inquiries.map(toInquiryRow)
+  const garageRows = garages.map(toGarageRow)
 
   const apartmentsResult = await supabase.from("apartments").upsert(apartmentRows, { onConflict: "id" })
   if (apartmentsResult.error) {
@@ -84,7 +101,12 @@ async function main() {
     throw new Error(`Failed to seed inquiries: ${inquiriesResult.error.message}`)
   }
 
-  console.log(`Seeded ${apartmentRows.length} apartments and ${inquiryRows.length} inquiries.`)
+  const garagesResult = await supabase.from("garages").upsert(garageRows, { onConflict: "id" })
+  if (garagesResult.error) {
+    throw new Error(`Failed to seed garages: ${garagesResult.error.message}`)
+  }
+
+  console.log(`Seeded ${apartmentRows.length} apartments, ${inquiryRows.length} inquiries, and ${garageRows.length} garages.`)
 }
 
 main().catch((error) => {

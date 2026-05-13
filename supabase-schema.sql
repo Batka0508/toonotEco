@@ -34,12 +34,31 @@ create table if not exists public.inquiries (
   status text default 'new' check (status in ('new', 'contacted', 'closed', 'read'))
 );
 
+create table if not exists public.garages (
+  id text primary key,
+  block text not null check (block in ('A блок', 'B блок', 'C блок')),
+  number text not null,
+  floor text not null,
+  area text not null,
+  price text not null,
+  status text default 'available' check (status in ('available', 'reserved', 'sold')),
+  image text not null default '/zogsool.jpg',
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
 alter table public.apartments enable row level security;
 alter table public.inquiries enable row level security;
+alter table public.garages enable row level security;
 
 drop policy if exists "Public can read apartments" on public.apartments;
 create policy "Public can read apartments"
   on public.apartments for select
+  using (true);
+
+drop policy if exists "Public can read garages" on public.garages;
+create policy "Public can read garages"
+  on public.garages for select
   using (true);
 
 drop policy if exists "Public can create inquiries" on public.inquiries;

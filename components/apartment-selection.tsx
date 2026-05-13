@@ -100,9 +100,14 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
                   <div className="mt-6 grid gap-2 sm:grid-cols-2">
                     <Button
                       type="button"
-                      variant={selectedCompareIds.includes(apartment.id) ? "default" : "outline"}
+                      variant="outline"
                       onClick={() => toggleCompare(apartment.id)}
-                      className="w-full border-2 border-emerald-700/45 shadow-sm dark:border-emerald-300/45"
+                      className={[
+                        "h-11 w-full rounded-xl border-2 font-bold shadow-sm transition-all hover:-translate-y-0.5",
+                        selectedCompareIds.includes(apartment.id)
+                          ? "border-emerald-600 bg-emerald-600 text-white shadow-emerald-900/20 hover:bg-emerald-700 hover:text-white"
+                          : "border-emerald-700/25 bg-white text-emerald-800 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900",
+                      ].join(" ")}
                     >
                       <GitCompare className="h-4 w-4" />
                       Харьцуулах
@@ -119,7 +124,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
           <button
             type="button"
             onClick={() => scrollCarousel("previous")}
-            className="pointer-events-auto -ml-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-lg shadow-emerald-950/15 transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800"
+            className="pointer-events-auto -ml-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/70 bg-white/85 text-emerald-900 shadow-xl shadow-emerald-950/20 backdrop-blur transition-all hover:-translate-x-0.5 hover:scale-105 hover:bg-emerald-600 hover:text-white dark:border-white/15 dark:bg-slate-900/80 dark:text-emerald-100 dark:hover:bg-emerald-600"
             aria-label="Өмнөх байр"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -127,7 +132,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
           <button
             type="button"
             onClick={() => scrollCarousel("next")}
-            className="pointer-events-auto -mr-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-lg shadow-emerald-950/15 transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800"
+            className="pointer-events-auto -mr-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/70 bg-white/85 text-emerald-900 shadow-xl shadow-emerald-950/20 backdrop-blur transition-all hover:translate-x-0.5 hover:scale-105 hover:bg-emerald-600 hover:text-white dark:border-white/15 dark:bg-slate-900/80 dark:text-emerald-100 dark:hover:bg-emerald-600"
             aria-label="Дараах байр"
           >
             <ChevronRight className="h-5 w-5" />
@@ -152,7 +157,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">
+        <Button className="h-11 w-full rounded-xl bg-slate-950 font-bold text-white shadow-lg shadow-slate-950/15 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-emerald-900/25 dark:bg-emerald-600 dark:hover:bg-emerald-500">
           <MessageCircle className="h-4 w-4" />
           Дэлгэрэнгүй харах
         </Button>
@@ -170,7 +175,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
               <button
                 type="button"
                 onClick={goPrevious}
-                className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white hover:bg-black/75"
+                className="absolute left-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-emerald-600"
                 aria-label="Өмнөх зураг"
               >
                 <ChevronLeft className="h-5 w-5" />
@@ -178,7 +183,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
               <button
                 type="button"
                 onClick={goNext}
-                className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white hover:bg-black/75"
+                className="absolute right-3 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white shadow-lg backdrop-blur transition-all hover:scale-105 hover:bg-emerald-600"
                 aria-label="Дараах зураг"
               >
                 <ChevronRight className="h-5 w-5" />
@@ -214,7 +219,7 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
           </div>
 
           <DialogFooter>
-            <Button asChild className="w-full sm:w-auto">
+            <Button asChild className="h-11 w-full rounded-xl bg-emerald-600 px-6 font-bold text-white shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 sm:w-auto">
               <Link href="#contact">Захиалга өгөх</Link>
             </Button>
           </DialogFooter>

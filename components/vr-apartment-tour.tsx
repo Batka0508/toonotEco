@@ -57,6 +57,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
   )
   const [activeRoom, setActiveRoom] = useState(rooms[0])
   const [hoverLabel, setHoverLabel] = useState("")
+  const [panoramaReady, setPanoramaReady] = useState(false)
 
   useEffect(() => {
     setActiveRoom(rooms[0])
@@ -65,14 +66,13 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
   useEffect(() => {
     const mount = mountRef.current
     if (!mount) return
+    setPanoramaReady(false)
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x0b1511)
-    scene.fog = new THREE.Fog(0x0b1511, 14, 34)
 
     const camera = new THREE.PerspectiveCamera(62, mount.clientWidth / mount.clientHeight, 0.1, 100)
-    camera.position.copy(rooms[0].position)
-    camera.lookAt(rooms[0].lookAt)
+    camera.position.set(0, 0, 0.01)
+    camera.lookAt(0, 0, -1)
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -87,6 +87,17 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     renderer.toneMappingExposure = 1.08
     mount.appendChild(renderer.domElement)
 
+    const textureLoader = new THREE.TextureLoader()
+    const panoramaTexture = textureLoader.load("/360.png", () => setPanoramaReady(true))
+    panoramaTexture.colorSpace = THREE.SRGBColorSpace
+    panoramaTexture.anisotropy = renderer.capabilities.getMaxAnisotropy()
+    const panorama = new THREE.Mesh(
+      new THREE.SphereGeometry(45, 96, 48),
+      new THREE.MeshBasicMaterial({ map: panoramaTexture, side: THREE.BackSide, toneMapped: false }),
+    )
+    panorama.name = "360 apartment panorama"
+    scene.add(panorama)
+
     const ambient = new THREE.HemisphereLight(0xffffff, 0x163326, 2.4)
     scene.add(ambient)
 
@@ -99,87 +110,6 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     const accent = new THREE.PointLight(0x37c871, 2.5, 18)
     accent.position.set(-3.8, 3.2, 2.6)
     scene.add(accent)
-
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0xe9ece8, roughness: 0.28, metalness: 0.08 })
-    const wallMat = new THREE.MeshStandardMaterial({ color: 0xf7f7f3, roughness: 0.42 })
-    const greenMat = new THREE.MeshStandardMaterial({ color: 0x2f7d4c, roughness: 0.38, metalness: 0.12 })
-    const darkMat = new THREE.MeshStandardMaterial({ color: 0x111a16, roughness: 0.32, metalness: 0.25 })
-    const woodMat = new THREE.MeshStandardMaterial({ color: 0x8b6748, roughness: 0.45 })
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0xdff7ff,
-      transparent: true,
-      opacity: 0.28,
-      roughness: 0.04,
-      metalness: 0,
-      transmission: 0.35,
-    })
-    const textureLoader = new THREE.TextureLoader()
-
-    function imagePanel(name: string, src: string, size: [number, number], pos: [number, number, number], rot: [number, number, number]) {
-      const texture = textureLoader.load(src)
-      texture.colorSpace = THREE.SRGBColorSpace
-      texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
-      const panel = new THREE.Mesh(new THREE.PlaneGeometry(size[0], size[1]), new THREE.MeshBasicMaterial({ map: texture, toneMapped: false }))
-      panel.name = name
-      panel.position.set(...pos)
-      panel.rotation.set(...rot)
-      scene.add(panel)
-      return panel
-    }
-
-    function box(name: string, size: [number, number, number], pos: [number, number, number], mat: THREE.Material, cast = true) {
-      const mesh = new THREE.Mesh(new THREE.BoxGeometry(...size), mat)
-      mesh.name = name
-      mesh.position.set(...pos)
-      mesh.castShadow = cast
-      mesh.receiveShadow = true
-      scene.add(mesh)
-      return mesh
-    }
-
-    box("floor", [15, 0.18, 13], [0, -0.1, 0], floorMat, false)
-    box("ceiling", [15, 0.14, 13], [0, 3.4, 0], wallMat, false)
-    box("back wall", [15, 3.5, 0.18], [0, 1.65, -6.5], wallMat, false)
-    box("left wall", [0.18, 3.5, 13], [-7.5, 1.65, 0], wallMat, false)
-    box("right partial wall", [0.18, 3.5, 6], [7.5, 1.65, -3.5], wallMat, false)
-    box("kitchen divider", [0.16, 2.5, 4], [-2.2, 1.25, -1.5], wallMat, false)
-    box("bedroom divider", [4.8, 2.7, 0.16], [3.2, 1.35, -2.2], wallMat, false)
-    box("bath divider", [3.2, 2.7, 0.16], [-5.7, 1.35, -2.6], wallMat, false)
-    box("glass window", [9, 2.4, 0.08], [2.5, 1.7, 6.45], glassMat, false)
-    box("balcony glass", [0.08, 1.6, 5], [7.45, 1.2, 2.5], glassMat, false)
-
-    box("sofa", [3.2, 0.75, 1.15], [0, 0.42, 2.1], darkMat)
-    box("sofa back", [3.2, 1.05, 0.22], [0, 0.85, 2.65], darkMat)
-    box("coffee table", [1.8, 0.22, 0.9], [0, 0.28, 0.55], woodMat)
-    box("media wall", [2.8, 1.5, 0.12], [0, 1.2, -1.2], greenMat)
-    imagePanel("living room real photo", "/images/bair.jpg", [3.2, 2.0], [0, 1.85, -1.12], [0, 0, 0])
-    imagePanel("project exterior photo", "/images/project-1.jpg", [4.6, 2.5], [-4.5, 1.95, -6.38], [0, 0, 0])
-    imagePanel("construction photo", "/images/asa.jpg", [3.9, 2.35], [2.9, 1.95, -6.37], [0, 0, 0])
-    box("kitchen island", [2.5, 0.9, 1.05], [-4.8, 0.45, 0.8], woodMat)
-    box("countertop", [2.6, 0.12, 1.12], [-4.8, 0.95, 0.8], darkMat)
-    box("kitchen cabinets", [2.8, 1.9, 0.5], [-6.7, 1.0, -0.8], greenMat)
-    imagePanel("kitchen.webp visual", "/images/kitchen.webp", [2.9, 1.75], [-6.58, 1.85, 1.65], [0, Math.PI / 2, 0])
-    imagePanel("interior detail photo", "/images/dsdasdasdasf.jpg", [3.2, 2.0], [-7.38, 1.85, -3.8], [0, Math.PI / 2, 0])
-    box("bed base", [2.8, 0.55, 2.15], [4.7, 0.32, -4.5], woodMat)
-    box("mattress", [2.65, 0.32, 2], [4.7, 0.75, -4.5], wallMat)
-    box("headboard", [3, 1.25, 0.22], [4.7, 1.15, -5.65], darkMat)
-    imagePanel("bedroom.jpg visual", "/images/bedroom.jpg", [3.6, 2.15], [4.7, 1.85, -6.38], [0, 0, 0])
-    imagePanel("apartment plan photo", "/images/two-room-1777448384494-0.jpg", [2.4, 1.7], [7.38, 1.75, -2.3], [0, -Math.PI / 2, 0])
-    imagePanel("green garden photo", "/images/garden.png", [3.4, 2.0], [7.38, 1.8, 2.2], [0, -Math.PI / 2, 0])
-    box("bath vanity", [1.8, 0.8, 0.6], [-5.8, 0.45, -4.4], woodMat)
-    box("shower glass", [0.08, 2, 1.8], [-4.2, 1.1, -5.35], glassMat, false)
-
-    for (let i = 0; i < 9; i++) {
-      const trunk = box("eco trunk", [0.14, 1.1, 0.14], [-7 + i * 1.8, 0.45, 9.5], woodMat)
-      const crown = new THREE.Mesh(new THREE.SphereGeometry(0.6, 18, 12), greenMat)
-      crown.position.set(trunk.position.x, 1.35, 9.5)
-      crown.castShadow = true
-      scene.add(crown)
-    }
-
-    for (let i = 0; i < 6; i++) {
-      box("city tower", [0.7 + (i % 3) * 0.22, 3 + (i % 2) * 1.4, 0.7], [-6 + i * 2.4, 1.5, 13], darkMat)
-    }
 
     const hotspots: THREE.Mesh[] = []
     rooms.forEach((room, index) => {
@@ -197,9 +127,9 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     const raycaster = new THREE.Raycaster()
     const pointer = new THREE.Vector2()
     const keys = new Set<string>()
-    const targetPosition = rooms[0].position.clone()
-    const targetLookAt = rooms[0].lookAt.clone()
-    const currentLookAt = rooms[0].lookAt.clone()
+    const targetPosition = new THREE.Vector3(0, 0, 0.01)
+    const targetLookAt = new THREE.Vector3(0, 0, -1)
+    const currentLookAt = targetLookAt.clone()
     let isDraggingView = false
     let didDragView = false
     let lastPointerX = 0
@@ -213,8 +143,8 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     function moveToRoom(roomId: string) {
       const next = rooms.find((room) => room.id === roomId)
       if (!next) return
-      targetPosition.copy(next.position)
-      targetLookAt.copy(next.lookAt)
+      targetPosition.set(0, 0, 0.01)
+      targetLookAt.copy(next.lookAt).normalize().multiplyScalar(10)
       manualLook = false
       yaw = 0
       pitch = 0
@@ -358,6 +288,13 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
       window.removeEventListener("keyup", onKeyUp)
       window.removeEventListener("room-change", onRoomChange)
       window.removeEventListener("resize", onResize)
+      panorama.geometry.dispose()
+      panoramaTexture.dispose()
+      if (Array.isArray(panorama.material)) {
+        panorama.material.forEach((material) => material.dispose())
+      } else {
+        panorama.material.dispose()
+      }
       renderer.dispose()
       mount.removeChild(renderer.domElement)
     }
@@ -390,13 +327,19 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
         <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-emerald-950/30 sm:rounded-3xl">
           <div className="grid lg:min-h-[44rem] lg:grid-cols-[1fr_21rem]">
             <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
-              <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('/360.png')" }}
+              />
+              {!panoramaReady && (
+                <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">
                 <div className="mx-4 rounded-2xl border border-emerald-300/20 bg-white/10 px-5 py-4 backdrop-blur sm:px-6">
                   <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 sm:text-sm">{content.loadingTitle}</p>
                   <p className="mt-2 text-xs text-slate-300">{content.loadingDescription}</p>
                 </div>
               </div>
-              <div ref={mountRef} className="relative h-full min-h-[24rem] w-full sm:min-h-[32rem] lg:min-h-[36rem]" />
+              )}
+              <div ref={mountRef} className="relative z-10 h-full min-h-[24rem] w-full sm:min-h-[32rem] lg:min-h-[36rem]" />
 
               {hoverLabel && (
                 <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-emerald-300/25 bg-slate-950/65 px-3 py-2 text-xs font-bold text-emerald-200 backdrop-blur sm:left-6 sm:top-6 sm:px-4 sm:text-sm">
