@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
-import { Building2, Leaf, LockKeyhole, Menu, Phone, X } from "lucide-react"
+import { LockKeyhole, Menu, Phone, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const navLinks = [
@@ -32,13 +33,11 @@ export function Header() {
           <Link
             href="/"
             onClick={() => handleNavClick("#home")}
-            className="flex min-w-0 max-w-[54vw] items-center gap-2 sm:max-w-none sm:gap-3"
+            className="flex min-w-0 max-w-[62vw] items-center gap-2 sm:max-w-none sm:gap-3"
+            aria-label="Нүүр хуудас"
           >
-            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-emerald-900/70 text-emerald-950 dark:border-emerald-300/70 dark:text-emerald-100 sm:h-14 sm:w-14">
-              <Building2 className="h-5 w-5 sm:h-7 sm:w-7" />
-              <span className="absolute right-0.5 top-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-white text-emerald-700 dark:bg-slate-950 dark:text-emerald-300 sm:right-1 sm:top-1 sm:h-4 sm:w-4">
-                <Leaf className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-              </span>
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full shadow-sm shadow-emerald-950/10 sm:h-18 sm:w-18 lg:h-20 lg:w-20">
+              <Image src="/logo.png" alt="Монгол Од Компани" fill sizes="(min-width: 1024px) 72px, (min-width: 640px) 64px, 48px" className="object-cover" priority />
             </div>
             <div className="min-w-0 leading-none">
               <span className="block whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-xl">Монгол Од</span>
@@ -54,7 +53,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="relative whitespace-nowrap text-xs font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:font-extrabold hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-sm"
+                className="relative whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:font-extrabold hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
               >
                 {link.label}
               </Link>

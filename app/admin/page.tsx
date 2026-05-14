@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { logoutUser } from "@/app/(user-auth)/actions"
-import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, replyInquiry, updateApartment, updateGarage, updateHomepageContent, updateInquiryStatus } from "./actions"
+import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, replyInquiry, updateApartment, updateGalleryContent, updateGarage, updateHomepageContent, updateInquiryStatus } from "./actions"
 
 type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "content"
 
@@ -256,26 +256,113 @@ function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiri
 
 function HomepageContentEditor({ content }: { content: Awaited<ReturnType<typeof getHomepageContent>> }) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Нүүр хуудасны content засах</CardTitle>
-        <CardDescription>Hero, давуу тал, gallery, contact, 3D tour зэрэг хэсгүүд backend JSON-оос уншина.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form action={updateHomepageContent} className="grid gap-4">
-          <Textarea name="content" defaultValue={JSON.stringify(content, null, 2)} rows={28} className="font-mono text-xs leading-5" />
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
-            JSON бүтэц эвдэрвэл хадгалахгүй. Зураг солихдоо `/images/...` эсвэл Supabase public URL ашиглаж болно.
-          </div>
-          <div className="flex justify-end">
-            <Button type="submit">
-              <Save className="h-4 w-4" />
-              Сайт шинэчлэх
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="grid gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Зургийн цомог засах</CardTitle>
+          <CardDescription>Нүүр хуудасны gallery хэсгийн зураг, гарчиг, ангиллыг Supabase Storage-д хадгалж удирдана.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={updateGalleryContent} className="grid gap-5">
+            <input type="hidden" name="galleryCount" value={content.gallery.items.length} />
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Жижиг гарчиг">
+                <Input name="galleryEyebrow" defaultValue={content.gallery.eyebrow} />
+              </Field>
+              <Field label="Гарчиг">
+                <Input name="gallerySectionTitle" defaultValue={content.gallery.title} />
+              </Field>
+            </div>
+            <Field label="Тайлбар">
+              <Textarea name="galleryDescription" defaultValue={content.gallery.description} rows={3} />
+            </Field>
+
+            <div className="grid gap-4">
+              {content.gallery.items.map((item, index) => (
+                <div key={`${item.src}-${index}`} className="grid gap-4 rounded-lg border border-slate-200 bg-white p-4 md:grid-cols-[160px_1fr]">
+                  <div className="relative h-32 overflow-hidden rounded-md bg-slate-100">
+                    <Image src={item.src || "/placeholder.jpg"} alt={item.title} fill sizes="160px" className="object-cover" />
+                  </div>
+                  <div className="grid gap-3">
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <Field label="Зургийн гарчиг">
+                        <Input name={`galleryTitle-${index}`} defaultValue={item.title} />
+                      </Field>
+                      <Field label="Ангилал">
+                        <Input name={`galleryLabel-${index}`} defaultValue={item.label} />
+                      </Field>
+                    </div>
+                    <Field label="Зургийн зам эсвэл public URL">
+                      <Input name={`gallerySrc-${index}`} defaultValue={item.src} placeholder="/images/project-1.jpg" />
+                    </Field>
+                    <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+                      <label className="grid gap-2 text-sm font-medium text-slate-800">
+                        Зураг солих
+                        <Input name={`galleryImageFile-${index}`} type="file" accept="image/*" className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
+                      </label>
+                      <label className="flex items-center gap-2 rounded-md border border-red-200 px-3 py-2 text-sm font-medium text-red-700">
+                        <input type="checkbox" name={`galleryRemove-${index}`} className="h-4 w-4" />
+                        Устгах
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid gap-4 rounded-lg border border-dashed border-emerald-300 bg-emerald-50 p-4">
+              <div>
+                <p className="font-semibold text-emerald-900">Шинэ зураг нэмэх</p>
+                <p className="text-sm text-emerald-800">File upload хийвэл Supabase public URL автоматаар хадгалагдана.</p>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <Field label="Зургийн гарчиг">
+                  <Input name="newGalleryTitle" placeholder="Барилгын явц" />
+                </Field>
+                <Field label="Ангилал">
+                  <Input name="newGalleryLabel" placeholder="Барилга" />
+                </Field>
+              </div>
+              <Field label="Зургийн зам эсвэл public URL">
+                <Input name="newGallerySrc" placeholder="/images/new-photo.jpg" />
+              </Field>
+              <label className="grid gap-2 text-sm font-medium text-slate-800">
+                Upload
+                <Input name="newGalleryImageFile" type="file" accept="image/*" className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
+              </label>
+            </div>
+
+            <div className="flex justify-end">
+              <Button type="submit">
+                <Save className="h-4 w-4" />
+                Цомог хадгалах
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Нүүр хуудасны content засах</CardTitle>
+          <CardDescription>Hero, давуу тал, gallery, contact, 3D tour зэрэг хэсгүүд backend JSON-оос уншина.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={updateHomepageContent} className="grid gap-4">
+            <Textarea name="content" defaultValue={JSON.stringify(content, null, 2)} rows={28} className="font-mono text-xs leading-5" />
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              JSON бүтэц эвдэрвэл хадгалахгүй. Зураг солихдоо `/images/...` эсвэл Supabase public URL ашиглаж болно.
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit">
+                <Save className="h-4 w-4" />
+                Сайт шинэчлэх
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 

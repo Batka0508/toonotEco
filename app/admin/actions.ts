@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { getCurrentAdmin } from "@/lib/admin-auth"
 import { sendEmail } from "@/lib/email"
 import { deleteGarageById, saveGarage, type Garage, type GarageBlock, type GarageStatus } from "@/lib/garages"
-import { mergeHomepageContent, saveHomepageContent } from "@/lib/homepage-content"
+import { getHomepageContent, mergeHomepageContent, saveHomepageContent } from "@/lib/homepage-content"
 import { deleteInquiryById, getInquiries, saveInquiries, type Inquiry } from "@/lib/inquiries"
 import { uploadPropertyImages } from "@/lib/property-images"
 import { deleteApartmentById, getApartmentImages, getSiteContent, saveSiteContent, type Apartment, type SiteContent } from "@/lib/site-content"
@@ -352,6 +352,67 @@ export async function updateHomepageContent(formData: FormData) {
     console.error("Failed to update homepage content", error)
     redirect("/admin?view=content&error=validation")
   }
+
+  revalidatePath("/")
+  revalidatePath("/admin")
+  redirect("/admin?view=content&saved=1")
+}
+
+export async function updateGalleryContent(formData: FormData) {
+  await requireAdmin()
+
+  const homepageContent = await getHomepageContent()
+  const count = Number(clean(formData.get("galleryCount"))) || 0
+  const items = []
+
+  for (let index = 0; index < count; index += 1) {
+    if (clean(formData.get(`galleryRemove-${index}`)) === "on") {
+      continue
+    }
+
+    const current = homepageContent.gallery.items[index]
+    const title = clean(formData.get(`galleryTitle-${index}`)) || current?.title || "Зураг"
+    const label = clean(formData.get(`galleryLabel-${index}`)) || current?.label || "Цомог"
+    let src = clean(formData.get(`gallerySrc-${index}`)) || current?.src || "/placeholder.jpg"
+    const uploadedImages = await uploadPropertyImages(formData.getAll(`galleryImageFile-${index}`), `gallery-${index + 1}`)
+
+    if (uploadedImages[0]) {
+      src = uploadedImages[0]
+    }
+
+    if (src) {
+      items.push({ src, title, label })
+    }
+  }
+
+  const newTitle = clean(formData.get("newGalleryTitle"))
+  const newLabel = clean(formData.get("newGalleryLabel"))
+  const newSrc = clean(formData.get("newGallerySrc"))
+  const uploadedNewImages = await uploadPropertyImages(formData.getAll("newGalleryImageFile"), "gallery-new")
+  const addedSrc = uploadedNewImages[0] || newSrc
+
+  if (addedSrc) {
+    items.push({
+      src: addedSrc,
+      title: newTitle || "Шинэ зураг",
+      label: newLabel || "Цомог",
+    })
+  }
+
+  if (items.length === 0) {
+    redirect("/admin?view=content&error=validation")
+  }
+
+  await saveHomepageContent({
+    ...homepageContent,
+    gallery: {
+      ...homepageContent.gallery,
+      eyebrow: clean(formData.get("galleryEyebrow")) || homepageContent.gallery.eyebrow,
+      title: clean(formData.get("gallerySectionTitle")) || homepageContent.gallery.title,
+      description: clean(formData.get("galleryDescription")) || homepageContent.gallery.description,
+      items,
+    },
+  })
 
   revalidatePath("/")
   revalidatePath("/admin")

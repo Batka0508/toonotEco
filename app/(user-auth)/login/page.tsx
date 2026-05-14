@@ -13,7 +13,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const params = await searchParams
   const isAdminMode = params.redirect === "/admin"
   const registerHref = params.redirect ? `/register?redirect=${encodeURIComponent(params.redirect)}` : "/register"
-  const adminEmails = (process.env.ADMIN_EMAILS ?? "").split(",").map((email) => email.trim()).filter(Boolean)
 
   return (
     <main
@@ -47,8 +46,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={loginUser} className="grid gap-4">
+          <form action={loginUser} className="grid gap-4" autoComplete={isAdminMode ? "off" : "on"}>
             <input type="hidden" name="redirect" value={isAdminMode ? "/admin" : ""} />
+            {isAdminMode && (
+              <>
+                <input className="hidden" tabIndex={-1} type="text" name="email" autoComplete="username" aria-hidden="true" />
+                <input className="hidden" tabIndex={-1} type="password" name="password" autoComplete="current-password" aria-hidden="true" />
+              </>
+            )}
             {params.error && (
               <p className="rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
                 {isAdminMode ? "Admin имэйл эсвэл нууц үг буруу байна." : "Имэйл эсвэл нууц үг буруу байна."}
@@ -60,27 +65,39 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <label className="grid gap-2 text-sm font-medium text-slate-800">
               {isAdminMode ? "Admin имэйл" : "Имэйл"}
               <Input
-                name="email"
-                type="email"
-                autoComplete="email"
-                defaultValue={isAdminMode ? adminEmails[0] ?? "" : ""}
+                name={isAdminMode ? "adminLoginId" : "email"}
+                type={isAdminMode ? "text" : "email"}
+                inputMode="email"
+                autoComplete={isAdminMode ? "new-password" : "email"}
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                data-lpignore={isAdminMode ? "true" : undefined}
+                data-1p-ignore={isAdminMode ? "true" : undefined}
+                data-form-type={isAdminMode ? "other" : undefined}
                 required
               />
             </label>
             <label className="grid gap-2 text-sm font-medium text-slate-800">
               Нууц үг
-              <Input name="password" type="password" autoComplete="current-password" required />
+              <Input
+                name={isAdminMode ? "adminSecret" : "password"}
+                type={isAdminMode ? "text" : "password"}
+                autoComplete={isAdminMode ? "new-password" : "current-password"}
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                data-lpignore={isAdminMode ? "true" : undefined}
+                data-1p-ignore={isAdminMode ? "true" : undefined}
+                data-form-type={isAdminMode ? "other" : undefined}
+                className={isAdminMode ? "[-webkit-text-security:disc]" : undefined}
+                required
+              />
             </label>
             <Button type="submit" className="w-full">
               {isAdminMode ? "Admin-аар орох" : "Нэвтрэх"}
             </Button>
           </form>
-
-          {isAdminMode && (
-            <div className="mt-4 rounded-lg border border-emerald-900/10 bg-emerald-50 p-3 text-xs leading-5 text-slate-700">
-              {adminEmails.length > 0 ? `Зөвшөөрөгдсөн админ: ${adminEmails.join(", ")}` : "ADMIN_EMAILS тохиргоо хоосон байна."}
-            </div>
-          )}
 
           {!isAdminMode && (
             <div className="mt-4 grid gap-2 text-center text-sm">

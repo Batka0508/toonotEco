@@ -91,9 +91,11 @@ export async function registerUser(formData: FormData) {
 }
 
 export async function loginUser(formData: FormData) {
-  const email = getString(formData, "email").toLowerCase()
-  const password = String(formData.get("password") || "")
   const redirectTo = getString(formData, "redirect")
+  const emailField = redirectTo === "/admin" ? "adminLoginId" : "email"
+  const passwordField = redirectTo === "/admin" ? "adminSecret" : "password"
+  const email = getString(formData, emailField).toLowerCase()
+  const password = String(formData.get(passwordField) || "")
   const loginPath = redirectTo ? `/login?redirect=${encodeURIComponent(redirectTo)}` : "/login"
   let user = await findUserByEmail(email)
 
