@@ -1,8 +1,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { BarChart3, Building2, ClipboardList, FilePenLine, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
+import { BarChart3, Bot, Building2, ClipboardList, FilePenLine, Home, LayoutDashboard, LogOut, Pencil, Plus, Save, Trash2, UploadCloud } from "lucide-react"
 import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
+import { getChatbotLeads, type ChatbotLead } from "@/lib/chatbot-leads"
 import { garageBlocks, getGarages, type Garage } from "@/lib/garages"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
@@ -18,7 +19,7 @@ import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInq
 
 const INQUIRY_TIME_OFFSET_MS = 4 * 60 * 60 * 1000
 
-type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "content"
+type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "chatbot" | "content"
 
 type AdminPageProps = {
   searchParams: Promise<{ view?: string; edit?: string; error?: string; saved?: string }>
@@ -56,6 +57,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const { apartments } = await getSiteContent()
   const garages = await getGarages()
   const inquiries = await getInquiries()
+  const chatbotLeads = view === "dashboard" || view === "chatbot" ? await getChatbotLeads() : []
   const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
@@ -84,6 +86,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <NavItem href="/admin?view=add" icon={Plus} active={view === "add"} label="Байр нэмэх" />
             <NavItem href="/admin?view=garages" icon={Home} active={view === "garages"} label="Гарааш" />
             <NavItem href="/admin?view=requests" icon={ClipboardList} active={view === "requests"} label="Хүсэлтүүд" count={newRequests} />
+            <NavItem href="/admin?view=chatbot" icon={Bot} active={view === "chatbot"} label="AI Leads" count={chatbotLeads.length} />
             <NavItem href="/admin?view=content" icon={FilePenLine} active={view === "content"} label="Сайт засах" />
           </nav>
 
@@ -123,7 +126,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           {params.error === "validation" && <Notice tone="error">Гарчиг, үнэ, талбай заавал бөглөнө үү.</Notice>}
           {params.error === "storage" && <Notice tone="error">Supabase тохиргоо эсвэл garages хүснэгт бэлэн биш байна.</Notice>}
 
-          {view === "dashboard" && <Dashboard apartments={apartments} inquiries={inquiries} />}
+          {view === "dashboard" && <Dashboard apartments={apartments} inquiries={inquiries} chatbotLeads={chatbotLeads} />}
           {view === "properties" && (
             <div className="grid gap-6">
               {savedMessage && <Notice tone="success">{savedMessage}</Notice>}
@@ -134,6 +137,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           {view === "add" && <PropertyForm title="Байр нэмэх" property={emptyProperty} action={createApartment} cancelHref="/admin?view=properties" />}
           {view === "garages" && <GaragesAdmin garages={garages} editGarageId={params.edit} savedMessage={savedMessage} />}
           {view === "requests" && <RequestsTable inquiries={inquiries} properties={apartments} />}
+          {view === "chatbot" && <ChatbotLeadsTable leads={chatbotLeads} />}
           {view === "content" && homepageContent && <HomepageContentEditor content={homepageContent} />}
         </section>
       </div>
@@ -167,7 +171,7 @@ function AdminAccessRequired() {
   )
 }
 
-function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiries: Inquiry[] }) {
+function Dashboard({ apartments, inquiries, chatbotLeads }: { apartments: Apartment[]; inquiries: Inquiry[]; chatbotLeads: ChatbotLead[] }) {
   const sold = apartments.filter((property) => property.status === "sold").length
   const available = apartments.filter((property) => property.status === "available").length
   const reserved = apartments.filter((property) => property.status === "reserved").length
@@ -183,6 +187,7 @@ function Dashboard({ apartments, inquiries }: { apartments: Apartment[]; inquiri
         <StatCard label="Сул байгаа" value={available} icon={Home} />
         <StatCard label="Захиалгатай/зарагдсан" value={reserved + sold} icon={Building2} />
         <StatCard label="Нийт хүсэлт" value={inquiries.length} icon={ClipboardList} />
+        <StatCard label="AI lead" value={chatbotLeads.length} icon={Bot} />
       </div>
       <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
         <Card>
@@ -762,6 +767,48 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
   )
 }
 
+function ChatbotLeadsTable({ leads }: { leads: ChatbotLead[] }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bot className="h-5 w-5 text-primary" />
+          AI chatbot leads
+        </CardTitle>
+        <CardDescription>Чатботоор ирсэн нэр, утас, сонирхсон байр/зогсоол болон нэмэлт хүсэлт.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {leads.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">Одоогоор chatbot lead ирээгүй байна.</div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Нэр</TableHead>
+                <TableHead>Утас</TableHead>
+                <TableHead>Сонирхол</TableHead>
+                <TableHead>Мессеж</TableHead>
+                <TableHead>Ирсэн огноо</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {leads.map((lead) => (
+                <TableRow key={lead.id}>
+                  <TableCell className="font-semibold text-slate-950">{lead.name}</TableCell>
+                  <TableCell>{lead.phone}</TableCell>
+                  <TableCell>{lead.apartmentType || "-"}</TableCell>
+                  <TableCell className="max-w-sm whitespace-pre-wrap text-sm text-slate-700">{lead.message || "-"}</TableCell>
+                  <TableCell>{formatInquiryDate(lead.createdAt)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
 function NavItem({ href, icon: Icon, active, label, count }: { href: string; icon: typeof Home; active: boolean; label: string; count?: number }) {
   return (
     <Link href={href} className={["flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-colors", active ? "bg-emerald-700 text-white" : "text-slate-700 hover:bg-slate-100"].join(" ")}>
@@ -888,7 +935,7 @@ function formatInquiryDate(value: string) {
 }
 
 function parseView(view?: string): AdminView {
-  if (view === "properties" || view === "add" || view === "garages" || view === "requests" || view === "content") {
+  if (view === "properties" || view === "add" || view === "garages" || view === "requests" || view === "chatbot" || view === "content") {
     return view
   }
 
@@ -902,6 +949,7 @@ function getViewTitle(view: AdminView) {
     add: "Байр нэмэх",
     garages: "Гарааш худалдаа",
     requests: "Хүсэлтүүд",
+    chatbot: "AI chatbot leads",
     content: "Сайт засах",
   }[view]
 }
@@ -921,6 +969,10 @@ function getSavedMessage(view: AdminView) {
 
   if (view === "requests") {
     return "Хүсэлт амжилттай шинэчлэгдлээ."
+  }
+
+  if (view === "chatbot") {
+    return "AI lead амжилттай шинэчлэгдлээ."
   }
 
   return "Амжилттай хадгалагдлаа."

@@ -47,9 +47,19 @@ create table if not exists public.garages (
   updated_at timestamptz default now()
 );
 
+create table if not exists public.chatbot_leads (
+  id uuid primary key,
+  name text not null,
+  phone text not null,
+  apartment_type text default '',
+  message text default '',
+  created_at timestamptz default now()
+);
+
 alter table public.apartments enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.garages enable row level security;
+alter table public.chatbot_leads enable row level security;
 
 drop policy if exists "Public can read apartments" on public.apartments;
 create policy "Public can read apartments"
@@ -64,6 +74,11 @@ create policy "Public can read garages"
 drop policy if exists "Public can create inquiries" on public.inquiries;
 create policy "Public can create inquiries"
   on public.inquiries for insert
+  with check (true);
+
+drop policy if exists "Public can create chatbot leads" on public.chatbot_leads;
+create policy "Public can create chatbot leads"
+  on public.chatbot_leads for insert
   with check (true);
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
