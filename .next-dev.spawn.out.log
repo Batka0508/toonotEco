@@ -1,0 +1,13 @@
+
+> my-project@0.1.0 dev
+> node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev -p 3000 --webpack
+
+▲ Next.js 16.1.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.109:3000
+- Environments: .env.local
+- Experiments (use with caution):
+  · serverActions
+
+✓ Starting...
+[?25h

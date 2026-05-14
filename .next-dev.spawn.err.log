@@ -1,0 +1,19 @@
+node:internal/buffer:1104
+  return new FastBuffer(createUnsafeArrayBuffer(size));
+                        ^
+
+RangeError: Failed to allocate memory
+    at createUnsafeBuffer (node:internal/buffer:1104:25)
+    at allocate (node:buffer:491:10)
+    at Buffer.allocUnsafe (node:buffer:454:10)
+    at Gunzip.ZlibBase (node:zlib:264:28)
+    at Gunzip.Zlib (node:zlib:683:12)
+    at new Gunzip (node:zlib:753:8)
+    at value (node:zlib:962:14)
+    at C:\Users\Admin\Desktop\toonoteco\v0-company-website-homepage\node_modules\next\dist\compiled\webpack\bundle5.js:29:1261608
+    at callback (C:\Users\Admin\Desktop\toonoteco\v0-company-website-homepage\node_modules\next\dist\compiled\webpack\bundle5.js:1:277846)
+    at FSReqCallback.oncomplete (node:fs:197:5) {
+  code: 'ERR_MEMORY_ALLOCATION_FAILED'
+}
+
+Node.js v24.15.0

@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000 --webpack",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next dev -p 3000 --webpack",
+    "build": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next build --webpack",
+    "start": "node --max-old-space-size=4096 ./node_modules/next/dist/bin/next start",
     "seed:supabase": "node scripts/seed-supabase.mjs",
     "seed:homepage": "node scripts/seed-homepage-content.mjs",
     "seed:auth": "node scripts/seed-auth-data.mjs",
