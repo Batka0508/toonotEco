@@ -1,6 +1,7 @@
 "use client"
 
-import { Clock, Mail, MapPin, Phone } from "lucide-react"
+import { useEffect, useState } from "react"
+import { CheckCircle2, Clock, Mail, MapPin, Phone } from "lucide-react"
 import { submitInquiry } from "@/app/contact-actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,6 +16,19 @@ const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
 }
 
 export function Contact({ content, isInquirySent = false }: { content: HomepageContent["contact"]; isInquirySent?: boolean }) {
+  const [showSuccess, setShowSuccess] = useState(isInquirySent)
+
+  useEffect(() => {
+    if (!isInquirySent) {
+      return
+    }
+
+    setShowSuccess(true)
+    const timer = window.setTimeout(() => setShowSuccess(false), 2000)
+
+    return () => window.clearTimeout(timer)
+  }, [isInquirySent])
+
   return (
     <section id="contact" className="bg-slate-50 py-12 sm:py-16 md:py-24">
       <div className="container mx-auto px-4">
@@ -59,13 +73,16 @@ export function Contact({ content, isInquirySent = false }: { content: HomepageC
             </div>
           </div>
 
-          <div className="rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
-            <h3 className="mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl">{content.formTitle}</h3>
-            {isInquirySent && (
-              <div className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
-                Таны захиалга амжилттай илгээгдлээ.
+          <div className="relative rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
+            {showSuccess && (
+              <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
+                <div role="status" className="flex items-center gap-2 rounded-full bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-2xl shadow-emerald-950/30 sm:text-base">
+                  <CheckCircle2 className="h-5 w-5" />
+                  Амжилттай илгээгдлээ
+                </div>
               </div>
             )}
+            <h3 className="mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl">{content.formTitle}</h3>
             <form action={submitInquiry} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Нэр">
