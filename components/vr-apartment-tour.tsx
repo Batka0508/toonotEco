@@ -10,6 +10,7 @@ const baseRooms = [
     id: "living",
     label: "Зочны өрөө",
     icon: Sofa,
+    panorama: "/vr/living-room-panorama.png",
     position: new THREE.Vector3(0, 1.7, 6),
     lookAt: new THREE.Vector3(0, 1.4, 0),
     info: "Панорам шилэн цонх, хотхоны харагдац, дулаан мэдрэмжтэй орчин үеийн тавилга.",
@@ -18,6 +19,7 @@ const baseRooms = [
     id: "kitchen",
     label: "Гал тогоо",
     icon: ChefHat,
+    panorama: "/vr/kitchen-panorama.png",
     position: new THREE.Vector3(-6, 1.7, 0),
     lookAt: new THREE.Vector3(-2.5, 1.2, 0),
     info: "Аралтай гал тогоо, чулуун тавцан, чанартай гэрэлтүүлэг.",
@@ -26,6 +28,7 @@ const baseRooms = [
     id: "bedroom",
     label: "Унтлагын өрөө",
     icon: BedDouble,
+    panorama: "/vr/bedroom-panorama.png",
     position: new THREE.Vector3(5.5, 1.7, -4.5),
     lookAt: new THREE.Vector3(2.5, 1.2, -2.6),
     info: "Тайван өнгөний шийдэл, том шүүгээтэй мастер өрөө.",
@@ -34,6 +37,7 @@ const baseRooms = [
     id: "bathroom",
     label: "Ариун цэврийн өрөө",
     icon: Bath,
+    panorama: "/vr/bathroom-panorama.png",
     position: new THREE.Vector3(-5.8, 1.7, -5),
     lookAt: new THREE.Vector3(-3.3, 1.2, -3.2),
     info: "Чанартай плита, шилэн душ, бодит тусгалтай интерьер.",
@@ -88,15 +92,30 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     mount.appendChild(renderer.domElement)
 
     const textureLoader = new THREE.TextureLoader()
-    const panoramaTexture = textureLoader.load("/360.png", () => setPanoramaReady(true))
-    panoramaTexture.colorSpace = THREE.SRGBColorSpace
-    panoramaTexture.anisotropy = renderer.capabilities.getMaxAnisotropy()
+    let activePanoramaTexture: THREE.Texture | null = null
+    const panoramaMaterial = new THREE.MeshBasicMaterial({ side: THREE.BackSide, toneMapped: false })
     const panorama = new THREE.Mesh(
       new THREE.SphereGeometry(45, 96, 48),
-      new THREE.MeshBasicMaterial({ map: panoramaTexture, side: THREE.BackSide, toneMapped: false }),
+      panoramaMaterial,
     )
     panorama.name = "360 apartment panorama"
     scene.add(panorama)
+
+    function loadPanorama(src: string) {
+      setPanoramaReady(false)
+      textureLoader.load(src, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace
+        texture.anisotropy = renderer.capabilities.getMaxAnisotropy()
+        const previousTexture = activePanoramaTexture
+        activePanoramaTexture = texture
+        panoramaMaterial.map = texture
+        panoramaMaterial.needsUpdate = true
+        previousTexture?.dispose()
+        setPanoramaReady(true)
+      })
+    }
+
+    loadPanorama(rooms[0].panorama)
 
     const ambient = new THREE.HemisphereLight(0xffffff, 0x163326, 2.4)
     scene.add(ambient)
@@ -143,6 +162,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
     function moveToRoom(roomId: string) {
       const next = rooms.find((room) => room.id === roomId)
       if (!next) return
+      loadPanorama(next.panorama)
       targetPosition.set(0, 0, 0.01)
       targetLookAt.copy(next.lookAt).normalize().multiplyScalar(10)
       manualLook = false
@@ -289,7 +309,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
       window.removeEventListener("room-change", onRoomChange)
       window.removeEventListener("resize", onResize)
       panorama.geometry.dispose()
-      panoramaTexture.dispose()
+      activePanoramaTexture?.dispose()
       if (Array.isArray(panorama.material)) {
         panorama.material.forEach((material) => material.dispose())
       } else {
@@ -329,7 +349,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
             <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('/360.png')" }}
+                style={{ backgroundImage: `url('${activeRoom.panorama}')` }}
               />
               {!panoramaReady && (
                 <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">

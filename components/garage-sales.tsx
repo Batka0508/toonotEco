@@ -99,14 +99,14 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           {groupedGarages.map((group) => (
             <div
               key={group.block}
-              className="w-[86vw] shrink-0 snap-start rounded-2xl border border-emerald-900/10 bg-slate-50/80 p-3 sm:w-[34rem] lg:w-[54rem]"
+              className="w-[86vw] shrink-0 snap-start rounded-2xl border border-white/15 bg-black/45 p-3 shadow-lg shadow-slate-950/15 backdrop-blur sm:w-[34rem] lg:w-[54rem]"
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-emerald-700">Гарааш блок</p>
-                  <h3 className="text-xl font-black text-slate-950">{group.block}</h3>
+                  <p className="text-xs font-black uppercase tracking-wide text-emerald-200">Гарааш блок</p>
+                  <h3 className="text-xl font-black text-white">{group.block}</h3>
                 </div>
-                <span className="rounded-full bg-white px-3 py-1 text-xs font-black text-emerald-800 shadow-sm">
+                <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black text-white shadow-sm ring-1 ring-white/15 backdrop-blur">
                   {group.garages.length} сонголт
                 </span>
               </div>
@@ -217,7 +217,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
 
 function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
   return (
-    <article className="group flex h-full min-h-[25rem] overflow-hidden rounded-2xl border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10">
+    <article className="group flex h-full min-h-[25rem] overflow-hidden rounded-2xl border border-white/15 bg-black/55 shadow-sm shadow-slate-950/20 backdrop-blur transition-all hover:-translate-y-1 hover:bg-black/65 hover:shadow-xl hover:shadow-slate-950/25">
       <div className="flex w-full flex-col">
       <div className="relative min-h-[8.75rem] bg-[linear-gradient(135deg,#064e3b,#059669)] p-4 text-white">
         <div className="grid min-h-14 grid-cols-[1fr_auto] items-start gap-3">
@@ -253,7 +253,7 @@ function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPrevie
           type="button"
           variant="outline"
           onClick={() => onPreview(garage)}
-          className="mt-2 h-11 w-full rounded-xl border-emerald-700/25 bg-white font-bold text-emerald-800 shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-900"
+          className="mt-2 h-11 w-full rounded-xl border-white/20 bg-white/10 font-bold text-white shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:border-emerald-300/60 hover:bg-white/20 hover:text-white"
         >
           <Eye className="h-4 w-4" />
           Харах
@@ -266,12 +266,12 @@ function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPrevie
 
 function GarageFact({ icon: Icon, label, value }: { icon: typeof Car; label: string; value: string }) {
   return (
-    <div className="flex min-h-11 items-center justify-between gap-4 rounded-xl bg-slate-50 px-3 py-2.5">
-      <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-slate-500">
-        <Icon className="h-4 w-4 text-emerald-700" />
+    <div className="flex min-h-11 items-center justify-between gap-4 rounded-xl bg-white/10 px-3 py-2.5 ring-1 ring-white/10 backdrop-blur">
+      <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-white/70">
+        <Icon className="h-4 w-4 text-emerald-200" />
         {label}
       </span>
-      <span className="text-right text-sm font-black text-slate-950">{value}</span>
+      <span className="text-right text-sm font-black text-white">{value}</span>
     </div>
   )
 }
