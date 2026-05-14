@@ -82,6 +82,7 @@ export function Contact({ content }: { content: HomepageContent["contact"] }) {
                   <option value="">Сонгох...</option>
                   <option value="2 өрөө байр">2 өрөө байр</option>
                   <option value="3 өрөө байр">3 өрөө байр</option>
+                  <option value="Гарааш">Гарааш</option>
                   <option value="Төлбөрийн нөхцөл">Төлбөрийн нөхцөл</option>
                 </select>
               </Field>
