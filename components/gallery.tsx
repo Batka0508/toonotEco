@@ -16,7 +16,7 @@ export function Gallery({ content }: { content: HomepageContent["gallery"] }) {
             <figure
               key={item.src}
               className={[
-                "group relative overflow-hidden rounded-lg border border-emerald-900/10 bg-slate-100 shadow-sm shadow-emerald-900/5",
+                "group relative min-h-[260px] overflow-hidden rounded-lg border border-emerald-900/10 bg-slate-100 shadow-sm shadow-emerald-900/5 sm:min-h-[320px] md:min-h-0",
                 index === 0 ? "md:col-span-2 md:row-span-2" : "",
                 index === 2 ? "md:col-span-2" : "",
               ].join(" ")}
