@@ -14,7 +14,7 @@ const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
   phone: Phone,
 }
 
-export function Contact({ content }: { content: HomepageContent["contact"] }) {
+export function Contact({ content, isInquirySent = false }: { content: HomepageContent["contact"]; isInquirySent?: boolean }) {
   return (
     <section id="contact" className="bg-slate-50 py-12 sm:py-16 md:py-24">
       <div className="container mx-auto px-4">
@@ -61,6 +61,11 @@ export function Contact({ content }: { content: HomepageContent["contact"] }) {
 
           <div className="rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8">
             <h3 className="mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl">{content.formTitle}</h3>
+            {isInquirySent && (
+              <div className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">
+                Таны захиалга амжилттай илгээгдлээ.
+              </div>
+            )}
             <form action={submitInquiry} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Нэр">

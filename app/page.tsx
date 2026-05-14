@@ -9,7 +9,12 @@ import { Contact } from "@/components/contact"
 import { Footer } from "@/components/footer"
 import { getHomepageContent } from "@/lib/homepage-content"
 
-export default async function Home() {
+type HomeProps = {
+  searchParams: Promise<{ inquiry?: string }>
+}
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams
   const content = await getHomepageContent()
 
   return (
@@ -21,7 +26,7 @@ export default async function Home() {
       <Services content={content.amenities} />
       <Projects />
       <Gallery content={content.gallery} />
-      <Contact content={content.contact} />
+      <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} />
       <Footer />
     </main>
   )

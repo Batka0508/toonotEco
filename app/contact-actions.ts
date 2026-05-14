@@ -34,5 +34,5 @@ export async function submitInquiry(formData: FormData) {
 
   revalidatePath("/")
   revalidatePath("/admin")
-  redirect("/#contact")
+  redirect("/?inquiry=sent#contact")
 }

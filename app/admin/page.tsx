@@ -16,6 +16,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { logoutUser } from "@/app/(user-auth)/actions"
 import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, replyInquiry, updateApartment, updateGalleryContent, updateGarage, updateHomepageContent, updateInquiryStatus } from "./actions"
 
+const INQUIRY_TIME_OFFSET_MS = 4 * 60 * 60 * 1000
+
 type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "content"
 
 type AdminPageProps = {
@@ -57,6 +59,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
+  const savedMessage = params.saved === "1" ? getSavedMessage(view) : ""
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -116,19 +119,20 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             )}
           </div>
 
-          {params.saved === "1" && <Notice tone="success">Амжилттай хадгалагдлаа.</Notice>}
+          {savedMessage && <Notice tone="success">{savedMessage}</Notice>}
           {params.error === "validation" && <Notice tone="error">Гарчиг, үнэ, талбай заавал бөглөнө үү.</Notice>}
           {params.error === "storage" && <Notice tone="error">Supabase тохиргоо эсвэл garages хүснэгт бэлэн биш байна.</Notice>}
 
           {view === "dashboard" && <Dashboard apartments={apartments} inquiries={inquiries} />}
           {view === "properties" && (
             <div className="grid gap-6">
+              {savedMessage && <Notice tone="success">{savedMessage}</Notice>}
               {editProperty && <PropertyForm title="Байр засах" property={editProperty} action={updateApartment} cancelHref="/admin?view=properties" />}
               <PropertiesTable properties={apartments} />
             </div>
           )}
           {view === "add" && <PropertyForm title="Байр нэмэх" property={emptyProperty} action={createApartment} cancelHref="/admin?view=properties" />}
-          {view === "garages" && <GaragesAdmin garages={garages} editGarageId={params.edit} />}
+          {view === "garages" && <GaragesAdmin garages={garages} editGarageId={params.edit} savedMessage={savedMessage} />}
           {view === "requests" && <RequestsTable inquiries={inquiries} properties={apartments} />}
           {view === "content" && homepageContent && <HomepageContentEditor content={homepageContent} />}
         </section>
@@ -421,12 +425,13 @@ function PropertiesTable({ properties }: { properties: Apartment[] }) {
   )
 }
 
-function GaragesAdmin({ garages, editGarageId }: { garages: Garage[]; editGarageId?: string }) {
+function GaragesAdmin({ garages, editGarageId, savedMessage }: { garages: Garage[]; editGarageId?: string; savedMessage?: string }) {
   const nextGarageNumber = getNextGarageNumber(garages)
   const editGarage = garages.find((garage) => garage.id === editGarageId)
 
   return (
     <div className="grid gap-6">
+      {savedMessage && <Notice tone="success">{savedMessage}</Notice>}
       {editGarage && <GarageForm title="Гарааш засах" garage={editGarage} action={updateGarage} cancelHref="/admin?view=garages" />}
       <GarageForm
         title="Гарааш нэмэх"
@@ -707,7 +712,7 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
                     </div>
                     <div>
                       <dt className="font-medium text-slate-500">Ирсэн огноо</dt>
-                      <dd className="mt-1 text-slate-900">{new Date(inquiry.createdAt).toLocaleString("mn-MN")}</dd>
+                      <dd className="mt-1 text-slate-900">{formatInquiryDate(inquiry.createdAt)}</dd>
                     </div>
                   </dl>
                   <div className="mt-4 rounded-md bg-slate-50 p-3 text-sm leading-relaxed text-slate-700">{inquiry.message || "Мессеж бичээгүй байна."}</div>
@@ -744,7 +749,7 @@ function RequestsTable({ inquiries, properties }: { inquiries: Inquiry[]; proper
                 <input type="hidden" name="id" value={inquiry.id} />
                 <label className="text-sm font-semibold text-slate-800" htmlFor={`reply-${inquiry.id}`}>Admin хариу</label>
                 <Textarea id={`reply-${inquiry.id}`} name="reply" rows={4} defaultValue={inquiry.adminReply ?? ""} placeholder="Хэрэглэгчид харагдах хариуг энд бичнэ..." className="bg-white" />
-                {inquiry.repliedAt && <p className="text-xs text-slate-500">Сүүлд хариулсан: {new Date(inquiry.repliedAt).toLocaleString("mn-MN")}</p>}
+                {inquiry.repliedAt && <p className="text-xs text-slate-500">Сүүлд хариулсан: {formatInquiryDate(inquiry.repliedAt)}</p>}
                 <div className="flex justify-end">
                   <Button type="submit">Хариу хадгалах</Button>
                 </div>
@@ -816,7 +821,11 @@ function StatusMetric({ label, value, className }: { label: string; value: numbe
 
 function Notice({ tone, children }: { tone: "success" | "error"; children: React.ReactNode }) {
   const classes = tone === "success" ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-red-200 bg-red-50 text-red-800"
-  return <div className={`mb-5 rounded-lg border px-4 py-3 text-sm font-medium ${classes}`}>{children}</div>
+  return (
+    <div role={tone === "success" ? "status" : "alert"} className={`mb-5 rounded-lg border px-4 py-3 text-sm font-semibold shadow-sm ${classes}`}>
+      {children}
+    </div>
+  )
 }
 
 function PropertyStatusBadge({ status }: { status: NonNullable<Apartment["status"]> }) {
@@ -868,6 +877,16 @@ function normalizeInquiryStatus(status: Inquiry["status"]) {
   return status === "read" ? "contacted" : status
 }
 
+function formatInquiryDate(value: string) {
+  const date = new Date(value)
+
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+
+  return new Date(date.getTime() - INQUIRY_TIME_OFFSET_MS).toLocaleString("mn-MN")
+}
+
 function parseView(view?: string): AdminView {
   if (view === "properties" || view === "add" || view === "garages" || view === "requests" || view === "content") {
     return view
@@ -885,4 +904,24 @@ function getViewTitle(view: AdminView) {
     requests: "Хүсэлтүүд",
     content: "Сайт засах",
   }[view]
+}
+
+function getSavedMessage(view: AdminView) {
+  if (view === "properties" || view === "add") {
+    return "Байр амжилттай хадгалагдлаа."
+  }
+
+  if (view === "garages") {
+    return "Гарааш амжилттай хадгалагдлаа."
+  }
+
+  if (view === "content") {
+    return "Сайтын мэдээлэл амжилттай хадгалагдлаа."
+  }
+
+  if (view === "requests") {
+    return "Хүсэлт амжилттай шинэчлэгдлээ."
+  }
+
+  return "Амжилттай хадгалагдлаа."
 }
