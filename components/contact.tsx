@@ -28,7 +28,9 @@ export function Contact({
   projectLocation?: ProjectLocation
 }) {
   const [showSuccess, setShowSuccess] = useState(isInquirySent)
-  const mapEmbedUrl = projectLocation?.mapEmbedUrl || content.mapEmbedUrl
+  const toonotEcoMapUrl = "https://maps.google.com/maps?q=%D0%A2%D0%BE%D0%BE%D0%BD%D0%BE%D1%82%20%D0%AD%D0%BA%D0%BE%20apartment&t=&z=15&ie=UTF8&iwloc=&output=embed"
+  const configuredMapEmbedUrl = projectLocation?.mapEmbedUrl || content.mapEmbedUrl
+  const mapEmbedUrl = configuredMapEmbedUrl.includes("Ulaanbaatar%20Mongolia") ? toonotEcoMapUrl : configuredMapEmbedUrl || toonotEcoMapUrl
 
   useEffect(() => {
     if (!isInquirySent) {
@@ -75,7 +77,7 @@ export function Contact({
                 <iframe
                   title="Тоонот Эко Хотхон байршил"
                   src={mapEmbedUrl}
-                  className="absolute inset-0 h-full w-full border-0 [filter:saturate(.9)_contrast(1.04)]"
+                  className="absolute inset-0 h-full w-full border-0"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />

@@ -101,11 +101,11 @@ create policy "Public can read projects"
 insert into public.projects (id, name, address, latitude, longitude, map_embed_url)
 values (
   'toonot-eco',
-  'Тоонот Эко хотхон',
-  'Энд өөрийн бодит хаягаа оруул',
+  'Тоонот Эко apartment',
+  'Тоонот Эко apartment',
   null,
   null,
-  'https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed'
+  'https://maps.google.com/maps?q=%D0%A2%D0%BE%D0%BE%D0%BD%D0%BE%D1%82%20%D0%AD%D0%BA%D0%BE%20apartment&t=&z=15&ie=UTF8&iwloc=&output=embed'
 )
 on conflict (id) do update
 set

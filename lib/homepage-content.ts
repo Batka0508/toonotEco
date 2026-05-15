@@ -163,7 +163,7 @@ export const defaultHomepageContent: HomepageContent = {
     description: "Сонгосон өрөөний төрөл, талбай, төлбөрийн нөхцөлөө үлдээгээрэй. Борлуулалтын баг таны хүсэлтийг хүлээн авч, удирдлагын хэсгээс хариу өгнө.",
     formTitle: "Захиалгын маягт",
     mapTitle: "Байршлын зураг",
-    mapEmbedUrl: "https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed",
+    mapEmbedUrl: "https://maps.google.com/maps?q=%D0%A2%D0%BE%D0%BE%D0%BD%D0%BE%D1%82%20%D0%AD%D0%BA%D0%BE%20apartment&t=&z=15&ie=UTF8&iwloc=&output=embed",
     info: [
       { icon: "phone", title: "Борлуулалтын утас", value: "+976 1111-1111", href: "tel:+97611111111" },
       { icon: "mail", title: "И-мэйл", value: "info@ecotown.mn", href: "mailto:info@ecotown.mn" },

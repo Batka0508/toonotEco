@@ -20,11 +20,11 @@ type ProjectLocationRow = {
 
 export const defaultProjectLocation: ProjectLocation = {
   id: "toonot-eco",
-  name: "Тоонот Эко хотхон",
-  address: "Энд өөрийн бодит хаягаа оруул",
+  name: "Тоонот Эко apartment",
+  address: "Тоонот Эко apartment",
   latitude: null,
   longitude: null,
-  mapEmbedUrl: "https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed",
+  mapEmbedUrl: "https://maps.google.com/maps?q=%D0%A2%D0%BE%D0%BE%D0%BD%D0%BE%D1%82%20%D0%AD%D0%BA%D0%BE%20apartment&t=&z=15&ie=UTF8&iwloc=&output=embed",
 }
 
 function projectLocationFromRow(row: ProjectLocationRow): ProjectLocation {
