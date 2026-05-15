@@ -2,7 +2,6 @@
 
 import { useMemo, useRef, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { BadgeDollarSign, Car, ChevronLeft, ChevronRight, Eye, Layers3, Ruler } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -59,8 +58,15 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
     })
   }
 
+  const handleReserveSubmit = () => {
+    setSelectedGarage(null)
+    window.setTimeout(() => {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 120)
+  }
+
   return (
-    <section className="mt-14 rounded-[2rem] border border-emerald-900/10 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:mt-16 sm:p-6 lg:p-8">
+    <section className="rounded-[2rem] border border-emerald-900/10 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-6 lg:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="mb-3 text-sm font-bold uppercase tracking-wide text-emerald-700">Дулаан зогсоол</p>
@@ -157,10 +163,8 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
               </div>
 
               <DialogFooter>
-                <Button asChild className="h-11 rounded-xl bg-emerald-700 px-6 font-bold text-white hover:bg-emerald-800">
-                  <Link href="#contact" onClick={() => setSelectedGarage(null)}>
-                    Contact form руу очих
-                  </Link>
+                <Button type="button" onClick={handleReserveSubmit} className="h-11 rounded-xl bg-emerald-700 px-6 font-bold text-white hover:bg-emerald-800">
+                  Захиалга өгөх
                 </Button>
               </DialogFooter>
             </>

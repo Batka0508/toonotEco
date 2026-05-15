@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { Banknote, BedDouble, Calculator, CheckCircle2, ChevronLeft, ChevronRight, GitCompare, Home, MessageCircle, Percent, Ruler, TrendingUp, Wallet } from "lucide-react"
 import type { Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
@@ -148,14 +147,21 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
 
 function ApartmentDialog({ apartment }: { apartment: Apartment }) {
   const images = getImages(apartment)
+  const [open, setOpen] = useState(false)
   const [activeImage, setActiveImage] = useState(0)
   const activeImageUrl = images[activeImage]?.replace(/"/g, "%22") ?? "/placeholder.jpg"
 
   const goPrevious = () => setActiveImage((value) => (value === 0 ? images.length - 1 : value - 1))
   const goNext = () => setActiveImage((value) => (value === images.length - 1 ? 0 : value + 1))
+  const handleReserve = () => {
+    setOpen(false)
+    window.setTimeout(() => {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }, 120)
+  }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="h-11 w-full rounded-xl bg-slate-950 font-bold text-white shadow-lg shadow-slate-950/15 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-emerald-900/25 dark:bg-emerald-600 dark:hover:bg-emerald-500">
           <MessageCircle className="h-4 w-4" />
@@ -219,8 +225,8 @@ function ApartmentDialog({ apartment }: { apartment: Apartment }) {
           </div>
 
           <DialogFooter>
-            <Button asChild className="h-11 w-full rounded-xl bg-emerald-600 px-6 font-bold text-white shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 sm:w-auto">
-              <Link href="#contact">Захиалга өгөх</Link>
+            <Button type="button" onClick={handleReserve} className="h-11 w-full rounded-xl bg-emerald-600 px-6 font-bold text-white shadow-lg shadow-emerald-900/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 sm:w-auto">
+              {"\u0417\u0430\u0445\u0438\u0430\u043b\u0433\u0430 \u04e9\u0433\u04e9\u0445"}
             </Button>
           </DialogFooter>
         </div>

@@ -13,6 +13,7 @@ export async function submitInquiry(formData: FormData) {
   const user = await getCurrentUser()
   const userEmail = user?.email ?? ""
   const submittedEmail = clean(formData.get("email"))
+  const sourcePath = clean(formData.get("sourcePath")) || "/"
 
   const inquiry: Inquiry = {
     id: crypto.randomUUID(),
@@ -34,5 +35,5 @@ export async function submitInquiry(formData: FormData) {
 
   revalidatePath("/")
   revalidatePath("/admin")
-  redirect("/?inquiry=sent#contact")
+  redirect(`${sourcePath}?inquiry=sent#contact`)
 }

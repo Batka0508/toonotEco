@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type { HomepageContent, IconKey } from "@/lib/homepage-content"
+import type { ProjectLocation } from "@/lib/project-location"
 
 const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
   clock: Clock,
@@ -15,8 +16,19 @@ const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
   phone: Phone,
 }
 
-export function Contact({ content, isInquirySent = false }: { content: HomepageContent["contact"]; isInquirySent?: boolean }) {
+export function Contact({
+  content,
+  isInquirySent = false,
+  sourcePath = "/",
+  projectLocation,
+}: {
+  content: HomepageContent["contact"]
+  isInquirySent?: boolean
+  sourcePath?: string
+  projectLocation?: ProjectLocation
+}) {
   const [showSuccess, setShowSuccess] = useState(isInquirySent)
+  const mapEmbedUrl = projectLocation?.mapEmbedUrl || content.mapEmbedUrl
 
   useEffect(() => {
     if (!isInquirySent) {
@@ -58,18 +70,16 @@ export function Contact({ content, isInquirySent = false }: { content: HomepageC
               })}
             </div>
 
-            <div id="location" className="mt-8 overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5">
-              <div className="flex items-center gap-3 border-b border-slate-200 p-4">
-                <MapPin className="h-5 w-5 text-primary" />
-                <h3 className="font-bold text-slate-950">{content.mapTitle}</h3>
+            <div id="location" className="mt-8 overflow-hidden rounded-2xl border border-emerald-900/10 bg-white p-2 shadow-2xl shadow-emerald-950/10">
+              <div className="relative h-[22rem] overflow-hidden rounded-xl bg-slate-100 sm:h-[28rem]">
+                <iframe
+                  title="Тоонот Эко Хотхон байршил"
+                  src={mapEmbedUrl}
+                  className="absolute inset-0 h-full w-full border-0 [filter:saturate(.9)_contrast(1.04)]"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
-              <iframe
-                title="Тоонот Эко Хотхон байршил"
-                src={content.mapEmbedUrl}
-                className="h-72 w-full border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
             </div>
           </div>
 
@@ -84,6 +94,7 @@ export function Contact({ content, isInquirySent = false }: { content: HomepageC
             )}
             <h3 className="mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl">{content.formTitle}</h3>
             <form action={submitInquiry} className="space-y-5">
+              <input type="hidden" name="sourcePath" value={sourcePath} />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Нэр">
                   <Input id="name" name="name" placeholder="Таны нэр" required />

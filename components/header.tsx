@@ -7,14 +7,14 @@ import { LockKeyhole, Menu, Phone, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const navLinks = [
-  { href: "#home", label: "Нүүр" },
-  { href: "#vr-tour", label: "3D аялал" },
-  { href: "#about", label: "Төслийн тухай" },
-  { href: "#location", label: "Байршил" },
-  { href: "#apartments", label: "Загварууд" },
-  { href: "#amenities", label: "Давуу тал" },
-  { href: "#gallery", label: "Мэдээ" },
-  { href: "#contact", label: "Холбоо барих" },
+  { href: "/#home", label: "Нүүр" },
+  { href: "/#vr-tour", label: "3D аялал" },
+  { href: "/#about", label: "Төслийн тухай" },
+  { href: "/#location", label: "Байршил" },
+  { href: "/apartments", label: "Байрууд" },
+  { href: "/garages", label: "Гарааш" },
+  { href: "/#gallery", label: "Зургийн цомог" },
+  { href: "/#contact", label: "Холбоо барих" },
 ]
 
 export function Header() {
@@ -47,13 +47,13 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="hidden flex-1 items-center justify-center gap-3 xl:flex 2xl:gap-6">
+          <nav className="hidden flex-1 items-center justify-center gap-5 px-4 xl:flex 2xl:gap-8 2xl:px-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="relative whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:font-extrabold hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
+                className="relative whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
               >
                 {link.label}
               </Link>
@@ -72,7 +72,7 @@ export function Header() {
             </Link>
             <a
               href="tel:+97686705445"
-              className="hidden h-11 items-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-bold text-white shadow-sm shadow-emerald-950/15 transition-colors hover:bg-emerald-900 lg:flex 2xl:h-14 2xl:gap-3 2xl:px-7 2xl:text-base"
+              className="hidden h-11 items-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-bold text-white shadow-sm shadow-emerald-950/15 transition-colors hover:bg-emerald-900 2xl:flex 2xl:h-14 2xl:gap-3 2xl:px-7 2xl:text-base"
             >
               <Phone className="h-4 w-4 2xl:h-5 2xl:w-5" />
               86705445

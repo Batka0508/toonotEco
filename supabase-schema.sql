@@ -56,10 +56,22 @@ create table if not exists public.chatbot_leads (
   created_at timestamptz default now()
 );
 
+create table if not exists public.projects (
+  id text primary key,
+  name text not null,
+  address text not null,
+  latitude double precision,
+  longitude double precision,
+  map_embed_url text not null,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
 alter table public.apartments enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.garages enable row level security;
 alter table public.chatbot_leads enable row level security;
+alter table public.projects enable row level security;
 
 drop policy if exists "Public can read apartments" on public.apartments;
 create policy "Public can read apartments"
@@ -80,6 +92,29 @@ drop policy if exists "Public can create chatbot leads" on public.chatbot_leads;
 create policy "Public can create chatbot leads"
   on public.chatbot_leads for insert
   with check (true);
+
+drop policy if exists "Public can read projects" on public.projects;
+create policy "Public can read projects"
+  on public.projects for select
+  using (true);
+
+insert into public.projects (id, name, address, latitude, longitude, map_embed_url)
+values (
+  'toonot-eco',
+  'Тоонот Эко хотхон',
+  'Энд өөрийн бодит хаягаа оруул',
+  null,
+  null,
+  'https://maps.google.com/maps?q=Ulaanbaatar%20Mongolia&t=&z=13&ie=UTF8&iwloc=&output=embed'
+)
+on conflict (id) do update
+set
+  name = excluded.name,
+  address = excluded.address,
+  latitude = excluded.latitude,
+  longitude = excluded.longitude,
+  map_embed_url = excluded.map_embed_url,
+  updated_at = now();
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
