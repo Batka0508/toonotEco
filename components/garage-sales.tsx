@@ -66,15 +66,15 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
   }
 
   return (
-    <section className="rounded-[2rem] border border-cyan-100/15 bg-slate-950/30 p-4 shadow-2xl shadow-slate-950/25 backdrop-blur-xl sm:p-6 lg:p-8">
+    <section className="rounded-[2rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <p className="mb-3 text-sm font-bold uppercase tracking-wide text-sky-300">Дулаан зогсоол</p>
+          <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">Дулаан зогсоол</p>
           <h2 className="text-3xl font-black tracking-tight text-white text-balance md:text-4xl">Гарааш худалдаа</h2>
           <p className="mt-4 text-base leading-8 text-cyan-50/75">Таны автомашинд аюулгүй, дулаан, тохилог зогсоол</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-cyan-100/15 bg-white/10 p-2 shadow-sm backdrop-blur">
+        <div className="flex flex-wrap gap-2 rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
           {filters.map((filter) => {
             const isActive = activeFilter === filter.id
 
@@ -86,8 +86,8 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
                 className={[
                   "h-10 rounded-xl px-4 text-sm font-bold transition-all hover:-translate-y-0.5",
                   isActive
-                    ? "bg-[#0ea5e9] text-white shadow-lg shadow-sky-950/25"
-                    : "bg-sky-500/20 text-white shadow-sm ring-1 ring-sky-300/20 hover:bg-sky-500/30",
+                    ? "bg-emerald-400 text-white shadow-[0_0_24px_rgba(16,185,129,0.34)]"
+                    : "bg-emerald-400/10 text-cyan-50 shadow-sm ring-1 ring-emerald-300/20 hover:bg-emerald-400/18",
                 ].join(" ")}
               >
                 {filter.label}
@@ -105,14 +105,14 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           {groupedGarages.map((group) => (
             <div
               key={group.block}
-              className="w-[86vw] shrink-0 snap-start rounded-2xl border border-white/15 bg-black/45 p-3 shadow-lg shadow-slate-950/15 backdrop-blur sm:w-[34rem] lg:w-[54rem]"
+              className="w-[86vw] shrink-0 snap-start rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] lg:w-[54rem]"
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-sky-200">Гарааш блок</p>
+                  <p className="text-xs font-black uppercase tracking-wide text-emerald-300">Гарааш блок</p>
                   <h3 className="text-xl font-black text-white">{group.block}</h3>
                 </div>
-                <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black text-white shadow-sm ring-1 ring-white/15 backdrop-blur">
+                <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-100 shadow-sm ring-1 ring-emerald-300/20 backdrop-blur">
                   {group.garages.length} сонголт
                 </span>
               </div>
@@ -126,7 +126,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           <button
             type="button"
             onClick={() => scrollCarousel("previous")}
-            className="pointer-events-auto -ml-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/70 bg-white/85 text-emerald-900 shadow-xl shadow-emerald-950/20 backdrop-blur transition-all hover:-translate-x-0.5 hover:scale-105 hover:bg-emerald-600 hover:text-white"
+            className="pointer-events-auto -ml-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-300/35 bg-emerald-400/10 text-emerald-200 shadow-[0_0_24px_rgba(16,185,129,0.16)] backdrop-blur-xl transition-all hover:-translate-x-0.5 hover:scale-105 hover:bg-emerald-400 hover:text-emerald-950"
             aria-label="Өмнөх блок"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -134,7 +134,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           <button
             type="button"
             onClick={() => scrollCarousel("next")}
-            className="pointer-events-auto -mr-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/70 bg-white/85 text-emerald-900 shadow-xl shadow-emerald-950/20 backdrop-blur transition-all hover:translate-x-0.5 hover:scale-105 hover:bg-emerald-600 hover:text-white"
+            className="pointer-events-auto -mr-4 flex h-12 w-12 items-center justify-center rounded-full border border-emerald-300/35 bg-emerald-400/10 text-emerald-200 shadow-[0_0_24px_rgba(16,185,129,0.16)] backdrop-blur-xl transition-all hover:translate-x-0.5 hover:scale-105 hover:bg-emerald-400 hover:text-emerald-950"
             aria-label="Дараах блок"
           >
             <ChevronRight className="h-5 w-5" />
@@ -245,7 +245,7 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
         <button
           type="button"
           onClick={() => scrollCards("previous")}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:-translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950 sm:h-10 sm:w-10"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-400/10 text-emerald-100 shadow-sm backdrop-blur transition-all hover:-translate-x-0.5 hover:bg-emerald-400 hover:text-emerald-950 sm:h-10 sm:w-10"
           aria-label="Өмнөх гарааш"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -253,7 +253,7 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
         <button
           type="button"
           onClick={() => scrollCards("next")}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950 sm:h-10 sm:w-10"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-300/25 bg-emerald-400/10 text-emerald-100 shadow-sm backdrop-blur transition-all hover:translate-x-0.5 hover:bg-emerald-400 hover:text-emerald-950 sm:h-10 sm:w-10"
           aria-label="Дараах гарааш"
         >
           <ChevronRight className="h-4 w-4" />
@@ -265,13 +265,13 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
 
 function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
   return (
-    <article className="group relative flex h-full min-h-[22.5rem] overflow-hidden rounded-2xl border border-cyan-200/18 bg-slate-950/62 shadow-2xl shadow-slate-950/30 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.012] hover:border-cyan-300/45 hover:shadow-[0_24px_70px_rgba(8,47,73,0.55)] sm:min-h-[27rem] sm:rounded-[28px]">
-      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/75 to-transparent" />
-      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-cyan-300/12 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+    <article className="group relative flex h-full min-h-[22.5rem] overflow-hidden rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.012] hover:border-emerald-300/50 hover:shadow-[0_0_42px_rgba(16,185,129,0.16)] sm:min-h-[27rem] sm:rounded-[28px]">
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-emerald-200/75 to-transparent" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-emerald-300/12 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
       <div className="pointer-events-none absolute -bottom-24 left-6 h-52 w-52 rounded-full bg-emerald-400/10 blur-3xl" />
       <div className="flex w-full flex-col">
-        <div className="relative min-h-[9.75rem] overflow-hidden bg-[radial-gradient(circle_at_15%_5%,rgba(255,255,255,0.22),transparent_8rem),linear-gradient(135deg,#05243f_0%,#075569_48%,#04c7b6_100%)] p-4 text-white sm:min-h-[12.75rem] sm:p-5">
-          <div className="pointer-events-none absolute -right-16 bottom-0 h-32 w-72 rounded-full bg-cyan-200/16 blur-2xl" />
+        <div className="relative min-h-[9.75rem] overflow-hidden bg-[radial-gradient(circle_at_15%_5%,rgba(255,255,255,0.14),transparent_8rem),linear-gradient(135deg,#020617_0%,#064e3b_58%,#10b981_100%)] p-4 text-white sm:min-h-[12.75rem] sm:p-5">
+          <div className="pointer-events-none absolute -right-16 bottom-0 h-32 w-72 rounded-full bg-emerald-200/16 blur-2xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_0_52%,rgba(255,255,255,0.10)_52%_64%,transparent_64%)]" />
           <div className="relative grid min-h-12 grid-cols-[1fr_auto] items-start gap-2 sm:min-h-14 sm:gap-3">
             <div className="min-w-0">
@@ -282,10 +282,10 @@ function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPrevie
               {statusLabels[garage.status]}
             </span>
           </div>
-          <div className="relative mt-4 flex h-12 w-16 items-end justify-center text-cyan-200 sm:mt-6 sm:h-16 sm:w-20">
-            <div className="absolute left-1/2 top-0 h-9 w-12 -translate-x-1/2 border-l-2 border-r-2 border-t-2 border-cyan-300/90 [clip-path:polygon(50%_0,100%_34%,100%_100%,0_100%,0_34%)] shadow-[0_0_18px_rgba(34,211,238,0.35)] sm:h-12 sm:w-16" />
-            <div className="relative flex h-9 w-11 items-center justify-center rounded-xl border border-cyan-200/25 bg-slate-950/20 backdrop-blur sm:h-11 sm:w-14">
-              <Car className="h-5 w-5 text-cyan-200 drop-shadow-[0_0_10px_rgba(34,211,238,0.55)] sm:h-7 sm:w-7" />
+          <div className="relative mt-4 flex h-12 w-16 items-end justify-center text-emerald-200 sm:mt-6 sm:h-16 sm:w-20">
+            <div className="absolute left-1/2 top-0 h-9 w-12 -translate-x-1/2 border-l-2 border-r-2 border-t-2 border-emerald-300/90 [clip-path:polygon(50%_0,100%_34%,100%_100%,0_100%,0_34%)] shadow-[0_0_18px_rgba(16,185,129,0.38)] sm:h-12 sm:w-16" />
+            <div className="relative flex h-9 w-11 items-center justify-center rounded-xl border border-emerald-200/25 bg-slate-950/20 backdrop-blur sm:h-11 sm:w-14">
+              <Car className="h-5 w-5 text-emerald-200 drop-shadow-[0_0_10px_rgba(16,185,129,0.58)] sm:h-7 sm:w-7" />
             </div>
           </div>
         </div>
@@ -301,7 +301,7 @@ function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPrevie
             type="button"
             disabled={garage.status === "sold"}
             onClick={() => onReserve(garage)}
-            className="mt-4 h-10 w-full rounded-xl border border-cyan-300/70 bg-cyan-300/10 text-sm font-black text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.18)] backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-cyan-300 hover:text-slate-950 hover:shadow-[0_0_34px_rgba(34,211,238,0.45)] disabled:border-slate-500/40 disabled:bg-slate-800/40 disabled:text-slate-500 disabled:shadow-none sm:mt-5 sm:h-12 sm:rounded-2xl sm:text-base"
+            className="mt-4 h-10 w-full rounded-xl border border-emerald-300/70 bg-emerald-400/10 text-sm font-black text-emerald-100 shadow-[0_0_24px_rgba(16,185,129,0.18)] backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-emerald-400 hover:text-emerald-950 hover:shadow-[0_0_34px_rgba(16,185,129,0.42)] disabled:border-slate-500/40 disabled:bg-slate-800/40 disabled:text-slate-500 disabled:shadow-none sm:mt-5 sm:h-12 sm:rounded-2xl sm:text-base"
           >
             Захиалах
           </Button>
@@ -324,7 +324,7 @@ function GarageFact({ icon: Icon, label, value }: { icon: typeof Car; label: str
   return (
     <div className="flex min-h-10 items-center justify-between gap-3 border-b border-cyan-100/10 px-3 py-2 last:border-b-0 sm:min-h-12 sm:gap-4 sm:px-4 sm:py-3">
       <span className="flex min-w-0 items-center gap-2 text-xs font-semibold text-cyan-50/68 sm:gap-2.5 sm:text-sm">
-        <Icon className="h-3.5 w-3.5 text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.45)] sm:h-4 sm:w-4" />
+        <Icon className="h-3.5 w-3.5 text-emerald-300 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] sm:h-4 sm:w-4" />
         {label}
       </span>
       <span className="text-right text-xs font-black text-white sm:text-sm">{value}</span>

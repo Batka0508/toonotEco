@@ -146,7 +146,7 @@ export function Contact({
               <Button
                 className={
                   isGaragePage
-                    ? "w-full bg-[#0ea5e9] text-white shadow-lg shadow-sky-950/25 hover:bg-[#0284c7] hover:text-white"
+                    ? "h-12 w-full rounded-xl bg-emerald-400 font-black text-white shadow-[0_0_30px_rgba(16,185,129,0.35)] hover:bg-emerald-300 hover:text-emerald-950"
                     : isDark
                       ? "h-12 w-full rounded-xl bg-emerald-400 font-black text-white shadow-[0_0_30px_rgba(16,185,129,0.35)] hover:bg-emerald-300 hover:text-emerald-950"
                       : "w-full"
