@@ -66,15 +66,15 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
   }
 
   return (
-    <section className="rounded-[2rem] border border-emerald-900/10 bg-white p-4 shadow-xl shadow-emerald-950/5 sm:p-6 lg:p-8">
+    <section className="rounded-[2rem] border border-cyan-100/15 bg-slate-950/30 p-4 shadow-2xl shadow-slate-950/25 backdrop-blur-xl sm:p-6 lg:p-8">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
-          <p className="mb-3 text-sm font-bold uppercase tracking-wide text-emerald-700">Дулаан зогсоол</p>
-          <h2 className="text-3xl font-black tracking-tight text-slate-950 text-balance md:text-4xl">Гарааш худалдаа</h2>
-          <p className="mt-4 text-base leading-8 text-slate-600">Таны автомашинд аюулгүй, дулаан, тохилог зогсоол</p>
+          <p className="mb-3 text-sm font-bold uppercase tracking-wide text-sky-300">Дулаан зогсоол</p>
+          <h2 className="text-3xl font-black tracking-tight text-white text-balance md:text-4xl">Гарааш худалдаа</h2>
+          <p className="mt-4 text-base leading-8 text-cyan-50/75">Таны автомашинд аюулгүй, дулаан, тохилог зогсоол</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 rounded-2xl border border-emerald-900/10 bg-emerald-50/70 p-2">
+        <div className="flex flex-wrap gap-2 rounded-2xl border border-cyan-100/15 bg-white/10 p-2 shadow-sm backdrop-blur">
           {filters.map((filter) => {
             const isActive = activeFilter === filter.id
 
@@ -86,8 +86,8 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
                 className={[
                   "h-10 rounded-xl px-4 text-sm font-bold transition-all hover:-translate-y-0.5",
                   isActive
-                    ? "bg-emerald-700 text-white shadow-lg shadow-emerald-900/20"
-                    : "bg-white text-emerald-900 shadow-sm hover:bg-emerald-100",
+                    ? "bg-[#0ea5e9] text-white shadow-lg shadow-sky-950/25"
+                    : "bg-sky-500/20 text-white shadow-sm ring-1 ring-sky-300/20 hover:bg-sky-500/30",
                 ].join(" ")}
               >
                 {filter.label}
@@ -109,7 +109,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-wide text-emerald-200">Гарааш блок</p>
+                  <p className="text-xs font-black uppercase tracking-wide text-sky-200">Гарааш блок</p>
                   <h3 className="text-xl font-black text-white">{group.block}</h3>
                 </div>
                 <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-black text-white shadow-sm ring-1 ring-white/15 backdrop-blur">
