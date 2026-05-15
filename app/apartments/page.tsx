@@ -51,7 +51,7 @@ export default async function ApartmentsPage({ searchParams }: ApartmentsPagePro
         </div>
       </section>
       <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} sourcePath="/apartments" projectLocation={projectLocation} />
-      <Footer />
+      <Footer variant="black" />
     </main>
   )
 }

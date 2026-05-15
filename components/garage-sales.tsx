@@ -21,9 +21,9 @@ const statusLabels: Record<GarageStatus, string> = {
 }
 
 const statusClasses: Record<GarageStatus, string> = {
-  available: "bg-emerald-100 text-emerald-800 ring-emerald-600/15",
-  reserved: "bg-amber-100 text-amber-800 ring-amber-600/15",
-  sold: "bg-red-100 text-red-800 ring-red-600/15",
+  available: "border-emerald-300/35 bg-emerald-400/18 text-emerald-100 shadow-emerald-400/20",
+  reserved: "border-amber-300/45 bg-amber-300/18 text-amber-100 shadow-amber-300/20",
+  sold: "border-rose-300/35 bg-rose-400/18 text-rose-100 shadow-rose-400/20",
 }
 
 const garageBlocks: Garage["block"][] = ["A блок", "B блок", "C блок"]
@@ -117,11 +117,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
                 </span>
               </div>
 
-              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                {group.garages.map((garage) => (
-                  <GarageCard key={garage.id} garage={garage} onPreview={setPreviewGarage} onReserve={setSelectedGarage} />
-                ))}
-              </div>
+              <GarageBlockCards garages={group.garages} onPreview={setPreviewGarage} onReserve={setSelectedGarage} />
             </div>
           ))}
         </div>
@@ -219,50 +215,117 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
   )
 }
 
+function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
+  const cardsRef = useRef<HTMLDivElement | null>(null)
+  const hasCarousel = garages.length > 3
+
+  const scrollCards = (direction: "previous" | "next") => {
+    const carousel = cardsRef.current
+    if (!carousel) return
+
+    carousel.scrollBy({
+      left: direction === "next" ? carousel.clientWidth * 0.92 : -carousel.clientWidth * 0.92,
+      behavior: "smooth",
+    })
+  }
+
+  if (!hasCarousel) {
+    return (
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {garages.map((garage) => (
+          <GarageCard key={garage.id} garage={garage} onPreview={onPreview} onReserve={onReserve} />
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative">
+      <div
+        ref={cardsRef}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {garages.map((garage) => (
+          <div key={garage.id} className="w-[78vw] shrink-0 snap-start sm:w-[19rem] lg:w-[16.25rem]">
+            <GarageCard garage={garage} onPreview={onPreview} onReserve={onReserve} />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={() => scrollCards("previous")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:-translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950"
+          aria-label="Өмнөх гарааш"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => scrollCards("next")}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950"
+          aria-label="Дараах гарааш"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
   return (
-    <article className="group flex h-full min-h-[25rem] overflow-hidden rounded-2xl border border-white/15 bg-black/55 shadow-sm shadow-slate-950/20 backdrop-blur transition-all hover:-translate-y-1 hover:bg-black/65 hover:shadow-xl hover:shadow-slate-950/25">
+    <article className="group relative flex h-full min-h-[27rem] overflow-hidden rounded-[28px] border border-cyan-200/18 bg-slate-950/62 shadow-2xl shadow-slate-950/30 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.012] hover:border-cyan-300/45 hover:shadow-[0_24px_70px_rgba(8,47,73,0.55)]">
+      <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-cyan-200/75 to-transparent" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-cyan-300/12 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
+      <div className="pointer-events-none absolute -bottom-24 left-6 h-52 w-52 rounded-full bg-emerald-400/10 blur-3xl" />
       <div className="flex w-full flex-col">
-      <div className="relative min-h-[8.75rem] bg-[linear-gradient(135deg,#064e3b,#059669)] p-4 text-white">
-        <div className="grid min-h-14 grid-cols-[1fr_auto] items-start gap-3">
-          <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-wide text-emerald-100">Гараашны дугаар</p>
-            <h3 className="mt-1 truncate text-2xl font-black">{garage.number}</h3>
+        <div className="relative min-h-[12.75rem] overflow-hidden bg-[radial-gradient(circle_at_15%_5%,rgba(255,255,255,0.22),transparent_8rem),linear-gradient(135deg,#05243f_0%,#075569_48%,#04c7b6_100%)] p-5 text-white">
+          <div className="pointer-events-none absolute -right-16 bottom-0 h-32 w-72 rounded-full bg-cyan-200/16 blur-2xl" />
+          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_0_52%,rgba(255,255,255,0.10)_52%_64%,transparent_64%)]" />
+          <div className="relative grid min-h-14 grid-cols-[1fr_auto] items-start gap-3">
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-wide text-cyan-50/82">Гараашны дугаар</p>
+              <h3 className="mt-2 truncate text-3xl font-black tracking-tight text-white drop-shadow-sm">{garage.number}</h3>
+            </div>
+            <span className={`inline-flex h-9 min-w-[5.75rem] shrink-0 items-center justify-center rounded-full border px-3 text-center text-xs font-black shadow-lg backdrop-blur-md ${statusClasses[garage.status]}`}>
+              {statusLabels[garage.status]}
+            </span>
           </div>
-          <span className={`inline-flex h-7 min-w-[5.75rem] shrink-0 items-center justify-center rounded-full px-3 text-center text-xs font-black ring-1 ${statusClasses[garage.status]}`}>
-            {statusLabels[garage.status]}
-          </span>
-        </div>
-        <div className="mt-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur">
-          <Car className="h-6 w-6" />
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col p-4">
-        <div className="grid gap-2.5">
-          <GarageFact icon={Layers3} label="Давхар" value={garage.floor} />
-          <GarageFact icon={Ruler} label="Талбай" value={garage.area} />
-          <GarageFact icon={BadgeDollarSign} label="Үнэ" value={garage.price} />
+          <div className="relative mt-6 flex h-16 w-20 items-end justify-center text-cyan-200">
+            <div className="absolute left-1/2 top-0 h-12 w-16 -translate-x-1/2 border-l-2 border-r-2 border-t-2 border-cyan-300/90 [clip-path:polygon(50%_0,100%_34%,100%_100%,0_100%,0_34%)] shadow-[0_0_18px_rgba(34,211,238,0.35)]" />
+            <div className="relative flex h-11 w-14 items-center justify-center rounded-xl border border-cyan-200/25 bg-slate-950/20 backdrop-blur">
+              <Car className="h-7 w-7 text-cyan-200 drop-shadow-[0_0_10px_rgba(34,211,238,0.55)]" />
+            </div>
+          </div>
         </div>
 
-        <Button
-          type="button"
-          disabled={garage.status === "sold"}
-          onClick={() => onReserve(garage)}
-          className="mt-auto h-11 w-full rounded-xl bg-slate-950 font-bold text-white shadow-lg shadow-slate-950/10 transition-all hover:-translate-y-0.5 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-500 disabled:shadow-none"
-        >
-          Захиалах
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => onPreview(garage)}
-          className="mt-2 h-11 w-full rounded-xl border-white/20 bg-white/10 font-bold text-white shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:border-emerald-300/60 hover:bg-white/20 hover:text-white"
-        >
-          <Eye className="h-4 w-4" />
-          Харах
-        </Button>
-      </div>
+        <div className="relative flex flex-1 flex-col p-5">
+          <div className="grid overflow-hidden rounded-2xl border border-cyan-100/10 bg-white/[0.045]">
+            <GarageFact icon={Layers3} label="Давхар" value={garage.floor} />
+            <GarageFact icon={Ruler} label="Талбай" value={garage.area} />
+            <GarageFact icon={BadgeDollarSign} label="Үнэ" value={garage.price} />
+          </div>
+
+          <Button
+            type="button"
+            disabled={garage.status === "sold"}
+            onClick={() => onReserve(garage)}
+            className="mt-5 h-12 w-full rounded-2xl border border-cyan-300/70 bg-cyan-300/10 font-black text-cyan-100 shadow-[0_0_24px_rgba(34,211,238,0.18)] backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-cyan-300 hover:text-slate-950 hover:shadow-[0_0_34px_rgba(34,211,238,0.45)] disabled:border-slate-500/40 disabled:bg-slate-800/40 disabled:text-slate-500 disabled:shadow-none"
+          >
+            Захиалах
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onPreview(garage)}
+            className="mt-2 h-10 w-full rounded-2xl border-transparent bg-transparent font-bold text-cyan-50/70 shadow-none transition-all hover:-translate-y-0.5 hover:bg-white/8 hover:text-white"
+          >
+            <Eye className="h-4 w-4" />
+            Харах
+          </Button>
+        </div>
       </div>
     </article>
   )
@@ -270,9 +333,9 @@ function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPrevie
 
 function GarageFact({ icon: Icon, label, value }: { icon: typeof Car; label: string; value: string }) {
   return (
-    <div className="flex min-h-11 items-center justify-between gap-4 rounded-xl bg-white/10 px-3 py-2.5 ring-1 ring-white/10 backdrop-blur">
-      <span className="flex min-w-0 items-center gap-2 text-sm font-semibold text-white/70">
-        <Icon className="h-4 w-4 text-emerald-200" />
+    <div className="flex min-h-12 items-center justify-between gap-4 border-b border-cyan-100/10 px-4 py-3 last:border-b-0">
+      <span className="flex min-w-0 items-center gap-2.5 text-sm font-semibold text-cyan-50/68">
+        <Icon className="h-4 w-4 text-cyan-300 drop-shadow-[0_0_8px_rgba(34,211,238,0.45)]" />
         {label}
       </span>
       <span className="text-right text-sm font-black text-white">{value}</span>

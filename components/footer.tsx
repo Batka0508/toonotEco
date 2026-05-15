@@ -24,9 +24,11 @@ const socialLinks = [
   { icon: Youtube, href: "#", label: "YouTube" },
 ]
 
-export function Footer() {
+export function Footer({ variant = "green" }: { variant?: "green" | "black" }) {
+  const isBlack = variant === "black"
+
   return (
-    <footer className="bg-emerald-700 text-white">
+    <footer className={isBlack ? "bg-slate-950 text-white" : "bg-emerald-700 text-white"}>
       <div className="container mx-auto px-4 py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div>

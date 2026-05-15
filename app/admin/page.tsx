@@ -433,6 +433,10 @@ function PropertiesTable({ properties }: { properties: Apartment[] }) {
 function GaragesAdmin({ garages, editGarageId, savedMessage }: { garages: Garage[]; editGarageId?: string; savedMessage?: string }) {
   const nextGarageNumber = getNextGarageNumber(garages)
   const editGarage = garages.find((garage) => garage.id === editGarageId)
+  const groupedGarages = garageBlocks.map((block) => ({
+    block,
+    garages: garages.filter((garage) => garage.block === block),
+  }))
 
   return (
     <div className="grid gap-6">
@@ -459,49 +463,67 @@ function GaragesAdmin({ garages, editGarageId, savedMessage }: { garages: Garage
           <CardTitle>Гараашны жагсаалт</CardTitle>
           <CardDescription>Гарааш худалдаа хэсэгт харагдах A, B, C блокийн card-ууд.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Дугаар</TableHead>
-                <TableHead>Блок</TableHead>
-                <TableHead>Давхар</TableHead>
-                <TableHead>Талбай</TableHead>
-                <TableHead>Үнэ</TableHead>
-                <TableHead>Төлөв</TableHead>
-                <TableHead className="text-right">Үйлдэл</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {garages.map((garage) => (
-                <TableRow key={garage.id}>
-                  <TableCell className="font-semibold">{garage.number}</TableCell>
-                  <TableCell>{garage.block}</TableCell>
-                  <TableCell>{garage.floor}</TableCell>
-                  <TableCell>{garage.area}</TableCell>
-                  <TableCell>{garage.price}</TableCell>
-                  <TableCell>
-                    <GarageStatusBadge status={garage.status} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-end gap-2">
-                      <Button asChild size="sm" variant="outline">
-                        <Link href={`/admin?view=garages&edit=${garage.id}`}>
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <form action={deleteGarage}>
-                        <input type="hidden" name="id" value={garage.id} />
-                        <Button type="submit" size="sm" variant="outline" className="text-red-700 hover:text-red-800">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </form>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <CardContent className="grid gap-5">
+          {groupedGarages.map((group) => (
+            <section key={group.block} className="overflow-hidden rounded-lg border border-slate-200 bg-slate-50/70">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
+                <div>
+                  <h3 className="text-base font-bold text-slate-950">{group.block}</h3>
+                  <p className="text-sm text-slate-500">Энэ блокт {group.garages.length} гарааш байна.</p>
+                </div>
+                <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-bold text-sky-800">
+                  {group.garages.length} ширхэг
+                </span>
+              </div>
+
+              {group.garages.length > 0 ? (
+                <div className="overflow-x-auto bg-white">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Дугаар</TableHead>
+                        <TableHead>Давхар</TableHead>
+                        <TableHead>Талбай</TableHead>
+                        <TableHead>Үнэ</TableHead>
+                        <TableHead>Төлөв</TableHead>
+                        <TableHead className="text-right">Үйлдэл</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {group.garages.map((garage) => (
+                        <TableRow key={garage.id}>
+                          <TableCell className="font-semibold">{garage.number}</TableCell>
+                          <TableCell>{garage.floor}</TableCell>
+                          <TableCell>{garage.area}</TableCell>
+                          <TableCell>{garage.price}</TableCell>
+                          <TableCell>
+                            <GarageStatusBadge status={garage.status} />
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex justify-end gap-2">
+                              <Button asChild size="sm" variant="outline">
+                                <Link href={`/admin?view=garages&edit=${garage.id}`}>
+                                  <Pencil className="h-4 w-4" />
+                                </Link>
+                              </Button>
+                              <form action={deleteGarage}>
+                                <input type="hidden" name="id" value={garage.id} />
+                                <Button type="submit" size="sm" variant="outline" className="text-red-700 hover:text-red-800">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </form>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <div className="bg-white px-4 py-6 text-sm text-slate-500">Энэ блокт гарааш нэмэгдээгүй байна.</div>
+              )}
+            </section>
+          ))}
         </CardContent>
       </Card>
     </div>
