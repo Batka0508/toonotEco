@@ -217,7 +217,6 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
 
 function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
   const cardsRef = useRef<HTMLDivElement | null>(null)
-  const hasCarousel = garages.length > 3
 
   const scrollCards = (direction: "previous" | "next") => {
     const carousel = cardsRef.current
@@ -229,34 +228,24 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
     })
   }
 
-  if (!hasCarousel) {
-    return (
-      <div className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2 sm:gap-3 md:grid-cols-2 lg:grid-cols-3">
-        {garages.map((garage) => (
-          <GarageCard key={garage.id} garage={garage} onPreview={onPreview} onReserve={onReserve} />
-        ))}
-      </div>
-    )
-  }
-
   return (
     <div className="relative">
       <div
         ref={cardsRef}
-        className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] sm:gap-3 [&::-webkit-scrollbar]:hidden"
       >
         {garages.map((garage) => (
-          <div key={garage.id} className="w-[68vw] max-w-[16.5rem] shrink-0 snap-start sm:w-[19rem] sm:max-w-none lg:w-[16.25rem]">
+          <div key={garage.id} className="w-[66vw] max-w-[15.75rem] shrink-0 snap-start sm:w-[19rem] sm:max-w-none lg:w-[16.25rem]">
             <GarageCard garage={garage} onPreview={onPreview} onReserve={onReserve} />
           </div>
         ))}
       </div>
 
-      <div className="mt-3 flex justify-end gap-2">
+      <div className="mt-2 flex justify-end gap-2 sm:mt-3">
         <button
           type="button"
           onClick={() => scrollCards("previous")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:-translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:-translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950 sm:h-10 sm:w-10"
           aria-label="Өмнөх гарааш"
         >
           <ChevronLeft className="h-4 w-4" />
@@ -264,7 +253,7 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
         <button
           type="button"
           onClick={() => scrollCards("next")}
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-100/20 bg-white/10 text-white shadow-sm backdrop-blur transition-all hover:translate-x-0.5 hover:bg-cyan-400 hover:text-slate-950 sm:h-10 sm:w-10"
           aria-label="Дараах гарааш"
         >
           <ChevronRight className="h-4 w-4" />
