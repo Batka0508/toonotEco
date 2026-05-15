@@ -37,7 +37,7 @@ export function Contact({
   const isDark = variant === "dark"
   const isGaragePage = sourcePath === "/garages"
   const darkFieldControlClass =
-    "border-cyan-100/25 bg-white text-slate-950 placeholder:text-slate-500 focus-visible:border-sky-300 focus-visible:ring-sky-400/35"
+    "rounded-xl border-cyan-100/20 bg-white/95 text-slate-950 placeholder:text-slate-500 focus-visible:border-emerald-300 focus-visible:ring-emerald-400/35"
 
   useEffect(() => {
     if (!isInquirySent) {
@@ -55,7 +55,7 @@ export function Contact({
       id="contact"
       className={
         isDark
-          ? "relative overflow-hidden bg-[radial-gradient(circle_at_18%_8%,rgba(14,165,233,0.22),transparent_26rem),radial-gradient(circle_at_82%_8%,rgba(16,185,129,0.18),transparent_24rem),linear-gradient(180deg,#071b3a,#06152d)] py-12 sm:py-16 md:py-24"
+          ? "relative overflow-hidden bg-[radial-gradient(circle_at_18%_8%,rgba(20,184,166,0.12),transparent_26rem),radial-gradient(circle_at_82%_8%,rgba(16,185,129,0.16),transparent_24rem),linear-gradient(180deg,#020617,#000)] py-12 sm:py-16 md:py-24"
           : "bg-slate-50 py-12 sm:py-16 md:py-24"
       }
     >
@@ -63,8 +63,8 @@ export function Contact({
       <div className="container mx-auto px-4">
         <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
-            <p className={isDark ? "mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-300" : "mb-3 text-sm font-semibold uppercase tracking-wide text-primary"}>{content.eyebrow}</p>
-            <h2 className={isDark ? "text-2xl font-bold text-white text-balance sm:text-3xl md:text-4xl" : "text-2xl font-bold text-slate-950 text-balance sm:text-3xl md:text-4xl"}>{content.title}</h2>
+            <p className={isDark ? "mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]" : "mb-3 text-sm font-semibold uppercase tracking-wide text-primary"}>{content.eyebrow}</p>
+            <h2 className={isDark ? "text-2xl font-black text-white text-balance sm:text-3xl md:text-4xl" : "text-2xl font-bold text-slate-950 text-balance sm:text-3xl md:text-4xl"}>{content.title}</h2>
             <p className={isDark ? "mt-4 text-sm leading-7 text-cyan-50/75 sm:mt-5 sm:text-base sm:leading-8" : "mt-4 text-sm leading-7 text-slate-600 sm:mt-5 sm:text-base sm:leading-8"}>
               {content.description}
             </p>
@@ -74,8 +74,8 @@ export function Contact({
                 const Icon = contactIcons[info.icon] ?? Phone
 
                 return (
-                <a key={info.title} href={info.href} className={isDark ? "flex items-start gap-4 rounded-lg border border-cyan-100/15 bg-white/10 p-4 shadow-sm shadow-slate-950/20 backdrop-blur" : "flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5"}>
-                  <div className={isDark ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-emerald-400/15 text-emerald-200" : "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"}>
+                <a key={info.title} href={info.href} className={isDark ? "flex items-start gap-4 rounded-[1.15rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-emerald-300/45" : "flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5"}>
+                  <div className={isDark ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/40 bg-emerald-400/10 text-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.16)]" : "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"}>
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0">
@@ -87,7 +87,7 @@ export function Contact({
               })}
             </div>
 
-            <div id="location" className={isDark ? "mt-8 overflow-hidden rounded-2xl border border-cyan-100/15 bg-white/10 p-2 shadow-2xl shadow-slate-950/25 backdrop-blur" : "mt-8 overflow-hidden rounded-2xl border border-emerald-900/10 bg-white p-2 shadow-2xl shadow-emerald-950/10"}>
+            <div id="location" className={isDark ? "mt-8 overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl" : "mt-8 overflow-hidden rounded-2xl border border-emerald-900/10 bg-white p-2 shadow-2xl shadow-emerald-950/10"}>
               <div className={isDark ? "relative h-[22rem] overflow-hidden rounded-xl bg-slate-900 sm:h-[28rem]" : "relative h-[22rem] overflow-hidden rounded-xl bg-slate-100 sm:h-[28rem]"}>
                 <iframe
                   title="Тоонот Эко Хотхон байршил"
@@ -100,7 +100,7 @@ export function Contact({
             </div>
           </div>
 
-          <div className={isDark ? "relative rounded-lg border border-cyan-100/15 bg-white/10 p-4 shadow-2xl shadow-slate-950/20 backdrop-blur sm:p-6 lg:p-8" : "relative rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8"}>
+          <div className={isDark ? "relative rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8" : "relative rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8"}>
             {showSuccess && (
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
                 <div role="status" className="flex items-center gap-2 rounded-full bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-2xl shadow-emerald-950/30 sm:text-base">
@@ -129,7 +129,7 @@ export function Contact({
                   name="apartment"
                   className={
                     isDark
-                      ? "h-10 w-full rounded-md border border-cyan-100/25 bg-white px-3 py-2 text-sm text-slate-950 outline-none focus-visible:border-sky-300 focus-visible:ring-2 focus-visible:ring-sky-400/35"
+                      ? "h-11 w-full rounded-xl border border-cyan-100/20 bg-white/95 px-3 py-2 text-sm text-slate-950 outline-none focus-visible:border-emerald-300 focus-visible:ring-2 focus-visible:ring-emerald-400/35"
                       : "h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   }
                 >
@@ -147,7 +147,9 @@ export function Contact({
                 className={
                   isGaragePage
                     ? "w-full bg-[#0ea5e9] text-white shadow-lg shadow-sky-950/25 hover:bg-[#0284c7] hover:text-white"
-                    : "w-full"
+                    : isDark
+                      ? "h-12 w-full rounded-xl bg-emerald-400 font-black text-white shadow-[0_0_30px_rgba(16,185,129,0.35)] hover:bg-emerald-300 hover:text-emerald-950"
+                      : "w-full"
                 }
                 size="lg"
                 type="submit"

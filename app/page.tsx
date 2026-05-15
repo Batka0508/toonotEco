@@ -26,8 +26,8 @@ export default async function Home({ searchParams }: HomeProps) {
       <About content={content.about} />
       <Services content={content.amenities} />
       <Gallery content={content.gallery} />
-      <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} projectLocation={projectLocation} />
-      <Footer />
+      <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} projectLocation={projectLocation} variant="dark" />
+      <Footer variant="black" />
     </main>
   )
 }
