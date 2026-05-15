@@ -105,7 +105,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           {groupedGarages.map((group) => (
             <div
               key={group.block}
-              className="w-[86vw] shrink-0 snap-start rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] lg:w-[54rem]"
+              className="w-[calc(100vw-2rem)] shrink-0 snap-start rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] sm:p-3 lg:w-[54rem]"
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>
@@ -235,7 +235,7 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
         className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] sm:gap-3 [&::-webkit-scrollbar]:hidden"
       >
         {garages.map((garage) => (
-          <div key={garage.id} className="w-[66vw] max-w-[15.75rem] shrink-0 snap-start sm:w-[19rem] sm:max-w-none lg:w-[16.25rem]">
+          <div key={garage.id} className="w-full shrink-0 snap-start sm:w-[19rem] lg:w-[16.25rem]">
             <GarageCard garage={garage} onPreview={onPreview} onReserve={onReserve} />
           </div>
         ))}
@@ -265,32 +265,32 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
 
 function GarageCard({ garage, onPreview, onReserve }: { garage: Garage; onPreview: (garage: Garage) => void; onReserve: (garage: Garage) => void }) {
   return (
-    <article className="group relative flex h-full min-h-[22.5rem] overflow-hidden rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.012] hover:border-emerald-300/50 hover:shadow-[0_0_42px_rgba(16,185,129,0.16)] sm:min-h-[27rem] sm:rounded-[28px]">
+    <article className="group relative flex h-full min-h-[21rem] overflow-hidden rounded-2xl border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:scale-[1.012] hover:border-emerald-300/50 hover:shadow-[0_0_42px_rgba(16,185,129,0.16)] sm:min-h-[27rem] sm:rounded-[28px]">
       <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-emerald-200/75 to-transparent" />
       <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-emerald-300/12 blur-3xl transition-opacity duration-300 group-hover:opacity-100" />
       <div className="pointer-events-none absolute -bottom-24 left-6 h-52 w-52 rounded-full bg-emerald-400/10 blur-3xl" />
       <div className="flex w-full flex-col">
-        <div className="relative min-h-[9.75rem] overflow-hidden bg-[radial-gradient(circle_at_15%_5%,rgba(255,255,255,0.14),transparent_8rem),linear-gradient(135deg,#020617_0%,#064e3b_58%,#10b981_100%)] p-4 text-white sm:min-h-[12.75rem] sm:p-5">
+        <div className="relative min-h-[8.75rem] overflow-hidden bg-[radial-gradient(circle_at_15%_5%,rgba(255,255,255,0.14),transparent_8rem),linear-gradient(135deg,#020617_0%,#064e3b_58%,#10b981_100%)] p-3.5 text-white sm:min-h-[12.75rem] sm:p-5">
           <div className="pointer-events-none absolute -right-16 bottom-0 h-32 w-72 rounded-full bg-emerald-200/16 blur-2xl" />
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,transparent_0_52%,rgba(255,255,255,0.10)_52%_64%,transparent_64%)]" />
           <div className="relative grid min-h-12 grid-cols-[1fr_auto] items-start gap-2 sm:min-h-14 sm:gap-3">
             <div className="min-w-0">
               <p className="text-[0.65rem] font-black uppercase tracking-wide text-cyan-50/82 sm:text-xs">Гараашны дугаар</p>
-              <h3 className="mt-1.5 truncate text-2xl font-black tracking-tight text-white drop-shadow-sm sm:mt-2 sm:text-3xl">{garage.number}</h3>
+              <h3 className="mt-1 truncate text-[1.35rem] font-black tracking-tight text-white drop-shadow-sm sm:mt-2 sm:text-3xl">{garage.number}</h3>
             </div>
             <span className={`inline-flex h-7 min-w-[4.75rem] shrink-0 items-center justify-center rounded-full border px-2 text-center text-[0.65rem] font-black shadow-lg backdrop-blur-md sm:h-9 sm:min-w-[5.75rem] sm:px-3 sm:text-xs ${statusClasses[garage.status]}`}>
               {statusLabels[garage.status]}
             </span>
           </div>
-          <div className="relative mt-4 flex h-12 w-16 items-end justify-center text-emerald-200 sm:mt-6 sm:h-16 sm:w-20">
-            <div className="absolute left-1/2 top-0 h-9 w-12 -translate-x-1/2 border-l-2 border-r-2 border-t-2 border-emerald-300/90 [clip-path:polygon(50%_0,100%_34%,100%_100%,0_100%,0_34%)] shadow-[0_0_18px_rgba(16,185,129,0.38)] sm:h-12 sm:w-16" />
-            <div className="relative flex h-9 w-11 items-center justify-center rounded-xl border border-emerald-200/25 bg-slate-950/20 backdrop-blur sm:h-11 sm:w-14">
+          <div className="relative mt-3 flex h-11 w-14 items-end justify-center text-emerald-200 sm:mt-6 sm:h-16 sm:w-20">
+            <div className="absolute left-1/2 top-0 h-8 w-11 -translate-x-1/2 border-l-2 border-r-2 border-t-2 border-emerald-300/90 [clip-path:polygon(50%_0,100%_34%,100%_100%,0_100%,0_34%)] shadow-[0_0_18px_rgba(16,185,129,0.38)] sm:h-12 sm:w-16" />
+            <div className="relative flex h-8 w-10 items-center justify-center rounded-xl border border-emerald-200/25 bg-slate-950/20 backdrop-blur sm:h-11 sm:w-14">
               <Car className="h-5 w-5 text-emerald-200 drop-shadow-[0_0_10px_rgba(16,185,129,0.58)] sm:h-7 sm:w-7" />
             </div>
           </div>
         </div>
 
-        <div className="relative flex flex-1 flex-col p-4 sm:p-5">
+        <div className="relative flex flex-1 flex-col p-3.5 sm:p-5">
           <div className="grid overflow-hidden rounded-2xl border border-cyan-100/10 bg-white/[0.045]">
             <GarageFact icon={Layers3} label="Давхар" value={garage.floor} />
             <GarageFact icon={Ruler} label="Талбай" value={garage.area} />
