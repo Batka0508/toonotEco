@@ -1,108 +1,171 @@
+"use client"
+
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Armchair, ArrowRight, Building2, CalendarCheck, Droplets, Layers3, MapPin, PhoneCall, Plug, ShieldCheck, Thermometer } from "lucide-react"
+import { ArrowRight, Award, Building2, Leaf, ShieldCheck, Sparkles, Target, UsersRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { HomepageContent, IconKey } from "@/lib/homepage-content"
+import type { HomepageContent } from "@/lib/homepage-content"
 
-const factIcons: Partial<Record<IconKey, typeof MapPin>> = {
-  building: Building2,
-  calendar: CalendarCheck,
-  layers: Layers3,
-  map: MapPin,
-}
-
-const benefits = [
-  { icon: ShieldCheck, title: "Аюулгүй", description: "24/7 хяналт хамгаалалт" },
-  { icon: Thermometer, title: "Дулаан", description: "-30°C хүртэл дулаан" },
-  { icon: Droplets, title: "Чийггүй", description: "Чийг тусгаарлалт сайн" },
-  { icon: Plug, title: "Цахилгаантай", description: "220V залгууртай" },
-  { icon: Armchair, title: "Өргөн зай", description: "Тав тухтай зай талбай" },
+const stats = [
+  { value: 500, suffix: "+", label: "Сэтгэл хангалуун харилцагч", icon: UsersRound },
+  { value: 10, suffix: "+", label: "Жилийн туршлага", icon: Award },
+  { value: 25, suffix: "", label: "Премиум төсөл", icon: Building2 },
+  { value: 98, suffix: "%", label: "Хэрэглэгчийн сэтгэл ханамж", icon: ShieldCheck },
 ]
 
-export function About({ content }: { content: HomepageContent["about"] }) {
+const values = [
+  {
+    icon: Target,
+    title: "Алсын хараа",
+    description: "Орчин үеийн төлөвлөлт, найдвартай барилга, үнэ цэнтэй хөрөнгө оруулалтыг нэг дор бүрдүүлсэн хотхоны стандарт бий болгоно.",
+  },
+  {
+    icon: Sparkles,
+    title: "Эрхэм зорилго",
+    description: "Харилцагч бүрт ойлгомжтой мэдээлэл, мэргэжлийн зөвлөгөө, итгэлтэй худалдан авалтын туршлага хүргэнэ.",
+  },
+  {
+    icon: Leaf,
+    title: "Эко үнэ цэн",
+    description: "Ногоон орчин, эрчим хүчний хэмнэлт, тав тухтай амьдрах хэв маягийг барилгын шийдэл бүрт тусгана.",
+  },
+]
+
+function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const duration = 1200
+    const start = performance.now()
+    let frame = 0
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.round(value * eased))
+
+      if (progress < 1) {
+        frame = requestAnimationFrame(tick)
+      }
+    }
+
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [value])
+
   return (
-    <section id="about" className="relative overflow-hidden bg-[#001b24] py-16 text-white md:py-24">
-      <Image
-        src="/images/zurag.jpg.png"
-        alt=""
-        fill
-        sizes="100vw"
-        className="pointer-events-none object-cover opacity-28"
-        aria-hidden="true"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_88%_42%,rgba(16,185,129,0.34),transparent_24rem),linear-gradient(90deg,rgba(0,26,36,0.98)_0%,rgba(0,31,43,0.88)_42%,rgba(0,35,45,0.72)_100%)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-[linear-gradient(0deg,rgba(0,37,39,0.95),transparent)]" />
+    <span>
+      {count}
+      {suffix}
+    </span>
+  )
+}
+
+export function About({ content }: { content: HomepageContent["about"] }) {
+  const paragraphs = useMemo(
+    () => [
+      "Монгол Од Компани нь премиум үл хөдлөх хөрөнгийн борлуулалт, орон сууцны төсөл хөгжүүлэлт, харилцагчийн зөвлөгөө үйлчилгээг мэргэжлийн түвшинд хүргэдэг байгууллага юм.",
+      "Бид Тоонот Эко Хотхоныг байршил, төлөвлөлт, чанартай хийц, ногоон орчин, урт хугацааны үнэ цэнийг хослуулсан орчин үеийн амьдралын сонголт болгон танилцуулж байна.",
+    ],
+    [],
+  )
+
+  return (
+    <section id="about" className="relative overflow-hidden bg-black py-16 text-white md:py-24">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(16,185,129,0.16),transparent_24rem),radial-gradient(circle_at_86%_22%,rgba(20,184,166,0.12),transparent_26rem),linear-gradient(180deg,#020617_0%,#000_52%,#020617_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:84px_84px]" />
 
       <div className="container relative z-10 mx-auto px-4">
-        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16">
-          <div className="max-w-2xl">
-            <p className="mb-5 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.45)]">{content.eyebrow}</p>
-            <h2 className="max-w-xl text-4xl font-black leading-tight text-white text-balance drop-shadow-[0_4px_24px_rgba(255,255,255,0.14)] md:text-5xl">
-              {content.title}
-            </h2>
-            <div className="mt-7 flex items-center gap-3">
-              <span className="h-1 w-24 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(16,185,129,0.8)]" />
-              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(16,185,129,0.9)]" />
-            </div>
-            {content.paragraphs.map((paragraph, index) => (
-              <p key={paragraph} className={index === 0 ? "mt-8 max-w-2xl text-base leading-8 text-cyan-50/78" : "mt-5 max-w-2xl text-base leading-8 text-cyan-50/78"}>
-                {paragraph}
-              </p>
-            ))}
+        <div className="mb-10 max-w-2xl md:mb-12">
+          <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">{content.eyebrow || "Компанийн тухай"}</p>
+          <h2 className="text-3xl font-black text-white text-balance md:text-4xl">
+           Орчин үеийн амьдралын шинэ стандарт
+          </h2>
+          <p className="mt-4 leading-8 text-cyan-50/72">
+            Монгол Од Компани нь чанар, итгэл, ногоон орчин, урт хугацааны үнэ цэнийг нэгтгэсэн орон сууцны төслүүдийг харилцагчдад мэргэжлийн түвшинд танилцуулдаг.
+          </p>
+        </div>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-              <Button
-                asChild
-                size="lg"
-                className="group h-14 rounded-[1.35rem] border border-emerald-300/35 bg-emerald-400 px-8 text-base font-black text-white shadow-[0_0_36px_rgba(16,185,129,0.48)] transition-all hover:-translate-y-0.5 hover:bg-emerald-300 hover:text-emerald-950 hover:shadow-[0_0_48px_rgba(16,185,129,0.65)]"
-              >
-                <Link href="#apartments">
-                  {content.primaryCta}
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="h-14 rounded-[1.35rem] border border-emerald-300/70 bg-slate-950/30 px-8 text-base font-black text-cyan-50 shadow-[0_0_22px_rgba(16,185,129,0.12)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-emerald-400/10 hover:text-white"
-              >
-                <Link href="#contact">
-                  <PhoneCall className="h-5 w-5 text-emerald-300" />
-                  {content.secondaryCta}
-                </Link>
-              </Button>
+        <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
+          <div className="group overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]">
+            <div className="relative aspect-[16/12] min-h-[28rem] w-full overflow-hidden bg-slate-950 lg:h-full">
+                <Image
+                  src="/images/zurag.jpg.png"
+                  alt="Тоонот Эко Хотхон барилгын зураг"
+                  fill
+                  sizes="(min-width: 1024px) 44vw, 100vw"
+                  className="object-cover opacity-82 transition-transform duration-500 group-hover:scale-105"
+                  priority={false}
+                />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.76))]" />
+              <div className="absolute bottom-5 left-5 right-5 rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.08] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-200">Premium Real Estate</p>
+                  <p className="mt-2 text-2xl font-black tracking-tight text-white">Монгол Од Компани</p>
+                <p className="mt-2 text-sm leading-6 text-cyan-50/70">Итгэл, чанар, үнэ цэнийг нэгтгэсэн борлуулалтын баг.</p>
+              </div>
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {content.facts.map((fact) => {
-              const Icon = factIcons[fact.icon] ?? MapPin
+          <div className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:p-8">
+            <div className="space-y-5 text-base leading-8 text-cyan-50/72">
+              {paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
 
-              return (
-              <div key={fact.label} className="min-h-[13.5rem] rounded-[1.4rem] border border-cyan-200/18 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/55 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)] md:min-h-[16rem] md:p-8">
-                <div className="mb-7 flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-300/45 bg-emerald-400/10 text-emerald-300 shadow-[0_0_24px_rgba(16,185,129,0.18)]">
-                  <Icon className="h-8 w-8 drop-shadow-[0_0_12px_rgba(16,185,129,0.75)]" />
-                </div>
-                <p className="text-base font-black text-emerald-300">{fact.label}</p>
-                <p className="mt-3 text-xl font-black leading-snug text-white md:text-2xl">{fact.value}</p>
-              </div>
-              )
-            })}
+            <div className="mt-8 grid gap-5 sm:grid-cols-3">
+              {values.map((item) => {
+                const Icon = item.icon
+
+                return (
+                  <div
+                    key={item.title}
+                    className="rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075]"
+                  >
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-300/45 bg-emerald-400/10 text-emerald-300 shadow-[0_0_22px_rgba(16,185,129,0.16)]">
+                      <Icon className="h-6 w-6 drop-shadow-[0_0_10px_rgba(16,185,129,0.7)]" />
+                    </div>
+                    <h3 className="mt-4 text-base font-black text-white">{item.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-cyan-50/70">{item.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Button asChild size="lg" className="h-13 rounded-[1.1rem] bg-emerald-400 px-7 font-black text-white shadow-[0_0_30px_rgba(16,185,129,0.28)] transition hover:-translate-y-0.5 hover:bg-emerald-300 hover:text-emerald-950">
+                <Link href="#gallery">
+                  Дэлгэрэнгүй
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-13 rounded-[1.1rem] border border-emerald-300/70 bg-slate-950/30 px-7 font-black text-cyan-50 shadow-[0_0_22px_rgba(16,185,129,0.12)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-emerald-400/10 hover:text-white">
+                <Link href="#contact">Холбоо барих</Link>
+              </Button>
+            </div>
           </div>
         </div>
 
-        <div className="mt-12 grid gap-4 rounded-[1.4rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:grid-cols-2 lg:grid-cols-5 lg:p-6">
-          {benefits.map((benefit) => {
-            const Icon = benefit.icon
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat) => {
+            const Icon = stat.icon
 
             return (
-              <div key={benefit.title} className="flex items-center gap-4">
-                <Icon className="h-10 w-10 shrink-0 text-emerald-300 drop-shadow-[0_0_14px_rgba(16,185,129,0.72)]" />
-                <div>
-                  <p className="font-black text-white">{benefit.title}</p>
-                  <p className="mt-1 text-sm text-cyan-50/68">{benefit.description}</p>
-                </div>
+              <div
+                key={stat.label}
+                className="group rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]"
+              >
+                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-300/45 bg-emerald-400/10 text-emerald-300 shadow-[0_0_22px_rgba(16,185,129,0.16)]">
+                    <Icon className="h-6 w-6 drop-shadow-[0_0_10px_rgba(16,185,129,0.7)]" />
+                    </div>
+                    <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.9)]" />
+                  </div>
+                  <p className="mt-7 text-4xl font-black tracking-tight text-white">
+                    <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+                  </p>
+                <p className="mt-2 text-sm font-semibold leading-6 text-cyan-50/70">{stat.label}</p>
               </div>
             )
           })}

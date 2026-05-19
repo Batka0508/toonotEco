@@ -323,28 +323,30 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
   const ActiveIcon = activeRoom.icon
 
   return (
-    <section id="vr-tour" className="overflow-hidden bg-slate-950 py-12 text-white sm:py-16 md:py-24">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+    <section id="vr-tour" className="relative overflow-hidden bg-black py-16 text-white md:py-24">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(16,185,129,0.16),transparent_24rem),radial-gradient(circle_at_86%_22%,rgba(20,184,166,0.12),transparent_26rem),linear-gradient(180deg,#020617_0%,#000_52%,#020617_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:84px_84px]" />
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mb-10 flex flex-col gap-5 md:mb-12 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
-            <p className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-xs font-bold uppercase tracking-wide text-emerald-300 sm:px-4 sm:text-sm">
+            <p className="mb-3 inline-flex max-w-full items-center gap-2 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">
               <Leaf className="h-4 w-4 shrink-0" />
               <span className="truncate">{content.badge}</span>
             </p>
-            <h2 className="text-2xl font-black leading-tight text-white text-balance sm:text-3xl md:text-5xl">
+            <h2 className="text-3xl font-black leading-tight text-white text-balance md:text-4xl">
               {content.title}
             </h2>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300 sm:text-base sm:leading-8">
+            <p className="mt-4 max-w-2xl leading-8 text-cyan-50/72">
               {content.description}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/10 p-4 text-sm text-slate-200 backdrop-blur">
+          <div className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-5 text-sm text-cyan-50/70 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
             <p className="font-bold text-white">{content.controlsTitle}</p>
             <p className="mt-1">{content.controlsDescription}</p>
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-emerald-950/30 sm:rounded-3xl">
+        <div className="overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
           <div className="grid lg:min-h-[44rem] lg:grid-cols-[1fr_21rem]">
             <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
               <div
@@ -352,40 +354,40 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
                 style={{ backgroundImage: `url('${activeRoom.panorama}')` }}
               />
               {!panoramaReady && (
-                <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#07130f,#0f1f1a)] text-center">
-                <div className="mx-4 rounded-2xl border border-emerald-300/20 bg-white/10 px-5 py-4 backdrop-blur sm:px-6">
+                <div className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_50%_35%,rgba(52,211,153,0.22),transparent_32%),linear-gradient(135deg,#020617,#000)] text-center">
+                <div className="mx-4 rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] px-5 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:px-6">
                   <p className="text-xs font-bold uppercase tracking-wide text-emerald-300 sm:text-sm">{content.loadingTitle}</p>
-                  <p className="mt-2 text-xs text-slate-300">{content.loadingDescription}</p>
+                  <p className="mt-2 text-xs text-cyan-50/70">{content.loadingDescription}</p>
                 </div>
               </div>
               )}
               <div ref={mountRef} className="relative z-10 h-full min-h-[24rem] w-full sm:min-h-[32rem] lg:min-h-[36rem]" />
 
               {hoverLabel && (
-                <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-emerald-300/25 bg-slate-950/65 px-3 py-2 text-xs font-bold text-emerald-200 backdrop-blur sm:left-6 sm:top-6 sm:px-4 sm:text-sm">
+                <div className="pointer-events-none absolute left-4 top-4 rounded-full border border-emerald-300/45 bg-emerald-400/10 px-3 py-2 text-xs font-bold text-emerald-200 shadow-[0_0_22px_rgba(16,185,129,0.16)] backdrop-blur-xl sm:left-6 sm:top-6 sm:px-4 sm:text-sm">
                   {hoverLabel}
                 </div>
               )}
 
-              <div className="absolute bottom-4 left-4 right-4 hidden gap-3 rounded-2xl border border-white/10 bg-slate-950/60 p-4 backdrop-blur-xl md:grid md:grid-cols-3 lg:bottom-6 lg:left-6 lg:right-6">
+              <div className="absolute bottom-4 left-4 right-4 hidden gap-3 rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:grid md:grid-cols-3 lg:bottom-6 lg:left-6 lg:right-6">
                 {content.infoPills.map((item) => (
                   <InfoPill key={item.label} label={item.label} value={item.value} />
                 ))}
               </div>
             </div>
 
-            <aside className="border-t border-white/10 bg-slate-950/90 p-4 backdrop-blur sm:p-5 lg:border-l lg:border-t-0">
-              <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+            <aside className="border-t border-cyan-200/16 bg-cyan-100/[0.035] p-4 backdrop-blur-xl sm:p-5 lg:border-l lg:border-t-0">
+              <div className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white sm:h-12 sm:w-12">
-                    <ActiveIcon className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/45 bg-emerald-400/10 text-emerald-300 shadow-[0_0_22px_rgba(16,185,129,0.16)] sm:h-12 sm:w-12">
+                    <ActiveIcon className="h-5 w-5 drop-shadow-[0_0_10px_rgba(16,185,129,0.7)] sm:h-6 sm:w-6" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">Одоогийн өрөө</p>
                     <h3 className="truncate text-lg font-black text-white sm:text-xl">{activeRoom.label}</h3>
                   </div>
                 </div>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{activeRoom.info}</p>
+                <p className="mt-4 text-sm leading-7 text-cyan-50/70">{activeRoom.info}</p>
               </div>
 
               <div className="mt-5">
@@ -405,8 +407,8 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
                         className={[
                           "min-h-20 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5",
                           isActive
-                            ? "border-emerald-400 bg-emerald-500 text-white"
-                            : "border-white/10 bg-white/5 text-slate-200 hover:bg-white/10",
+                            ? "border-emerald-300/70 bg-emerald-400 text-white shadow-[0_0_22px_rgba(16,185,129,0.18)]"
+                            : "border-cyan-200/16 bg-cyan-100/[0.055] text-cyan-50/78 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075]",
                         ].join(" ")}
                       >
                         <Icon className="h-5 w-5" />
@@ -417,7 +419,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
                 </div>
               </div>
 
-              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div className="mt-6 rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl">
                 <p className="text-sm font-bold text-white">{content.panelTitle}</p>
                 <dl className="mt-4 grid gap-3 text-sm">
                   {content.panelRows.map((item) => (
@@ -435,7 +437,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
 
 function InfoPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-white/10 p-3">
+    <div className="rounded-xl border border-cyan-200/16 bg-cyan-100/[0.055] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
       <p className="text-xs font-bold uppercase tracking-wide text-emerald-300">{label}</p>
       <p className="mt-1 text-sm font-semibold text-white">{value}</p>
     </div>
@@ -444,8 +446,8 @@ function InfoPill({ label, value }: { label: string; value: string }) {
 
 function PanelRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-2 last:border-0 last:pb-0">
-      <dt className="text-slate-400">{label}</dt>
+    <div className="flex items-center justify-between gap-3 border-b border-cyan-200/16 pb-2 last:border-0 last:pb-0">
+      <dt className="text-cyan-50/60">{label}</dt>
       <dd className="text-right font-bold text-white">{value}</dd>
     </div>
   )
