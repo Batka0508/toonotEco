@@ -28,7 +28,7 @@ export function Header() {
 
   return (
     <header className="relative z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
-      <div className="mx-auto max-w-[1440px] px-3 sm:px-5 lg:px-6 xl:px-8">
+      <div className="mx-auto max-w-[1440px] pl-1 pr-3 sm:pl-2 sm:pr-5 lg:pl-3 lg:pr-6 xl:pl-4 xl:pr-8">
         <div className="flex h-16 items-center justify-between gap-2 sm:h-20 lg:h-24 lg:gap-4">
           <Link
             href="/"
