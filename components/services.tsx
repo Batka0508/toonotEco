@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Baby, Car, Dumbbell, ShieldCheck, Trees, Wifi } from "lucide-react"
+import { FadeIn, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent, IconKey } from "@/lib/homepage-content"
 
 const amenityIcons: Partial<Record<IconKey, typeof Dumbbell>> = {
@@ -15,20 +16,20 @@ export function Services({ content }: { content: HomepageContent["amenities"] })
   return (
     <section id="amenities" className="relative overflow-hidden py-16 text-white md:py-24">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="mb-10 max-w-2xl md:mb-12">
+        <FadeIn className="mb-10 max-w-2xl md:mb-12">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">{content.eyebrow}</p>
           <h2 className="text-3xl font-black text-white text-balance md:text-4xl">{content.title}</h2>
           <p className="mt-4 leading-8 text-cyan-50/72">
             {content.description}
           </p>
-        </div>
+        </FadeIn>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <StaggerGroup className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {content.items.map((item) => {
             const Icon = amenityIcons[item.icon] ?? Trees
 
             return (
-            <div
+            <StaggerItem
               key={item.title}
               className="group overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]"
             >
@@ -51,10 +52,10 @@ export function Services({ content }: { content: HomepageContent["amenities"] })
                 <h3 className="text-xl font-black text-white">{item.title}</h3>
                 <p className="mt-3 leading-7 text-cyan-50/70">{item.description}</p>
               </div>
-            </div>
+            </StaggerItem>
             )
           })}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   )

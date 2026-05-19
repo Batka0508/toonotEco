@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer"
 import { GarageSales } from "@/components/garage-sales"
 import { Contact } from "@/components/contact"
 import { Button } from "@/components/ui/button"
+import { FadeIn } from "@/components/motion-primitives"
 import { getGarages } from "@/lib/garages"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getProjectLocation } from "@/lib/project-location"
@@ -29,7 +30,7 @@ export default async function GaragesPage({ searchParams }: GaragesPageProps) {
         <div className="relative z-10">
           <section className="py-16 text-white md:py-24">
             <div className="container mx-auto px-4">
-              <div className="flex max-w-4xl flex-col gap-4">
+              <FadeIn className="flex max-w-4xl flex-col gap-4">
                 <p className="flex w-fit items-center gap-2 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">
                   <Car className="h-4 w-4" />
                   Дулаан зогсоол
@@ -46,7 +47,7 @@ export default async function GaragesPage({ searchParams }: GaragesPageProps) {
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 </Button>
-              </div>
+              </FadeIn>
             </div>
           </section>
 

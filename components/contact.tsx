@@ -6,6 +6,7 @@ import { submitInquiry } from "@/app/contact-actions"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { FadeIn, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent, IconKey } from "@/lib/homepage-content"
 import type { ProjectLocation } from "@/lib/project-location"
 
@@ -61,19 +62,20 @@ export function Contact({
     >
       <div className="container mx-auto px-4">
         <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-          <div>
+          <FadeIn>
             <p className={isDark ? "mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]" : "mb-3 text-sm font-semibold uppercase tracking-wide text-primary"}>{content.eyebrow}</p>
             <h2 className={isDark ? "text-2xl font-black text-white text-balance sm:text-3xl md:text-4xl" : "text-2xl font-bold text-slate-950 text-balance sm:text-3xl md:text-4xl"}>{content.title}</h2>
             <p className={isDark ? "mt-4 text-sm leading-7 text-cyan-50/75 sm:mt-5 sm:text-base sm:leading-8" : "mt-4 text-sm leading-7 text-slate-600 sm:mt-5 sm:text-base sm:leading-8"}>
               {content.description}
             </p>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <StaggerGroup className="mt-8 grid gap-4 sm:grid-cols-2">
               {content.info.map((info) => {
                 const Icon = contactIcons[info.icon] ?? Phone
 
                 return (
-                <a key={info.title} href={info.href} className={isDark ? "flex items-start gap-4 rounded-[1.15rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-emerald-300/45" : "flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5"}>
+                <StaggerItem key={info.title}>
+                <a href={info.href} className={isDark ? "flex items-start gap-4 rounded-[1.15rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-emerald-300/45" : "flex items-start gap-4 rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5"}>
                   <div className={isDark ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-300/40 bg-emerald-400/10 text-emerald-300 shadow-[0_0_18px_rgba(16,185,129,0.16)]" : "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"}>
                     <Icon className="h-5 w-5" />
                   </div>
@@ -82,9 +84,10 @@ export function Contact({
                     <p className={isDark ? "mt-1 break-words font-bold text-white" : "mt-1 break-words font-bold text-slate-950"}>{info.value}</p>
                   </div>
                 </a>
+                </StaggerItem>
                 )
               })}
-            </div>
+            </StaggerGroup>
 
             <div id="location" className={isDark ? "mt-8 overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl" : "mt-8 overflow-hidden rounded-2xl border border-emerald-900/10 bg-white p-2 shadow-2xl shadow-emerald-950/10"}>
               <div className={isDark ? "relative h-[22rem] overflow-hidden rounded-xl bg-slate-900 sm:h-[28rem]" : "relative h-[22rem] overflow-hidden rounded-xl bg-slate-100 sm:h-[28rem]"}>
@@ -97,9 +100,9 @@ export function Contact({
                 />
               </div>
             </div>
-          </div>
+          </FadeIn>
 
-          <div className={isDark ? "relative rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8" : "relative rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8"}>
+          <FadeIn delay={0.1} className={isDark ? "relative rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8" : "relative rounded-lg border border-emerald-900/10 bg-white p-4 shadow-sm shadow-emerald-900/5 sm:p-6 lg:p-8"}>
             {showSuccess && (
               <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-4">
                 <div role="status" className="flex items-center gap-2 rounded-full bg-emerald-700 px-6 py-3 text-sm font-bold text-white shadow-2xl shadow-emerald-950/30 sm:text-base">
@@ -156,7 +159,7 @@ export function Contact({
                 Захиалга илгээх
               </Button>
             </form>
-          </div>
+          </FadeIn>
         </div>
       </div>
     </section>

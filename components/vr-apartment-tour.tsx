@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Bath, BedDouble, ChefHat, Leaf, Sofa } from "lucide-react"
 import * as THREE from "three"
+import { FadeIn, SoftZoomImage, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent } from "@/lib/homepage-content"
 
 const baseRooms = [
@@ -325,7 +326,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
   return (
     <section id="vr-tour" className="relative overflow-hidden py-16 text-white md:py-24">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="mb-10 flex flex-col gap-5 md:mb-12 lg:flex-row lg:items-end lg:justify-between">
+        <FadeIn className="mb-10 flex flex-col gap-5 md:mb-12 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl">
             <p className="mb-3 inline-flex max-w-full items-center gap-2 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">
               <Leaf className="h-4 w-4 shrink-0" />
@@ -342,9 +343,9 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
             <p className="font-bold text-white">{content.controlsTitle}</p>
             <p className="mt-1">{content.controlsDescription}</p>
           </div>
-        </div>
+        </FadeIn>
 
-        <div className="overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+        <SoftZoomImage className="overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
           <div className="grid lg:min-h-[44rem] lg:grid-cols-[1fr_21rem]">
             <div className="relative min-h-[24rem] sm:min-h-[32rem] lg:min-h-[36rem]">
               <div
@@ -368,9 +369,13 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
               )}
 
               <div className="absolute bottom-4 left-4 right-4 hidden gap-3 rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:grid md:grid-cols-3 lg:bottom-6 lg:left-6 lg:right-6">
-                {content.infoPills.map((item) => (
-                  <InfoPill key={item.label} label={item.label} value={item.value} />
-                ))}
+                <StaggerGroup className="contents">
+                  {content.infoPills.map((item) => (
+                    <StaggerItem key={item.label}>
+                      <InfoPill label={item.label} value={item.value} />
+                    </StaggerItem>
+                  ))}
+                </StaggerGroup>
               </div>
             </div>
 
@@ -390,31 +395,35 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
 
               <div className="mt-5">
                 <p className="text-sm font-bold uppercase tracking-wide text-slate-400">Өрөө сонгох</p>
-                <div className="mt-3 grid grid-cols-2 gap-2">
+                <StaggerGroup className="mt-3 grid grid-cols-2 gap-2">
                   {rooms.map((room) => {
                     const Icon = room.icon
                     const isActive = activeRoom.id === room.id
                     return (
-                      <button
+                      <StaggerItem
                         key={room.id}
-                        type="button"
-                        onClick={() => {
-                          setActiveRoom(room)
-                          window.dispatchEvent(new CustomEvent("room-change", { detail: room.id }))
-                        }}
                         className={[
-                          "min-h-20 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5",
+                          "min-h-20 rounded-xl border",
                           isActive
                             ? "border-emerald-300/70 bg-emerald-400 text-white shadow-[0_0_22px_rgba(16,185,129,0.18)]"
                             : "border-cyan-200/16 bg-cyan-100/[0.055] text-cyan-50/78 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075]",
                         ].join(" ")}
                       >
-                        <Icon className="h-5 w-5" />
-                        <span className="mt-2 block text-xs font-bold leading-4">{room.label}</span>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveRoom(room)
+                            window.dispatchEvent(new CustomEvent("room-change", { detail: room.id }))
+                          }}
+                          className="h-full w-full p-3 text-left transition-all hover:-translate-y-0.5"
+                        >
+                          <Icon className="h-5 w-5" />
+                          <span className="mt-2 block text-xs font-bold leading-4">{room.label}</span>
+                        </button>
+                      </StaggerItem>
                     )
                   })}
-                </div>
+                </StaggerGroup>
               </div>
 
               <div className="mt-6 rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl">
@@ -427,7 +436,7 @@ export function VrApartmentTour({ content }: { content: HomepageContent["vrTour"
               </div>
             </aside>
           </div>
-        </div>
+        </SoftZoomImage>
       </div>
     </section>
   )

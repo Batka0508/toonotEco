@@ -5,6 +5,7 @@ import Image from "next/image"
 import { BadgeDollarSign, Car, ChevronLeft, ChevronRight, Eye, Layers3, Ruler } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { FadeIn, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { Garage, GarageStatus } from "@/lib/garages"
 
 type GarageFilter = "all" | "available"
@@ -67,7 +68,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
 
   return (
     <section className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8">
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <FadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">Гарааш худалдаа</p>
           <h2 className="text-3xl font-black tracking-tight text-white text-balance md:text-4xl">Дулаан зогсоолын сонголтууд</h2>
@@ -95,9 +96,9 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
             )
           })}
         </div>
-      </div>
+      </FadeIn>
 
-      <div className="relative mt-8">
+      <FadeIn delay={0.08} className="relative mt-8">
         <div ref={carouselRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {groupedGarages.map((group) => (
             <div
@@ -123,7 +124,7 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           <CarouselButton direction="previous" onClick={() => scrollCarousel("previous")} label="Өмнөх блок" />
           <CarouselButton direction="next" onClick={() => scrollCarousel("next")} label="Дараах блок" />
         </div>
-      </div>
+      </FadeIn>
 
       <ReserveDialog garage={selectedGarage} onClose={() => setSelectedGarage(null)} onSubmit={handleReserveSubmit} />
       <PreviewDialog garage={previewGarage} onClose={() => setPreviewGarage(null)} onReserve={(garage) => {
@@ -149,13 +150,13 @@ function GarageBlockCards({ garages, onPreview, onReserve }: { garages: Garage[]
 
   return (
     <div className="relative">
-      <div ref={cardsRef} className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] sm:gap-3 [&::-webkit-scrollbar]:hidden">
+      <StaggerGroup ref={cardsRef} className="flex snap-x snap-mandatory gap-2 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] sm:gap-3 [&::-webkit-scrollbar]:hidden">
         {garages.map((garage) => (
-          <div key={garage.id} className="w-full shrink-0 snap-start sm:w-[19rem] lg:w-[16.25rem]">
+          <StaggerItem key={garage.id} className="w-full shrink-0 snap-start sm:w-[19rem] lg:w-[16.25rem]">
             <GarageCard garage={garage} onPreview={onPreview} onReserve={onReserve} />
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
 
       <div className="mt-2 flex justify-end gap-2 sm:mt-3">
         <SmallCarouselButton direction="previous" onClick={() => scrollCards("previous")} label="Өмнөх гарааш" />

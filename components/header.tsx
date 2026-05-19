@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { LockKeyhole, Menu, Phone, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { ScrollBlurHeader } from "@/components/motion-primitives"
 
 const navLinks = [
   { href: "/#home", label: "\u041d\u04af\u04af\u0440" },
@@ -27,7 +28,7 @@ export function Header() {
   }
 
   return (
-    <header className="relative z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
+    <ScrollBlurHeader className="sticky top-0 z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
       <div className="mx-auto max-w-[1440px] pl-1 pr-3 sm:pl-2 sm:pr-5 lg:pl-3 lg:pr-6 xl:pl-4 xl:pr-8">
         <div className="flex h-16 items-center justify-between gap-2 sm:h-20 lg:h-24 lg:gap-4">
           <Link
@@ -114,6 +115,6 @@ export function Header() {
           </nav>
         )}
       </div>
-    </header>
+    </ScrollBlurHeader>
   )
 }

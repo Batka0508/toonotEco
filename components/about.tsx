@@ -5,6 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Award, Building2, Leaf, ShieldCheck, Sparkles, Target, UsersRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { FadeIn, SoftZoomImage, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent } from "@/lib/homepage-content"
 
 const stats = [
@@ -74,7 +75,7 @@ export function About({ content }: { content: HomepageContent["about"] }) {
   return (
     <section id="about" className="relative overflow-hidden py-16 text-white md:py-24">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="mb-10 max-w-2xl md:mb-12">
+        <FadeIn className="mb-10 max-w-2xl md:mb-12">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">{content.eyebrow || "Компанийн тухай"}</p>
           <h2 className="text-3xl font-black text-white text-balance md:text-4xl">
            Орчин үеийн амьдралын шинэ стандарт
@@ -82,10 +83,10 @@ export function About({ content }: { content: HomepageContent["about"] }) {
           <p className="mt-4 leading-8 text-cyan-50/72">
             Монгол Од Компани нь чанар, итгэл, ногоон орчин, урт хугацааны үнэ цэнийг нэгтгэсэн орон сууцны төслүүдийг харилцагчдад мэргэжлийн түвшинд танилцуулдаг.
           </p>
-        </div>
+        </FadeIn>
 
         <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-stretch">
-          <div className="group overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]">
+          <SoftZoomImage className="group overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]">
             <div className="relative aspect-[16/12] min-h-[28rem] w-full overflow-hidden bg-slate-950 lg:h-full">
                 <Image
                   src="/images/zurag.jpg.png"
@@ -102,21 +103,21 @@ export function About({ content }: { content: HomepageContent["about"] }) {
                 <p className="mt-2 text-sm leading-6 text-cyan-50/70">Итгэл, чанар, үнэ цэнийг нэгтгэсэн борлуулалтын баг.</p>
               </div>
             </div>
-          </div>
+          </SoftZoomImage>
 
-          <div className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:p-8">
+          <FadeIn delay={0.08} className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl md:p-8">
             <div className="space-y-5 text-base leading-8 text-cyan-50/72">
               {paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
 
-            <div className="mt-8 grid gap-5 sm:grid-cols-3">
+            <StaggerGroup className="mt-8 grid gap-5 sm:grid-cols-3">
               {values.map((item) => {
                 const Icon = item.icon
 
                 return (
-                  <div
+                  <StaggerItem
                     key={item.title}
                     className="rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.18)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075]"
                   >
@@ -125,10 +126,10 @@ export function About({ content }: { content: HomepageContent["about"] }) {
                     </div>
                     <h3 className="mt-4 text-base font-black text-white">{item.title}</h3>
                     <p className="mt-2 text-sm leading-6 text-cyan-50/70">{item.description}</p>
-                  </div>
+                  </StaggerItem>
                 )
               })}
-            </div>
+            </StaggerGroup>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg" className="h-13 rounded-[1.1rem] bg-emerald-400 px-7 font-black text-white shadow-[0_0_30px_rgba(16,185,129,0.28)] transition hover:-translate-y-0.5 hover:bg-emerald-300 hover:text-emerald-950">
@@ -141,15 +142,15 @@ export function About({ content }: { content: HomepageContent["about"] }) {
                 <Link href="#contact">Холбоо барих</Link>
               </Button>
             </div>
-          </div>
+          </FadeIn>
         </div>
 
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerGroup className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => {
             const Icon = stat.icon
 
             return (
-              <div
+              <StaggerItem
                 key={stat.label}
                 className="group rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-emerald-300/50 hover:bg-emerald-300/[0.075] hover:shadow-[0_0_42px_rgba(16,185,129,0.16)]"
               >
@@ -163,10 +164,10 @@ export function About({ content }: { content: HomepageContent["about"] }) {
                     <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                   </p>
                 <p className="mt-2 text-sm font-semibold leading-6 text-cyan-50/70">{stat.label}</p>
-              </div>
+              </StaggerItem>
             )
           })}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   )

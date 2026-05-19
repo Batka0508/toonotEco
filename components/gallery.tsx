@@ -1,19 +1,20 @@
 import Image from "next/image"
+import { FadeIn, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent } from "@/lib/homepage-content"
 
 export function Gallery({ content }: { content: HomepageContent["gallery"] }) {
   return (
     <section id="gallery" className="relative overflow-hidden py-16 text-white md:py-24">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="mb-10 max-w-2xl">
+        <FadeIn className="mb-10 max-w-2xl">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">{content.eyebrow}</p>
           <h2 className="text-3xl font-black text-white text-balance md:text-4xl">{content.title}</h2>
           <p className="mt-4 leading-8 text-cyan-50/72">{content.description}</p>
-        </div>
+        </FadeIn>
 
-        <div className="grid gap-4 md:grid-cols-4 md:auto-rows-[220px]">
+        <StaggerGroup className="grid gap-4 md:grid-cols-4 md:auto-rows-[220px]">
           {content.items.map((item, index) => (
-            <figure
+            <StaggerItem
               key={item.src}
               className={[
                 "group relative min-h-[260px] overflow-hidden rounded-[1.35rem] border border-cyan-200/16 bg-slate-950 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] sm:min-h-[320px] md:min-h-0",
@@ -27,9 +28,9 @@ export function Gallery({ content }: { content: HomepageContent["gallery"] }) {
                 <p className="text-xs font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_10px_rgba(16,185,129,0.7)]">{item.label}</p>
                 <p className="mt-1 text-lg font-black">{item.title}</p>
               </figcaption>
-            </figure>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   )

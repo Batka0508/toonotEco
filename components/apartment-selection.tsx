@@ -6,6 +6,7 @@ import { Banknote, BedDouble, Calculator, CheckCircle2, ChevronLeft, ChevronRigh
 import type { Apartment } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { FadeIn, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 
 function getImages(apartment: Apartment) {
   const images = apartment.images?.filter(Boolean)
@@ -52,8 +53,8 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
 
   return (
     <>
-      <div className="relative">
-        <div
+      <FadeIn className="relative">
+        <StaggerGroup
           ref={carouselRef}
           className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] sm:gap-5 [&::-webkit-scrollbar]:hidden"
         >
@@ -61,7 +62,7 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
             const images = getImages(apartment)
 
             return (
-              <article
+              <StaggerItem
                 key={apartment.id}
                 className="w-[84vw] shrink-0 snap-start overflow-hidden rounded-lg border border-emerald-900/10 bg-white shadow-sm shadow-emerald-900/5 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-900/10 min-[420px]:w-[21rem] sm:w-[23rem] lg:w-[25rem]"
               >
@@ -114,10 +115,10 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
                     <ApartmentDialog apartment={apartment} />
                   </div>
                 </div>
-              </article>
+              </StaggerItem>
             )
           })}
-        </div>
+        </StaggerGroup>
 
         <div className="pointer-events-none absolute inset-y-0 left-0 right-0 hidden items-center justify-between md:flex">
           <button
@@ -137,10 +138,14 @@ export function ApartmentSelection({ apartments }: { apartments: Apartment[] }) 
             <ChevronRight className="h-5 w-5" />
           </button>
         </div>
-      </div>
+      </FadeIn>
 
-      <PriceCalculator />
-      <CompareApartments apartments={compareApartments} />
+      <FadeIn delay={0.08}>
+        <PriceCalculator />
+      </FadeIn>
+      <FadeIn delay={0.12}>
+        <CompareApartments apartments={compareApartments} />
+      </FadeIn>
     </>
   )
 }

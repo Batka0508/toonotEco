@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer"
 import { ApartmentSelection } from "@/components/apartment-selection"
 import { Contact } from "@/components/contact"
 import { Button } from "@/components/ui/button"
+import { FadeIn } from "@/components/motion-primitives"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getProjectLocation } from "@/lib/project-location"
 import { getSiteContent } from "@/lib/site-content"
@@ -24,7 +25,7 @@ export default async function ApartmentsPage({ searchParams }: ApartmentsPagePro
       <Header />
       <section className="bg-white py-8 sm:py-10 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="flex max-w-4xl flex-col gap-4">
+          <FadeIn className="flex max-w-4xl flex-col gap-4">
             <p className="flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-800">
               <Building2 className="h-4 w-4" />
               Байрны сонголт
@@ -35,13 +36,13 @@ export default async function ApartmentsPage({ searchParams }: ApartmentsPagePro
             <p className="max-w-2xl text-base leading-8 text-slate-600">
               Байрны зураг, талбай, үнэ болон төлөвийн мэдээллийг нэг дороос харж, өөрт тохирох сонголтоо харьцуулна уу.
             </p>
-            <Button asChild className="w-fit bg-emerald-700 hover:bg-emerald-800">
+            <Button asChild className="w-fit bg-emerald-700 transition-all hover:-translate-y-0.5 hover:bg-emerald-800">
               <Link href="#contact">
                 Захиалга өгөх
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             </Button>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
