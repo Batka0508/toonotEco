@@ -30,7 +30,7 @@ export default async function ApartmentsPage({ searchParams }: ApartmentsPagePro
               Байрны сонголт
             </p>
             <h1 className="text-3xl font-black tracking-tight text-slate-950 text-balance sm:text-4xl md:text-5xl">
-              1, 2, 3 өрөө байрны сонголтууд
+              2, 3 өрөө байрны сонголтууд
             </h1>
             <p className="max-w-2xl text-base leading-8 text-slate-600">
               Байрны зураг, талбай, үнэ болон төлөвийн мэдээллийг нэг дороос харж, өөрт тохирох сонголтоо харьцуулна уу.

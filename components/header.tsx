@@ -19,7 +19,7 @@ const navLinks = [
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeHref, setActiveHref] = useState("#home")
+  const [activeHref, setActiveHref] = useState("/#home")
 
   const handleNavClick = (href: string) => {
     setActiveHref(href)
@@ -32,7 +32,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between gap-2 sm:h-20 lg:h-24 lg:gap-4">
           <Link
             href="/"
-            onClick={() => handleNavClick("#home")}
+            onClick={() => handleNavClick("/#home")}
             className="flex min-w-0 max-w-[62vw] items-center gap-2 sm:max-w-none sm:gap-3"
             aria-label="Нүүр хуудас"
           >
