@@ -72,10 +72,7 @@ export function About({ content }: { content: HomepageContent["about"] }) {
   )
 
   return (
-    <section id="about" className="relative overflow-hidden bg-black py-16 text-white md:py-24">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_12%,rgba(16,185,129,0.16),transparent_24rem),radial-gradient(circle_at_86%_22%,rgba(20,184,166,0.12),transparent_26rem),linear-gradient(180deg,#020617_0%,#000_52%,#020617_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:84px_84px]" />
-
+    <section id="about" className="relative overflow-hidden py-16 text-white md:py-24">
       <div className="container relative z-10 mx-auto px-4">
         <div className="mb-10 max-w-2xl md:mb-12">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">{content.eyebrow || "Компанийн тухай"}</p>

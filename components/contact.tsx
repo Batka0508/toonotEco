@@ -55,11 +55,10 @@ export function Contact({
       id="contact"
       className={
         isDark
-          ? "relative overflow-hidden bg-[radial-gradient(circle_at_18%_8%,rgba(20,184,166,0.12),transparent_26rem),radial-gradient(circle_at_82%_8%,rgba(16,185,129,0.16),transparent_24rem),linear-gradient(180deg,#020617,#000)] py-12 sm:py-16 md:py-24"
+          ? "relative overflow-hidden py-12 sm:py-16 md:py-24"
           : "bg-slate-50 py-12 sm:py-16 md:py-24"
       }
     >
-      {isDark && <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.032)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.026)_1px,transparent_1px)] bg-[size:76px_76px]" />}
       <div className="container mx-auto px-4">
         <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
