@@ -7,14 +7,14 @@ import { LockKeyhole, Menu, Phone, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const navLinks = [
-  { href: "/#home", label: "Нүүр" },
-  { href: "/#vr-tour", label: "3D аялал" },
-  { href: "/#about", label: "Төслийн тухай" },
-  { href: "/#location", label: "Байршил" },
-  { href: "/apartments", label: "Байрууд" },
-  { href: "/garages", label: "Гарааш" },
-  { href: "/#gallery", label: "Зургийн цомог" },
-  { href: "/#contact", label: "Холбоо барих" },
+  { href: "/#home", label: "\u041d\u04af\u04af\u0440" },
+  { href: "/#vr-tour", label: "3D \u0430\u044f\u043b\u0430\u043b" },
+  { href: "/#about", label: "\u0422\u04e9\u0441\u043b\u0438\u0439\u043d \u0442\u0443\u0445\u0430\u0439" },
+  { href: "/#location", label: "\u0411\u0430\u0439\u0440\u0448\u0438\u043b" },
+  { href: "/apartments", label: "\u0411\u0430\u0439\u0440\u0443\u0443\u0434" },
+  { href: "/garages", label: "\u0413\u0430\u0440\u0430\u0430\u0448" },
+  { href: "/#gallery", label: "\u0417\u0443\u0440\u0433\u0438\u0439\u043d \u0446\u043e\u043c\u043e\u0433" },
+  { href: "/#contact", label: "\u0425\u043e\u043b\u0431\u043e\u043e \u0431\u0430\u0440\u0438\u0445" },
 ]
 
 export function Header() {
@@ -34,15 +34,15 @@ export function Header() {
             href="/"
             onClick={() => handleNavClick("/#home")}
             className="flex min-w-0 max-w-[62vw] items-center gap-2 sm:max-w-none sm:gap-3"
-            aria-label="Нүүр хуудас"
+            aria-label="\u041d\u04af\u04af\u0440 \u0445\u0443\u0443\u0434\u0430\u0441"
           >
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full shadow-sm shadow-emerald-950/10 sm:h-18 sm:w-18 lg:h-20 lg:w-20">
-              <Image src="/logo.png" alt="Монгол Од Компани" fill sizes="(min-width: 1024px) 72px, (min-width: 640px) 64px, 48px" className="object-cover" priority />
+              <Image src="/logo.png" alt="\u041c\u043e\u043d\u0433\u043e\u043b \u041e\u0434 \u041a\u043e\u043c\u043f\u0430\u043d\u0438" fill sizes="(min-width: 1024px) 72px, (min-width: 640px) 64px, 48px" className="object-cover" priority />
             </div>
             <div className="min-w-0 leading-none">
-              <span className="block whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-xl">Монгол Од</span>
+              <span className="block whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-xl">{"\u041c\u043e\u043d\u0433\u043e\u043b \u041e\u0434"}</span>
               <span className="mt-1 block whitespace-nowrap text-[0.62rem] font-bold uppercase tracking-[0.1em] text-emerald-950 dark:text-emerald-200 sm:text-sm sm:tracking-[0.16em]">
-                Компани
+                {"\u041a\u043e\u043c\u043f\u0430\u043d\u0438"}
               </span>
             </div>
           </Link>
@@ -65,8 +65,8 @@ export function Header() {
             <Link
               href="/login?redirect=/admin"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 sm:h-11 sm:w-11"
-              aria-label="Admin нэвтрэх"
-              title="Admin нэвтрэх"
+              aria-label="Admin \u043d\u044d\u0432\u0442\u0440\u044d\u0445"
+              title="Admin \u043d\u044d\u0432\u0442\u0440\u044d\u0445"
             >
               <LockKeyhole className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
@@ -80,7 +80,7 @@ export function Header() {
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
               className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-11 sm:w-11"
-              aria-label="Цэс нээх"
+              aria-label="\u0426\u044d\u0441 \u043d\u044d\u044d\u0445"
               aria-expanded={isMenuOpen}
             >
               {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
