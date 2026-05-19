@@ -33,7 +33,7 @@ export function Header() {
           <Link
             href="/"
             onClick={() => handleNavClick("/#home")}
-            className="flex min-w-0 max-w-[62vw] items-center gap-2 sm:max-w-none sm:gap-3"
+            className="flex min-w-0 max-w-[62vw] shrink-0 items-center gap-2 sm:max-w-none sm:gap-3"
             aria-label="\u041d\u04af\u04af\u0440 \u0445\u0443\u0443\u0434\u0430\u0441"
           >
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full shadow-sm shadow-emerald-950/10 sm:h-18 sm:w-18 lg:h-20 lg:w-20">
@@ -47,13 +47,13 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="hidden flex-1 items-center justify-center gap-5 px-4 xl:flex 2xl:gap-8 2xl:px-6">
+          <nav className="hidden min-w-0 flex-1 items-center justify-end gap-4 px-3 xl:flex 2xl:gap-7 2xl:px-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="relative whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
+                className="relative shrink-0 whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
               >
                 {link.label}
               </Link>
