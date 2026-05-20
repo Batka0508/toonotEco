@@ -1,7 +1,19 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { BedDouble, Bot, Calculator, Home, Loader2, MapPin, MessageCircle, Phone, Send, Sparkles, Wallet, X } from "lucide-react"
+import {
+  BedDouble,
+  Bot,
+  Calculator,
+  Home,
+  Loader2,
+  MapPin,
+  Phone,
+  Send,
+  Sparkles,
+  Wallet,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -27,7 +39,8 @@ const initialMessages: ChatMessage[] = [
   {
     id: "welcome",
     role: "assistant",
-    content: "Сайн байна уу! Би Тоонот Эко хотхоны AI зөвлөх. Та байр, үнэ, зогсоол, зээлийн нөхцөлийн талаар асуугаарай.",
+    content:
+      "Сайн байна уу! Би Тоонот Эко хотхоны AI зөвлөх. Та байр, үнэ, зогсоол, зээлийн нөхцөлийн талаар асуугаарай.",
   },
 ]
 
@@ -75,9 +88,25 @@ export function AIChatBot() {
       }
 
       const data = await response.json()
-      setMessages((current) => [...current, { id: makeId(), role: "assistant", content: data.reply || "Энэ мэдээллийг борлуулалтын ажилтнаас тодруулж өгье." }])
+      setMessages((current) => [
+        ...current,
+        {
+          id: makeId(),
+          role: "assistant",
+          content:
+            data.reply ||
+            "Энэ мэдээллийг борлуулалтын ажилтнаас тодруулж өгье. Та нэр, утсаа үлдээвэл бид холбогдоно.",
+        },
+      ])
     } catch {
-      setMessages((current) => [...current, { id: makeId(), role: "assistant", content: "Түр алдаа гарлаа. Дахин оролдоно уу." }])
+      setMessages((current) => [
+        ...current,
+        {
+          id: makeId(),
+          role: "assistant",
+          content: "Түр алдаа гарлаа. Дахин оролдоно уу.",
+        },
+      ])
     } finally {
       setLoading(false)
       window.setTimeout(() => inputRef.current?.focus(), 0)
@@ -103,7 +132,12 @@ export function AIChatBot() {
                   </p>
                 </div>
               </div>
-              <button type="button" onClick={() => setOpen(false)} className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 hover:bg-white/20" aria-label="Чат хаах">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 hover:bg-white/20"
+                aria-label="Чат хаах"
+              >
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -118,7 +152,13 @@ export function AIChatBot() {
                       <Bot className="h-3.5 w-3.5" />
                     </div>
                   )}
-                  <div className={message.role === "user" ? "max-w-[82%] rounded-2xl rounded-br-md bg-emerald-600 px-2.5 py-1.5 text-xs leading-5 text-white shadow-sm" : "max-w-[82%] rounded-2xl rounded-tl-md bg-slate-100 px-2.5 py-1.5 text-xs leading-5 text-slate-800 shadow-sm"}>
+                  <div
+                    className={
+                      message.role === "user"
+                        ? "max-w-[82%] rounded-2xl rounded-br-md bg-emerald-600 px-2.5 py-1.5 text-xs leading-5 text-white shadow-sm"
+                        : "max-w-[82%] rounded-2xl rounded-tl-md bg-slate-100 px-2.5 py-1.5 text-xs leading-5 text-slate-800 shadow-sm"
+                    }
+                  >
                     {message.content}
                   </div>
                 </div>
@@ -143,7 +183,12 @@ export function AIChatBot() {
                     const Icon = item.icon
 
                     return (
-                      <button key={item.label} type="button" onClick={() => sendMessage(item.label)} className="flex min-h-10 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-left text-[0.62rem] font-bold text-slate-800 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50">
+                      <button
+                        key={item.label}
+                        type="button"
+                        onClick={() => sendMessage(item.label)}
+                        className="flex min-h-10 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-left text-[0.62rem] font-bold text-slate-800 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50"
+                      >
                         <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
                           <Icon className="h-3 w-3" />
                         </span>
@@ -164,7 +209,13 @@ export function AIChatBot() {
               }}
               className="mb-2 flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2 py-1 shadow-lg shadow-slate-900/5"
             >
-              <Input ref={inputRef} value={input} onChange={(event) => setInput(event.target.value)} placeholder="Асуултаа бичнэ үү..." className="h-8 border-0 bg-transparent text-xs shadow-none focus-visible:ring-0" />
+              <Input
+                ref={inputRef}
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="Асуултаа бичнэ үү..."
+                className="h-8 border-0 bg-transparent text-xs shadow-none focus-visible:ring-0"
+              />
               <Button type="submit" size="icon" disabled={loading} className="h-8 w-8 rounded-full bg-emerald-600 hover:bg-emerald-700">
                 {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
               </Button>

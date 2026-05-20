@@ -57,7 +57,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const { apartments } = await getSiteContent()
   const garages = await getGarages()
   const inquiries = await getInquiries()
-  const chatbotLeads = view === "dashboard" || view === "chatbot" ? await getChatbotLeads() : []
+  const chatbotLeads = await getChatbotLeads()
   const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
@@ -239,6 +239,43 @@ function Dashboard({ apartments, inquiries, chatbotLeads }: { apartments: Apartm
             {apartments.slice(0, 5).map((property) => (
               <PropertyRow key={property.id} property={property} />
             ))}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bot className="h-5 w-5 text-primary" />
+              Сүүлийн AI chatbot lead
+            </CardTitle>
+            <CardDescription>Чатаар утсаа үлдээсэн хэрэглэгчдийн мэдээлэл</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3">
+            {chatbotLeads.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600">
+                Одоогоор AI chatbot lead ирээгүй байна.
+              </div>
+            ) : (
+              chatbotLeads.slice(0, 5).map((lead) => (
+                <div key={lead.id} className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-3">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <p className="font-semibold text-slate-950">{lead.name}</p>
+                      <p className="mt-1 text-sm font-medium text-emerald-800">{lead.phone}</p>
+                    </div>
+                    <span className="w-fit rounded bg-white px-2 py-1 text-xs font-semibold text-slate-700">
+                      {lead.apartmentType || "Сонгоогүй"}
+                    </span>
+                  </div>
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{lead.message || "Мессеж байхгүй"}</p>
+                  <p className="mt-2 text-xs text-slate-500">{formatInquiryDate(lead.createdAt)}</p>
+                </div>
+              ))
+            )}
+            {chatbotLeads.length > 0 && (
+              <Button asChild variant="outline" size="sm" className="justify-self-start">
+                <Link href="/admin?view=chatbot">Бүх AI lead харах</Link>
+              </Button>
+            )}
           </CardContent>
         </Card>
         <Card>
