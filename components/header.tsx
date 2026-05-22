@@ -3,19 +3,19 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { LockKeyhole, Menu, Phone, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ScrollBlurHeader } from "@/components/motion-primitives"
 
 const navLinks = [
-  { href: "/#home", label: "\u041d\u04af\u04af\u0440" },
-  { href: "/#vr-tour", label: "3D \u0430\u044f\u043b\u0430\u043b" },
-  { href: "/#about", label: "\u0422\u04e9\u0441\u043b\u0438\u0439\u043d \u0442\u0443\u0445\u0430\u0439" },
-  { href: "/#location", label: "\u0411\u0430\u0439\u0440\u0448\u0438\u043b" },
-  { href: "/apartments", label: "\u0411\u0430\u0439\u0440\u0443\u0443\u0434" },
-  { href: "/garages", label: "\u0413\u0430\u0440\u0430\u0430\u0448" },
-  { href: "/#gallery", label: "\u0417\u0443\u0440\u0433\u0438\u0439\u043d \u0446\u043e\u043c\u043e\u0433" },
-  { href: "/#contact", label: "\u0425\u043e\u043b\u0431\u043e\u043e \u0431\u0430\u0440\u0438\u0445" },
+  { href: "/#home", label: "Нүүр" },
+  { href: "/#vr-tour", label: "3D аялал" },
+  { href: "/#about", label: "Төслийн тухай" },
+  { href: "/#location", label: "Байршил" },
+  { href: "/apartments", label: "Байрууд" },
+  { href: "/garages", label: "Гарааш" },
+  { href: "/#gallery", label: "Зургийн цомог" },
+  { href: "/#contact", label: "Холбоо барих" },
 ]
 
 export function Header() {
@@ -29,62 +29,56 @@ export function Header() {
 
   return (
     <ScrollBlurHeader className="sticky top-0 z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
-      <div className="mx-auto max-w-[1440px] pl-1 pr-3 sm:pl-2 sm:pr-5 lg:pl-3 lg:pr-6 xl:pl-4 xl:pr-8">
-        <div className="flex h-16 items-center justify-between gap-2 sm:h-20 lg:h-24 lg:gap-4">
+      <div className="mx-auto max-w-[1440px] px-3 sm:px-5 lg:px-6 xl:px-8">
+        <div className="flex h-16 items-center gap-3 sm:h-[4.5rem] lg:h-20 lg:gap-6">
           <Link
             href="/"
             onClick={() => handleNavClick("/#home")}
-            className="flex min-w-0 max-w-[62vw] shrink-0 items-center gap-2 sm:max-w-none sm:gap-3"
-            aria-label="\u041d\u04af\u04af\u0440 \u0445\u0443\u0443\u0434\u0430\u0441"
+            className="flex shrink-0 items-center gap-2.5 sm:gap-3"
+            aria-label="Нүүр хуудас"
           >
-            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full shadow-sm shadow-emerald-950/10 sm:h-18 sm:w-18 lg:h-20 lg:w-20">
-              <Image src="/logo.png" alt="\u041c\u043e\u043d\u0433\u043e\u043b \u041e\u0434 \u041a\u043e\u043c\u043f\u0430\u043d\u0438" fill sizes="(min-width: 1024px) 72px, (min-width: 640px) 64px, 48px" className="object-cover" priority />
+            <div className="relative h-11 w-11 shrink-0 sm:h-12 sm:w-12 lg:h-14 lg:w-14">
+              <Image
+                src="/logo.png"
+                alt="Монгол Од Компани"
+                fill
+                sizes="(min-width: 1024px) 56px, (min-width: 640px) 48px, 44px"
+                className="object-contain object-center dark:brightness-[1.15] dark:contrast-[1.05]"
+                priority
+              />
             </div>
-            <div className="min-w-0 leading-none">
-              <span className="block whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-xl">{"\u041c\u043e\u043d\u0433\u043e\u043b \u041e\u0434"}</span>
-              <span className="mt-1 block whitespace-nowrap text-[0.62rem] font-bold uppercase tracking-[0.1em] text-emerald-950 dark:text-emerald-200 sm:text-sm sm:tracking-[0.16em]">
-                {"\u041a\u043e\u043c\u043f\u0430\u043d\u0438"}
+            <div className="flex flex-col items-center justify-center text-center leading-none">
+              <span className="whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-base lg:text-lg">
+                Монгол Од
+              </span>
+              <span className="mt-1 whitespace-nowrap text-[0.62rem] font-bold uppercase tracking-[0.14em] text-emerald-800 dark:text-emerald-300 sm:text-xs sm:tracking-[0.16em]">
+                Компани
               </span>
             </div>
           </Link>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-end gap-4 px-3 xl:flex 2xl:gap-7 2xl:px-6">
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-3 xl:flex 2xl:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="relative shrink-0 whitespace-nowrap text-sm font-semibold text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:drop-shadow-[0_0_10px_rgba(5,150,105,0.25)] hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
+                className="relative shrink-0 whitespace-nowrap text-sm font-semibold leading-none text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 2xl:gap-3">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
             <ThemeToggle />
-            <Link
-              href="/login?redirect=/admin"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 hover:text-emerald-700 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 sm:h-11 sm:w-11"
-              aria-label="Admin \u043d\u044d\u0432\u0442\u0440\u044d\u0445"
-              title="Admin \u043d\u044d\u0432\u0442\u0440\u044d\u0445"
-            >
-              <LockKeyhole className="h-4 w-4 sm:h-5 sm:w-5" />
-            </Link>
-            <a
-              href="tel:+97686705445"
-              className="hidden h-11 items-center gap-2 rounded-full bg-emerald-800 px-4 text-sm font-bold text-white shadow-sm shadow-emerald-950/15 transition-colors hover:bg-emerald-900 2xl:flex 2xl:h-14 2xl:gap-3 2xl:px-7 2xl:text-base"
-            >
-              <Phone className="h-4 w-4 2xl:h-5 2xl:w-5" />
-              86705445
-            </a>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-emerald-900/15 bg-white text-emerald-950 shadow-sm transition-colors hover:bg-emerald-50 dark:border-white/15 dark:bg-slate-900 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-11 sm:w-11"
-              aria-label="\u0426\u044d\u0441 \u043d\u044d\u044d\u0445"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-emerald-950 transition-colors hover:bg-emerald-50 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-10 sm:w-10"
+              aria-label="Цэс нээх"
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -99,18 +93,14 @@ export function Header() {
                   onClick={() => handleNavClick(link.href)}
                   className={[
                     "block rounded-xl px-4 py-3 text-sm font-semibold transition-colors",
-                    activeHref === link.href ? "bg-emerald-800 text-white" : "text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 dark:text-slate-200 dark:hover:bg-emerald-400/15 dark:hover:text-emerald-200",
+                    activeHref === link.href
+                      ? "bg-emerald-800 text-white"
+                      : "text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 dark:text-slate-200 dark:hover:bg-emerald-400/15 dark:hover:text-emerald-200",
                   ].join(" ")}
                 >
                   {link.label}
                 </Link>
               ))}
-            </div>
-            <div className="border-t border-emerald-900/10 p-3">
-              <a href="tel:+97686705445" className="flex h-12 items-center justify-center gap-3 rounded-full bg-emerald-800 px-5 text-sm font-bold text-white">
-                <Phone className="h-4 w-4" />
-                86705445
-              </a>
             </div>
           </nav>
         )}

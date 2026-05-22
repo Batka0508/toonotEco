@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react"
+import { Facebook, Instagram, Linkedin, LockKeyhole, Youtube } from "lucide-react"
 
 const footerLinks = {
   menu: [
@@ -101,16 +101,27 @@ export function Footer({ variant = "green" }: { variant?: "green" | "black" }) {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/20 pt-8 md:flex-row">
-          <p className="text-sm text-emerald-50/85">
-            © {new Date().getFullYear()} Тоонот Эко Хотхон. Бүх эрх хуулиар хамгаалагдсан.
-          </p>
-          <div className="flex gap-6 text-sm text-emerald-50/85">
-            <Link href="#contact" className="transition-colors hover:text-white">
-              Борлуулалтын алба
-            </Link>
-            <Link href="#apartments" className="transition-colors hover:text-white">
-              Үнийн мэдээлэл
+        <div className="mt-12 space-y-4 border-t border-white/20 pt-8">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-sm text-emerald-50/85">
+              © {new Date().getFullYear()} Тоонот Эко Хотхон. Бүх эрх хуулиар хамгаалагдсан.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-emerald-50/85">
+              <Link href="#contact" className="transition-colors hover:text-white">
+                Борлуулалтын алба
+              </Link>
+              <Link href="#apartments" className="transition-colors hover:text-white">
+                Үнийн мэдээлэл
+              </Link>
+            </div>
+          </div>
+          <div className="flex justify-center border-t border-white/10 pt-4">
+            <Link
+              href="/login?redirect=/admin"
+              className="inline-flex items-center gap-2 text-xs font-medium text-emerald-50/70 transition-colors hover:text-white"
+            >
+              <LockKeyhole className="h-3.5 w-3.5" />
+              Admin нэвтрэх
             </Link>
           </div>
         </div>

@@ -51,8 +51,8 @@ function parseStatus(value: string): Apartment["status"] {
 }
 
 function parseInquiryStatus(value: string): Inquiry["status"] {
-  if (value === "contacted" || value === "closed") {
-    return value
+  if (value === "contacted" || value === "closed" || value === "read") {
+    return value === "read" ? "contacted" : value
   }
 
   return "new"
@@ -318,7 +318,7 @@ export async function updateInquiryStatus(formData: FormData) {
 
   revalidatePath("/admin")
   revalidatePath("/account")
-  redirect("/admin?view=requests")
+  redirect("/admin?view=requests&saved=1")
 }
 
 export async function deleteInquiry(formData: FormData) {
