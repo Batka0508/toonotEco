@@ -8,6 +8,7 @@ import { AdminShell } from "@/components/admin/admin-shell"
 import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { DashboardView } from "@/components/admin/dashboard-view"
 import { MarkNotificationsSeen } from "@/components/admin/mark-notifications-seen"
+import { MultiImageFileInput } from "@/components/admin/multi-image-file-input"
 import { NotificationsView } from "@/components/admin/notifications-view"
 import { RequestsAdmin } from "@/components/admin/requests-admin"
 import { AdminCard, Notice, StatusPill } from "@/components/admin/admin-ui"
@@ -589,7 +590,7 @@ function PropertyForm({ title, property, action, cancelHref }: { title: string; 
                 <UploadCloud className="h-5 w-5" />
                 <span className="font-semibold">Олон зураг сонгож болно</span>
               </div>
-              <Input name="imageFiles" type="file" accept="image/*" multiple className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
+              <MultiImageFileInput />
             </div>
           </label>
 
