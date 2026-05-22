@@ -9,10 +9,10 @@ import { ScrollBlurHeader } from "@/components/motion-primitives"
 
 const navLinks = [
   { href: "/#home", label: "Нүүр" },
-  { href: "/#vr-tour", label: "3D аялал" },
   { href: "/#about", label: "Төслийн тухай" },
   { href: "/#location", label: "Байршил" },
   { href: "/apartments", label: "Байрууд" },
+  { href: "/apartments#vr-tour", label: "3D аялал" },
   { href: "/garages", label: "Гарааш" },
   { href: "/#gallery", label: "Зургийн цомог" },
   { href: "/#contact", label: "Холбоо барих" },

@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowUpRight, Building2 } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { VrApartmentTour } from "@/components/vr-apartment-tour"
 import { ApartmentSelection } from "@/components/apartment-selection"
 import { Contact } from "@/components/contact"
 import { Button } from "@/components/ui/button"
@@ -23,7 +24,15 @@ export default async function ApartmentsPage({ searchParams }: ApartmentsPagePro
   return (
     <main className="min-h-screen overflow-x-hidden bg-slate-50">
       <Header />
-      <section className="bg-white py-8 sm:py-10 md:py-12">
+      <div className="relative overflow-hidden bg-black">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_16%_8%,rgba(16,185,129,0.18),transparent_28rem),radial-gradient(circle_at_86%_30%,rgba(20,184,166,0.12),transparent_30rem),radial-gradient(circle_at_18%_72%,rgba(16,185,129,0.12),transparent_28rem),linear-gradient(180deg,#020617_0%,#000_48%,#020617_100%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.028)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.022)_1px,transparent_1px)] bg-[size:84px_84px]" />
+        <div className="relative z-10">
+          <VrApartmentTour content={content.vrTour} />
+        </div>
+      </div>
+
+      <section id="apartments" className="bg-white py-8 sm:py-10 md:py-12">
         <div className="container mx-auto px-4">
           <FadeIn className="flex max-w-4xl flex-col gap-4">
             <p className="flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-800">

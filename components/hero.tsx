@@ -49,7 +49,7 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
               variant="outline"
               className="h-12 w-full rounded-md border-white/40 bg-white/10 px-6 text-base font-bold text-white backdrop-blur-sm hover:bg-white/15 hover:text-white sm:h-14 sm:w-auto"
             >
-              <Link href="#apartments" className="justify-center">
+              <Link href="/apartments" className="justify-center">
                 {content.secondaryCta}
               </Link>
             </Button>
@@ -58,7 +58,7 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
               size="lg"
               className="group h-12 w-full rounded-md bg-emerald-800 px-6 text-base font-bold shadow-lg shadow-emerald-950/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-xl hover:shadow-emerald-950/25 sm:h-14 sm:w-auto"
             >
-              <Link href="#vr-tour" className="justify-center">
+              <Link href="/apartments#vr-tour" className="justify-center">
                 <Eye className="h-5 w-5 transition-transform group-hover:scale-110" />
                 {content.vrCta}
               </Link>
