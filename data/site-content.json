@@ -1,6 +1,29 @@
 {
   "apartments": [
     {
+      "id": "2",
+      "title": "2өрөө",
+      "description": "",
+      "price": "3.2 сая/м2-с",
+      "location": "Нисэх",
+      "district": "Хан уул дүүрэг",
+      "rooms": "2",
+      "area": "42-55 м2",
+      "floor": "12давхар",
+      "totalFloors": "16",
+      "status": "reserved",
+      "images": [
+        "/images/2-1781758162668-0.jfif"
+      ],
+      "image": "/images/2-1781758162668-0.jfif",
+      "floorPlanImage": "",
+      "amenities": [],
+      "total": "210 саяас",
+      "tag": "Залуу гэр бүл",
+      "createdAt": "2026-06-18T04:49:22.666Z",
+      "updatedAt": "2026-06-18T04:49:22.666Z"
+    },
+    {
       "id": "dwq",
       "title": "dwq",
       "description": "eqw",
@@ -20,10 +43,10 @@
       "amenities": [
         "eqeqw"
       ],
-      "total": "275сая",
+      "total": "789",
       "tag": "wq",
       "createdAt": "2026-05-12T06:25:30.693Z",
-      "updatedAt": "2026-05-12T06:25:30.693Z"
+      "updatedAt": "2026-06-12T15:19:08.081Z"
     },
     {
       "id": "two-room",
@@ -38,11 +61,11 @@
       "totalFloors": "16",
       "status": "available",
       "images": [
-        "/images/two-room-1777448384494-0.jpg",
-        "/images/two-room-1777448405921-0.jpg",
-        "/images/two-room-1777448416950-0.jpg"
+        "/images/project-1.jpg",
+        "/images/project-2.jpg",
+        "/images/project-3.jpg"
       ],
-      "image": "/images/two-room-1777448384494-0.jpg",
+      "image": "/images/project-1.jpg",
       "floorPlanImage": "",
       "amenities": [
         "Тусдаа унтлагын өрөө",
@@ -68,8 +91,8 @@
       "status": "available",
       "images": [
         "/images/project-2.jpg",
-        "/images/project-3.jpg",
-        "/images/5-1777617364714-0.jpg"
+        "/images/project-1.jpg",
+        "/images/project-3.jpg"
       ],
       "image": "/images/project-2.jpg",
       "floorPlanImage": "",

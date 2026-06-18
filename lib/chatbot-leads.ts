@@ -1,6 +1,6 @@
 import path from "node:path"
 import { readBackendJson, writeBackendJson } from "@/lib/backend-json"
-import { getSupabaseAdminClient } from "@/lib/supabase"
+import { getSupabaseAdminClient, isSupabaseNetworkError } from "@/lib/supabase"
 
 export type ChatbotLead = {
   id: string
@@ -60,7 +60,9 @@ export async function getChatbotLeads(): Promise<ChatbotLead[]> {
   const { data, error } = await supabase.from("chatbot_leads").select("*").order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Failed to load chatbot leads from Supabase", error)
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to load chatbot leads from Supabase", error)
+    }
     return readLocalLeads()
   }
 

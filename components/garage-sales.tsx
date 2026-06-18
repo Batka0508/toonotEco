@@ -53,8 +53,28 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
     const carousel = carouselRef.current
     if (!carousel) return
 
-    carousel.scrollBy({
-      left: direction === "next" ? carousel.clientWidth * 0.9 : -carousel.clientWidth * 0.9,
+    const blocks = Array.from(carousel.querySelectorAll<HTMLElement>("[data-garage-block]"))
+    if (blocks.length === 0) return
+
+    const carouselRect = carousel.getBoundingClientRect()
+    const currentIndex = blocks.reduce((nearestIndex, block, index) => {
+      const blockCenter = block.getBoundingClientRect().left - carouselRect.left + block.clientWidth / 2
+      const carouselCenter = carousel.clientWidth / 2
+      const distance = Math.abs(blockCenter - carouselCenter)
+      const nearestBlockCenter =
+        blocks[nearestIndex].getBoundingClientRect().left - carouselRect.left + blocks[nearestIndex].clientWidth / 2
+      const nearestDistance = Math.abs(nearestBlockCenter - carouselCenter)
+
+      return distance < nearestDistance ? index : nearestIndex
+    }, 0)
+    const nextIndex =
+      direction === "next" ? Math.min(currentIndex + 1, blocks.length - 1) : Math.max(currentIndex - 1, 0)
+    const nextBlock = blocks[nextIndex]
+    const nextBlockLeft =
+      nextBlock.getBoundingClientRect().left - carouselRect.left + carousel.scrollLeft - (carousel.clientWidth - nextBlock.clientWidth) / 2
+
+    carousel.scrollTo({
+      left: nextBlockLeft,
       behavior: "smooth",
     })
   }
@@ -103,7 +123,8 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
           {groupedGarages.map((group) => (
             <div
               key={group.block}
-              className="w-[calc(100vw-2rem)] shrink-0 snap-start rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] sm:p-3 lg:w-[54rem]"
+              data-garage-block
+              className="w-[calc(100vw-2rem)] shrink-0 snap-center rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] sm:p-3 lg:w-[54rem]"
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>

@@ -11,6 +11,7 @@ import { MarkNotificationsSeen } from "@/components/admin/mark-notifications-see
 import { MultiImageFileInput } from "@/components/admin/multi-image-file-input"
 import { NotificationsView } from "@/components/admin/notifications-view"
 import { RequestsAdmin } from "@/components/admin/requests-admin"
+import { SiteVisitsView } from "@/components/admin/site-visits-view"
 import { AdminCard, Notice, StatusPill } from "@/components/admin/admin-ui"
 import { buildAdminNotifications } from "@/lib/admin-notifications"
 import { getAdminEmails, getCurrentAdmin } from "@/lib/admin-auth"
@@ -20,6 +21,7 @@ import { garageBlocks, getGarages, type Garage } from "@/lib/garages"
 import { getHomepageContent } from "@/lib/homepage-content"
 import { getInquiries, type Inquiry } from "@/lib/inquiries"
 import { getApartmentImages, getSiteContent, type Apartment } from "@/lib/site-content"
+import { getSiteVisitStats } from "@/lib/site-visits"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ConfirmSubmitButton } from "@/components/confirm-submit-button"
@@ -67,6 +69,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const garages = await getGarages()
   const inquiries = await getInquiries()
   const chatbotLeads = await getChatbotLeads()
+  const visitStats = await getSiteVisitStats()
   const homepageContent = view === "content" ? await getHomepageContent() : null
   const editProperty = apartments.find((property) => property.id === params.edit)
   const newRequests = inquiries.filter((inquiry) => inquiry.status === "new").length
@@ -116,7 +119,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
       {params.error === "storage" && <Notice tone="error">Supabase тохиргоо эсвэл garages хүснэгт бэлэн биш байна.</Notice>}
 
       {view === "dashboard" && (
-        <DashboardView apartments={apartments} garages={garages} inquiries={inquiries} chatbotLeads={chatbotLeads} />
+        <DashboardView apartments={apartments} garages={garages} inquiries={inquiries} chatbotLeads={chatbotLeads} visitStats={visitStats} />
       )}
       {view === "properties" && (
         <div className="grid gap-6">
@@ -134,6 +137,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         </>
       )}
       {view === "chatbot" && <ChatbotLeadsTable leads={chatbotLeads} />}
+      {view === "reports" && <SiteVisitsView stats={visitStats} />}
       {view === "content" && homepageContent && <HomepageContentEditor content={homepageContent} />}
     </AdminShell>
   )
@@ -708,6 +712,7 @@ function parseView(view?: string): AdminView {
     view === "requests" ||
     view === "chatbot" ||
     view === "notifications" ||
+    view === "reports" ||
     view === "content"
   ) {
     return view
@@ -725,6 +730,7 @@ function getViewTitle(view: AdminView) {
     requests: "Захиалга",
     chatbot: "Харилцагчид",
     notifications: "Мэдэгдэл",
+    reports: "Сайтын хандалт",
     content: "Тохиргоо",
   }[view]
 }

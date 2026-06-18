@@ -1,1 +1,1 @@
-export type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "chatbot" | "notifications" | "content"
+export type AdminView = "dashboard" | "properties" | "add" | "garages" | "requests" | "chatbot" | "notifications" | "reports" | "content"

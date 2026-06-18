@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { assertWritableBackend } from "@/lib/backend-json"
-import { getSupabaseAdminClient } from "@/lib/supabase"
+import { getSupabaseAdminClient, isSupabaseNetworkError } from "@/lib/supabase"
 
 export type Inquiry = {
   id: string
@@ -89,7 +89,9 @@ export async function getInquiries(): Promise<Inquiry[]> {
   const { data, error } = await supabase.from("inquiries").select("*").order("created_at", { ascending: false })
 
   if (error) {
-    console.error("Failed to load inquiries from Supabase", error)
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to load inquiries from Supabase", error)
+    }
     return readLocalInquiries()
   }
 

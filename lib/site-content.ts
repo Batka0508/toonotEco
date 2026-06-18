@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
 import { assertWritableBackend } from "@/lib/backend-json"
-import { getSupabaseAdminClient } from "@/lib/supabase"
+import { getSupabaseAdminClient, isSupabaseNetworkError } from "@/lib/supabase"
 
 export type Apartment = {
   id: string
@@ -133,6 +133,12 @@ function readLocalSiteContent(): SiteContent {
   }
 }
 
+async function writeLocalSiteContent(content: SiteContent) {
+  assertWritableBackend()
+  await mkdir(path.dirname(siteContentPath), { recursive: true })
+  await writeFile(siteContentPath, `${JSON.stringify(content, null, 2)}\n`, "utf8")
+}
+
 function apartmentFromRow(row: ApartmentRow): Apartment {
   return normalizeApartment({
     id: row.id,
@@ -190,10 +196,23 @@ export async function getSiteContent(): Promise<SiteContent> {
     return readLocalSiteContent()
   }
 
-  const { data, error } = await supabase.from("apartments").select("*").order("created_at", { ascending: false })
+  let result
+
+  try {
+    result = await supabase.from("apartments").select("*").order("created_at", { ascending: false })
+  } catch (error) {
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to load apartments from Supabase", error)
+    }
+    return readLocalSiteContent()
+  }
+
+  const { data, error } = result
 
   if (error) {
-    console.error("Failed to load apartments from Supabase", error)
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to load apartments from Supabase", error)
+    }
     return readLocalSiteContent()
   }
 
@@ -206,14 +225,26 @@ export async function saveSiteContent(content: SiteContent) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    assertWritableBackend()
-    await mkdir(path.dirname(siteContentPath), { recursive: true })
-    await writeFile(siteContentPath, JSON.stringify(content, null, 2), "utf8")
+    await writeLocalSiteContent(content)
     return
   }
 
   const rows = content.apartments.map(apartmentToRow)
-  const { error } = await supabase.from("apartments").upsert(rows, { onConflict: "id" })
+
+  let result
+
+  try {
+    result = await supabase.from("apartments").upsert(rows, { onConflict: "id" })
+  } catch (error) {
+    if (isSupabaseNetworkError(error)) {
+      await writeLocalSiteContent(content)
+      return
+    }
+
+    throw error
+  }
+
+  const { error } = result
 
   if (error) {
     throw new Error(`Failed to save apartments: ${error.message}`)
@@ -224,14 +255,28 @@ export async function deleteApartmentById(id: string) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    assertWritableBackend()
     const content = readLocalSiteContent()
     content.apartments = content.apartments.filter((item) => item.id !== id)
-    await saveSiteContent(content)
+    await writeLocalSiteContent(content)
     return
   }
 
-  const { error } = await supabase.from("apartments").delete().eq("id", id)
+  let result
+
+  try {
+    result = await supabase.from("apartments").delete().eq("id", id)
+  } catch (error) {
+    if (isSupabaseNetworkError(error)) {
+      const content = readLocalSiteContent()
+      content.apartments = content.apartments.filter((item) => item.id !== id)
+      await writeLocalSiteContent(content)
+      return
+    }
+
+    throw error
+  }
+
+  const { error } = result
 
   if (error) {
     throw new Error(`Failed to delete apartment: ${error.message}`)

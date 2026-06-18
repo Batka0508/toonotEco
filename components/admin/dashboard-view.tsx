@@ -6,6 +6,7 @@ import {
   Car,
   CheckCircle2,
   Clock,
+  Eye,
   FileText,
   Pencil,
   Plus,
@@ -19,6 +20,7 @@ import type { ChatbotLead } from "@/lib/chatbot-leads"
 import type { Garage } from "@/lib/garages"
 import type { Inquiry } from "@/lib/inquiries"
 import type { Apartment } from "@/lib/site-content"
+import type { SiteVisitStats } from "@/lib/site-visits"
 import { getApartmentImages } from "@/lib/site-content"
 import { Button } from "@/components/ui/button"
 import { SalesDonutChart } from "@/components/admin/sales-donut-chart"
@@ -29,6 +31,7 @@ type DashboardViewProps = {
   garages: Garage[]
   inquiries: Inquiry[]
   chatbotLeads: ChatbotLead[]
+  visitStats: SiteVisitStats
 }
 
 type RecentRow = {
@@ -44,7 +47,7 @@ type RecentRow = {
   isGarage: boolean
 }
 
-export function DashboardView({ apartments, garages, inquiries, chatbotLeads }: DashboardViewProps) {
+export function DashboardView({ apartments, garages, inquiries, chatbotLeads, visitStats }: DashboardViewProps) {
   const soldApartments = apartments.filter((p) => p.status === "sold").length
   const reservedApartments = apartments.filter((p) => p.status === "reserved").length
   const availableApartments = apartments.filter((p) => (p.status ?? "available") === "available").length
@@ -83,7 +86,7 @@ export function DashboardView({ apartments, garages, inquiries, chatbotLeads }: 
 
   return (
     <div className="grid gap-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         <AdminStatCard
           icon={Building2}
           label="Нийт байр"
@@ -118,6 +121,13 @@ export function DashboardView({ apartments, garages, inquiries, chatbotLeads }: 
           value={inquiries.length}
           subtext={`${chatbotLeads.length} AI lead`}
           iconClassName="bg-red-100 text-red-600"
+        />
+        <AdminStatCard
+          icon={Eye}
+          label="Өнөөдрийн хандалт"
+          value={visitStats.todayVisits}
+          subtext={`${visitStats.activeVisitors} одоо идэвхтэй`}
+          iconClassName="bg-indigo-100 text-indigo-600"
         />
       </div>
 

@@ -78,6 +78,7 @@ async function saveContent(content: SiteContent) {
   await saveSiteContent(content)
 
   revalidatePath("/")
+  revalidatePath("/apartments")
   revalidatePath("/admin")
 }
 
@@ -216,6 +217,7 @@ export async function deleteApartment(formData: FormData) {
   const id = clean(formData.get("id"))
   await deleteApartmentById(id)
   revalidatePath("/")
+  revalidatePath("/apartments")
   revalidatePath("/admin")
   redirect("/admin?view=properties&saved=1")
 }

@@ -32,7 +32,7 @@ const navItems: NavItemConfig[] = [
   { id: "requests", href: "/admin?view=requests", icon: ClipboardList, label: "Захиалга", matchViews: ["requests"], countKey: "requests" },
   { id: "chatbot", href: "/admin?view=chatbot", icon: Users, label: "Харилцагчид", matchViews: ["chatbot"], countKey: "chatbot" },
   { id: "payments", href: "/admin?view=requests", icon: Wallet, label: "Төлбөрүүд", matchViews: [] },
-  { id: "reports", href: "/admin", icon: BarChart3, label: "Тайлан", matchViews: [] },
+  { id: "reports", href: "/admin?view=reports", icon: BarChart3, label: "Тайлан", matchViews: ["reports"] },
   { id: "notifications", href: "/admin?view=notifications", icon: Bell, label: "Мэдэгдэл", matchViews: ["notifications"], countKey: "notifications" },
   { id: "settings", href: "/admin?view=content", icon: Settings, label: "Тохиргоо", matchViews: ["content"] },
 ]
@@ -45,7 +45,7 @@ type AdminSidebarProps = {
 }
 
 export function AdminSidebar({ activeView, newRequests, chatbotCount, notifications }: AdminSidebarProps) {
-  const counts = { requests: newRequests, chatbot: chatbotCount }
+  const counts = { requests: newRequests, chatbot: chatbotCount, notifications: notifications.length }
 
   return (
     <div className="flex h-full flex-col px-4 py-6">

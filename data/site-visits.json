@@ -1,0 +1,28 @@
+{
+  "visits": [
+    {
+      "id": "45d1d2a3-ef61-464c-ba88-308d3b7bcb96",
+      "visitorId": "visitor-mqj0hr51-0hi7aujh83",
+      "path": "/login",
+      "referrer": "http://192.168.1.24:3000/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-06-18T04:43:18.263Z"
+    },
+    {
+      "id": "90c1d45a-f870-4570-b97e-8ce2ba7d7d18",
+      "visitorId": "visitor-mqj0hr51-0hi7aujh83",
+      "path": "/apartments",
+      "referrer": "http://192.168.1.24:3000/apartments",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-06-18T04:40:58.141Z"
+    },
+    {
+      "id": "a864609e-bb20-40e7-9570-24a3d4d07e98",
+      "visitorId": "visitor-mqj0hr51-0hi7aujh83",
+      "path": "/",
+      "referrer": "http://192.168.1.24:3000/",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0",
+      "createdAt": "2026-06-18T04:40:43.952Z"
+    }
+  ]
+}
