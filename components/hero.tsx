@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Building2, Eye, MapPin, Ruler, Trees } from "lucide-react"
+import { ArrowRight, Building2, Eye, Leaf, MapPin, Ruler, Trees } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { HeroMotion, StaggerGroup, StaggerItem } from "@/components/motion-primitives"
 import type { HomepageContent, IconKey } from "@/lib/homepage-content"
@@ -11,6 +11,27 @@ const highlightIcons: Partial<Record<IconKey, typeof Ruler>> = {
   building: Building2,
   ruler: Ruler,
   trees: Trees,
+}
+
+function HeroTitle({ title }: { title: string }) {
+  const match = title.match(/^(Тоонот)\s+(Эко)\s+(Хотхон)$/i)
+
+  if (!match) {
+    return <>{title}</>
+  }
+
+  return (
+    <span className="inline-flex flex-wrap items-baseline gap-x-[0.18em] gap-y-2">
+      <span className="font-black uppercase text-[#263e91] [text-shadow:0_0.035em_0_#fff,0_0.07em_0_#fff,0_0.11em_0.18em_rgba(255,255,255,0.9),0_0.16em_0.22em_rgba(15,23,42,0.28)]">
+        ТООНОТ
+      </span>
+      <span className="inline-flex translate-y-[-0.18em] items-center gap-[0.08em] rounded-[0.18em] border-[0.055em] border-emerald-600/80 bg-white/92 px-[0.18em] py-[0.04em] text-[0.48em] font-black uppercase leading-none text-emerald-700 shadow-[0_0.05em_0.16em_rgba(255,255,255,0.65),0_0.08em_0.2em_rgba(15,23,42,0.2)]">
+        <Leaf className="h-[0.82em] w-[0.82em] fill-emerald-500 text-emerald-600" />
+        ЭКО
+      </span>
+      <span className="font-bold text-white">Хотхон</span>
+    </span>
+  )
 }
 
 export function Hero({ content }: { content: HomepageContent["hero"] }) {
@@ -29,7 +50,7 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
           </p>
 
           <h1 className="max-w-4xl text-3xl font-bold leading-[1.08] text-white text-balance min-[380px]:text-4xl sm:text-6xl lg:text-7xl">
-            {content.title}
+            <HeroTitle title={content.title} />
           </h1>
 
           <p className="mt-4 max-w-2xl text-sm leading-6 text-white/88 sm:mt-6 sm:text-xl sm:leading-8">

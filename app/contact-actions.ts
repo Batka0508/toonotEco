@@ -9,6 +9,14 @@ function clean(value: FormDataEntryValue | null) {
   return String(value ?? "").trim()
 }
 
+function createInquiryId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID()
+  }
+
+  return `inquiry-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`
+}
+
 export async function submitInquiry(formData: FormData) {
   const user = await getCurrentUser()
   const userEmail = user?.email ?? ""
@@ -16,7 +24,7 @@ export async function submitInquiry(formData: FormData) {
   const sourcePath = clean(formData.get("sourcePath")) || "/"
 
   const inquiry: Inquiry = {
-    id: crypto.randomUUID(),
+    id: createInquiryId(),
     userId: user?.id,
     name: clean(formData.get("name")),
     phone: clean(formData.get("phone")),

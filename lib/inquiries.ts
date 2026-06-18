@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs"
 import { mkdir, writeFile } from "node:fs/promises"
 import path from "node:path"
-import { assertWritableBackend } from "@/lib/backend-json"
+import { assertWritableBackend, readBackendJson, writeBackendJson } from "@/lib/backend-json"
 import { getSupabaseAdminClient, isSupabaseNetworkError } from "@/lib/supabase"
 
 export type Inquiry = {
@@ -19,6 +19,8 @@ export type Inquiry = {
 }
 
 export const inquiriesPath = path.join(process.cwd(), "data", "inquiries.json")
+const inquiriesBackupPath = path.join(process.cwd(), "data", "inquiries-backup.json")
+const inquiriesStoragePath = "inquiries/inquiries.json"
 
 type InquiryRow = {
   id: string
@@ -45,6 +47,36 @@ function readLocalInquiries(): Inquiry[] {
   } catch {
     return []
   }
+}
+
+async function writeLocalInquiries(inquiries: Inquiry[]) {
+  assertWritableBackend()
+  await mkdir(path.dirname(inquiriesPath), { recursive: true })
+  await writeFile(inquiriesPath, `${JSON.stringify(inquiries, null, 2)}\n`, "utf8")
+}
+
+async function readFallbackInquiries() {
+  const data = await readBackendJson<{ inquiries: Inquiry[] }>(inquiriesStoragePath, inquiriesBackupPath, {
+    inquiries: readLocalInquiries(),
+  })
+
+  return (data.inquiries ?? []).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+async function writeFallbackInquiries(inquiries: Inquiry[]) {
+  await writeBackendJson(inquiriesStoragePath, inquiriesBackupPath, { inquiries })
+
+  try {
+    await writeLocalInquiries(inquiries)
+  } catch {
+    // In production local writes may be unavailable; Supabase Storage backup is enough.
+  }
+}
+
+async function addFallbackInquiry(inquiry: Inquiry) {
+  const inquiries = await readFallbackInquiries()
+  inquiries.unshift(inquiry)
+  await writeFallbackInquiries(inquiries)
 }
 
 function inquiryFromRow(row: InquiryRow): Inquiry {
@@ -86,13 +118,24 @@ export async function getInquiries(): Promise<Inquiry[]> {
     return readLocalInquiries()
   }
 
-  const { data, error } = await supabase.from("inquiries").select("*").order("created_at", { ascending: false })
+  let result
+
+  try {
+    result = await supabase.from("inquiries").select("*").order("created_at", { ascending: false })
+  } catch (error) {
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to load inquiries from Supabase", error)
+    }
+    return readFallbackInquiries()
+  }
+
+  const { data, error } = result
 
   if (error) {
     if (!isSupabaseNetworkError(error)) {
       console.error("Failed to load inquiries from Supabase", error)
     }
-    return readLocalInquiries()
+    return readFallbackInquiries()
   }
 
   return ((data ?? []) as InquiryRow[]).map(inquiryFromRow)
@@ -102,16 +145,28 @@ export async function saveInquiries(inquiries: Inquiry[]) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    assertWritableBackend()
-    await mkdir(path.dirname(inquiriesPath), { recursive: true })
-    await writeFile(inquiriesPath, JSON.stringify(inquiries, null, 2), "utf8")
+    await writeLocalInquiries(inquiries)
     return
   }
 
-  const { error } = await supabase.from("inquiries").upsert(inquiries.map(inquiryToRow), { onConflict: "id" })
+  let result
+
+  try {
+    result = await supabase.from("inquiries").upsert(inquiries.map(inquiryToRow), { onConflict: "id" })
+  } catch (error) {
+    if (isSupabaseNetworkError(error)) {
+      await writeFallbackInquiries(inquiries)
+      return
+    }
+
+    throw error
+  }
+
+  const { error } = result
 
   if (error) {
-    throw new Error(`Failed to save inquiries: ${error.message}`)
+    console.error("Failed to save inquiries in Supabase, using backup storage", error)
+    await writeFallbackInquiries(inquiries)
   }
 }
 
@@ -119,17 +174,30 @@ export async function createInquiry(inquiry: Inquiry) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    assertWritableBackend()
-    const inquiries = readLocalInquiries()
-    inquiries.unshift(inquiry)
-    await saveInquiries(inquiries)
+    await addFallbackInquiry(inquiry)
     return
   }
 
-  const { error } = await supabase.from("inquiries").insert(inquiryToRow(inquiry))
+  let result
+
+  try {
+    result = await supabase.from("inquiries").insert(inquiryToRow(inquiry))
+  } catch (error) {
+    if (isSupabaseNetworkError(error)) {
+      await addFallbackInquiry(inquiry)
+      return
+    }
+
+    console.error("Failed to create inquiry in Supabase, using backup storage", error)
+    await addFallbackInquiry(inquiry)
+    return
+  }
+
+  const { error } = result
 
   if (error) {
-    throw new Error(`Failed to create inquiry: ${error.message}`)
+    console.error("Failed to create inquiry in Supabase, using backup storage", error)
+    await addFallbackInquiry(inquiry)
   }
 }
 
@@ -137,16 +205,31 @@ export async function deleteInquiryById(id: string) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    assertWritableBackend()
     const inquiries = readLocalInquiries().filter((inquiry) => inquiry.id !== id)
-    await saveInquiries(inquiries)
+    await writeLocalInquiries(inquiries)
     return
   }
 
-  const { error } = await supabase.from("inquiries").delete().eq("id", id)
+  let result
+
+  try {
+    result = await supabase.from("inquiries").delete().eq("id", id)
+  } catch (error) {
+    if (isSupabaseNetworkError(error)) {
+      const inquiries = readLocalInquiries().filter((inquiry) => inquiry.id !== id)
+      await writeFallbackInquiries(inquiries)
+      return
+    }
+
+    throw error
+  }
+
+  const { error } = result
 
   if (error) {
-    throw new Error(`Failed to delete inquiry: ${error.message}`)
+    console.error("Failed to delete inquiry from Supabase, using backup storage", error)
+    const inquiries = (await readFallbackInquiries()).filter((inquiry) => inquiry.id !== id)
+    await writeFallbackInquiries(inquiries)
   }
 }
 
