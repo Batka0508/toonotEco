@@ -39,9 +39,14 @@ export async function submitInquiry(formData: FormData) {
     redirect("/#contact")
   }
 
-  await createInquiry(inquiry)
+  const saved = await createInquiry(inquiry)
 
   revalidatePath("/")
   revalidatePath("/admin")
+
+  if (!saved) {
+    redirect(`${sourcePath}?inquiry=failed#contact`)
+  }
+
   redirect(`${sourcePath}?inquiry=sent#contact`)
 }

@@ -200,8 +200,7 @@ export async function createInquiry(inquiry: Inquiry) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    await tryAddFallbackInquiry(inquiry)
-    return
+    return tryAddFallbackInquiry(inquiry)
   }
 
   let result
@@ -210,21 +209,21 @@ export async function createInquiry(inquiry: Inquiry) {
     result = await supabase.from("inquiries").insert(inquiryToRow(inquiry))
   } catch (error) {
     if (isSupabaseNetworkError(error)) {
-      await tryAddFallbackInquiry(inquiry)
-      return
+      return tryAddFallbackInquiry(inquiry)
     }
 
     console.error("Failed to create inquiry in Supabase, using backup storage", error)
-    await tryAddFallbackInquiry(inquiry)
-    return
+    return tryAddFallbackInquiry(inquiry)
   }
 
   const { error } = result
 
   if (error) {
     console.error("Failed to create inquiry in Supabase, using backup storage", error)
-    await tryAddFallbackInquiry(inquiry)
+    return tryAddFallbackInquiry(inquiry)
   }
+
+  return true
 }
 
 export async function deleteInquiryById(id: string) {

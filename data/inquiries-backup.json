@@ -1,6 +1,17 @@
 {
   "inquiries": [
     {
+      "id": "9a3eaa6b-5d9a-49d9-8a45-4209c010e2ec",
+      "userId": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
+      "name": "galaa",
+      "phone": "91919199",
+      "email": "suhee@yahoo.com",
+      "apartment": "2 өрөө байр",
+      "message": "oo gala2",
+      "createdAt": "2026-06-23T16:10:57.700Z",
+      "status": "new"
+    },
+    {
       "id": "36e3a999-0473-4e5a-bb53-94887ab46ee0",
       "userId": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
       "name": "dsdsa",

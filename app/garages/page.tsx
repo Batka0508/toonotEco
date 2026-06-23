@@ -56,7 +56,7 @@ export default async function GaragesPage({ searchParams }: GaragesPageProps) {
               <GarageSales garages={garages} />
             </div>
           </section>
-          <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} sourcePath="/garages" projectLocation={projectLocation} variant="dark" />
+          <Contact content={content.contact} isInquirySent={params.inquiry === "sent"} isInquiryFailed={params.inquiry === "failed"} sourcePath="/garages" projectLocation={projectLocation} variant="dark" />
         </div>
       </div>
       <Footer variant="black" />

@@ -20,12 +20,14 @@ const contactIcons: Partial<Record<IconKey, typeof Phone>> = {
 export function Contact({
   content,
   isInquirySent = false,
+  isInquiryFailed = false,
   sourcePath = "/",
   projectLocation,
   variant = "light",
 }: {
   content: HomepageContent["contact"]
   isInquirySent?: boolean
+  isInquiryFailed?: boolean
   sourcePath?: string
   projectLocation?: ProjectLocation
   variant?: "light" | "dark"
@@ -109,6 +111,11 @@ export function Contact({
                   <CheckCircle2 className="h-5 w-5" />
                   Амжилттай илгээгдлээ
                 </div>
+              </div>
+            )}
+            {isInquiryFailed && (
+              <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800">
+                Хүсэлт хадгалагдсангүй. Supabase/Vercel тохиргоог шалгаад дахин илгээнэ үү.
               </div>
             )}
             <h3 className={isDark ? "mb-5 text-xl font-bold text-white sm:mb-6 sm:text-2xl" : "mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl"}>{content.formTitle}</h3>
