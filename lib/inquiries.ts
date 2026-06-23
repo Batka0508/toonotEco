@@ -92,6 +92,16 @@ async function tryAddFallbackInquiry(inquiry: Inquiry) {
   }
 }
 
+function mergeInquiries(primary: Inquiry[], fallback: Inquiry[]) {
+  const byId = new Map<string, Inquiry>()
+
+  for (const inquiry of [...fallback, ...primary]) {
+    byId.set(inquiry.id, inquiry)
+  }
+
+  return [...byId.values()].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
 function inquiryFromRow(row: InquiryRow): Inquiry {
   return {
     id: row.id,
@@ -151,7 +161,10 @@ export async function getInquiries(): Promise<Inquiry[]> {
     return readFallbackInquiries()
   }
 
-  return ((data ?? []) as InquiryRow[]).map(inquiryFromRow)
+  const tableInquiries = ((data ?? []) as InquiryRow[]).map(inquiryFromRow)
+  const fallbackInquiries = await readFallbackInquiries()
+
+  return mergeInquiries(tableInquiries, fallbackInquiries)
 }
 
 export async function saveInquiries(inquiries: Inquiry[]) {
