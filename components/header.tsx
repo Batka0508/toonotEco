@@ -3,8 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { Menu, Phone, X } from "lucide-react"
 import { ScrollBlurHeader } from "@/components/motion-primitives"
 
 const navLinks = [
@@ -12,8 +11,7 @@ const navLinks = [
   { href: "/#about", label: "Төслийн тухай" },
   { href: "/#location", label: "Байршил" },
   { href: "/apartments", label: "Байрууд" },
-  { href: "/apartments#vr-tour", label: "3D аялал" },
-  { href: "/garages", label: "Гарааш" },
+  { href: "/apartments#vr-tour", label: "3D интерактив" },
   { href: "/#gallery", label: "Зургийн цомог" },
   { href: "/#contact", label: "Холбоо барих" },
 ]
@@ -28,7 +26,7 @@ export function Header() {
   }
 
   return (
-    <ScrollBlurHeader className="sticky top-0 z-40 border-b border-slate-900/10 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/92">
+    <ScrollBlurHeader className="sticky top-0 z-40 border-b border-white/10 bg-[#071513]/92 shadow-[0_18px_60px_rgba(0,0,0,0.22)] backdrop-blur-2xl">
       <div className="mx-auto max-w-[1440px] px-3 sm:px-5 lg:px-6 xl:px-8">
         <div className="flex h-16 items-center gap-3 sm:h-[4.5rem] lg:h-20 lg:gap-6">
           <Link
@@ -37,44 +35,66 @@ export function Header() {
             className="flex shrink-0 items-center gap-2.5 sm:gap-3"
             aria-label="Нүүр хуудас"
           >
-            <div className="relative h-11 w-11 shrink-0 sm:h-12 sm:w-12 lg:h-14 lg:w-14">
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full sm:h-11 sm:w-11">
               <Image
                 src="/logo.png"
                 alt="Монгол Од Компани"
                 fill
-                sizes="(min-width: 1024px) 56px, (min-width: 640px) 48px, 44px"
-                className="object-contain object-center dark:brightness-[1.15] dark:contrast-[1.05]"
+                sizes="44px"
+                className="scale-125 object-cover object-center brightness-[1.12] contrast-[1.08]"
                 priority
               />
             </div>
-            <div className="flex flex-col items-center justify-center text-center leading-none">
-              <span className="whitespace-nowrap text-sm font-black tracking-wide text-emerald-950 dark:text-emerald-50 sm:text-base lg:text-lg">
+            <div className="leading-none">
+              <span className="block whitespace-nowrap text-lg font-black tracking-wide text-white sm:text-xl">
                 Монгол Од
               </span>
-              <span className="mt-1 whitespace-nowrap text-[0.62rem] font-bold uppercase tracking-[0.14em] text-emerald-800 dark:text-emerald-300 sm:text-xs sm:tracking-[0.16em]">
+              <span className="mt-1 block text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-white/62">
                 Компани
               </span>
             </div>
           </Link>
 
-          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-3 xl:flex 2xl:gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="relative shrink-0 whitespace-nowrap text-sm font-semibold leading-none text-slate-800 transition-all after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-emerald-600 after:transition-all hover:text-emerald-600 hover:after:w-full dark:text-slate-200 dark:after:bg-emerald-300 dark:hover:text-emerald-300 2xl:text-base"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:flex 2xl:gap-5">
+            {navLinks.map((link) => {
+              const isActive = activeHref === link.href
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className={[
+                    "relative shrink-0 whitespace-nowrap px-2 py-3 text-sm font-semibold leading-none transition-colors 2xl:text-[0.95rem]",
+                    isActive ? "text-white" : "text-white/72 hover:text-white",
+                    "after:absolute after:bottom-1 after:left-2 after:h-0.5 after:rounded-full after:bg-[#8fcd4f] after:transition-all",
+                    isActive ? "after:w-7" : "after:w-0 hover:after:w-7",
+                  ].join(" ")}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <ThemeToggle />
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <a
+              href="tel:+97677778888"
+              className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-white/82 transition-colors hover:bg-white/8 hover:text-white lg:flex"
+            >
+              <Phone className="h-4 w-4 text-[#8fcd4f]" />
+              7777-8888
+            </a>
+            <Link
+              href="/#contact"
+              onClick={() => handleNavClick("/#contact")}
+              className="hidden rounded-full bg-[#7ec243] px-5 py-3 text-sm font-black text-[#10210f] shadow-[0_12px_30px_rgba(126,194,67,0.22)] transition-all hover:-translate-y-0.5 hover:bg-[#91d956] sm:inline-flex"
+            >
+              Захиалга өгөх
+            </Link>
             <button
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="flex h-9 w-9 items-center justify-center rounded-full text-emerald-950 transition-colors hover:bg-emerald-50 dark:text-emerald-100 dark:hover:bg-slate-800 xl:hidden sm:h-10 sm:w-10"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/8 text-white transition-colors hover:bg-white/14 xl:hidden"
               aria-label="Цэс нээх"
               aria-expanded={isMenuOpen}
             >
@@ -84,8 +104,8 @@ export function Header() {
         </div>
 
         {isMenuOpen && (
-          <nav className="absolute left-3 right-3 top-[calc(100%+0.5rem)] z-50 max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl border border-emerald-900/10 bg-white shadow-xl shadow-emerald-950/15 dark:border-white/10 dark:bg-slate-950 sm:left-auto sm:right-5 sm:w-[22rem] lg:right-6 xl:hidden">
-            <div className="grid grid-cols-1 gap-1 p-2">
+          <nav className="absolute left-3 right-3 top-[calc(100%+0.5rem)] z-50 max-h-[calc(100svh-5rem)] overflow-y-auto rounded-2xl border border-white/10 bg-[#071513]/96 p-2 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:left-auto sm:right-5 sm:w-[22rem] lg:right-6 xl:hidden">
+            <div className="grid grid-cols-1 gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -94,13 +114,27 @@ export function Header() {
                   className={[
                     "block rounded-xl px-4 py-3 text-sm font-semibold transition-colors",
                     activeHref === link.href
-                      ? "bg-emerald-800 text-white"
-                      : "text-slate-700 hover:bg-emerald-100 hover:text-emerald-900 dark:text-slate-200 dark:hover:bg-emerald-400/15 dark:hover:text-emerald-200",
+                      ? "bg-[#7ec243] text-[#10210f]"
+                      : "text-white/78 hover:bg-white/8 hover:text-white",
                   ].join(" ")}
                 >
                   {link.label}
                 </Link>
               ))}
+              <a
+                href="tel:+97677778888"
+                className="mt-1 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white/82 hover:bg-white/8 hover:text-white"
+              >
+                <Phone className="h-4 w-4 text-[#8fcd4f]" />
+                7777-8888
+              </a>
+              <Link
+                href="/#contact"
+                onClick={() => handleNavClick("/#contact")}
+                className="mt-1 rounded-xl bg-[#7ec243] px-4 py-3 text-center text-sm font-black text-[#10210f]"
+              >
+                Захиалга өгөх
+              </Link>
             </div>
           </nav>
         )}

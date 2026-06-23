@@ -25,11 +25,10 @@ function HeroTitle({ title }: { title: string }) {
       <span className="font-black uppercase text-[#263e91] [text-shadow:0_0.035em_0_#fff,0_0.07em_0_#fff,0_0.11em_0.18em_rgba(255,255,255,0.9),0_0.16em_0.22em_rgba(15,23,42,0.28)]">
         ТООНОТ
       </span>
-      <span className="inline-flex translate-y-[-0.18em] items-center gap-[0.08em] rounded-[0.18em] border-[0.055em] border-emerald-600/80 bg-white/92 px-[0.18em] py-[0.04em] text-[0.48em] font-black uppercase leading-none text-emerald-700 shadow-[0_0.05em_0.16em_rgba(255,255,255,0.65),0_0.08em_0.2em_rgba(15,23,42,0.2)]">
+      <span className="inline-flex items-baseline gap-[0.08em] text-[0.48em] font-black uppercase leading-none text-emerald-400">
         <Leaf className="h-[0.82em] w-[0.82em] fill-emerald-500 text-emerald-600" />
         ЭКО
       </span>
-      <span className="font-bold text-white">Хотхон</span>
     </span>
   )
 }
@@ -91,11 +90,11 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
               const Icon = highlightIcons[item.icon] ?? Ruler
 
               return (
-              <StaggerItem key={item.label} className="rounded-lg border border-white/15 bg-black/28 p-3 shadow-lg backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-black/36 sm:p-4">
-                <Icon className="mb-3 h-5 w-5 text-emerald-300" />
-                <p className="text-sm font-semibold text-white/65">{item.label}</p>
-                <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{item.value}</p>
-              </StaggerItem>
+                <StaggerItem key={item.label} className="rounded-lg border border-white/15 bg-black/28 p-3 shadow-lg backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-black/36 sm:p-4">
+                  <Icon className="mb-3 h-5 w-5 text-emerald-300" />
+                  <p className="text-sm font-semibold text-white/65">{item.label}</p>
+                  <p className="mt-1 text-lg font-bold text-white sm:text-2xl">{item.value}</p>
+                </StaggerItem>
               )
             })}
           </StaggerGroup>

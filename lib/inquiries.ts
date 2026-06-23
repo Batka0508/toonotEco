@@ -79,6 +79,19 @@ async function addFallbackInquiry(inquiry: Inquiry) {
   await writeFallbackInquiries(inquiries)
 }
 
+async function tryAddFallbackInquiry(inquiry: Inquiry) {
+  try {
+    await addFallbackInquiry(inquiry)
+    return true
+  } catch (error) {
+    console.error(
+      "Failed to persist inquiry fallback. Configure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in production.",
+      error,
+    )
+    return false
+  }
+}
+
 function inquiryFromRow(row: InquiryRow): Inquiry {
   return {
     id: row.id,
@@ -174,7 +187,7 @@ export async function createInquiry(inquiry: Inquiry) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase) {
-    await addFallbackInquiry(inquiry)
+    await tryAddFallbackInquiry(inquiry)
     return
   }
 
@@ -184,12 +197,12 @@ export async function createInquiry(inquiry: Inquiry) {
     result = await supabase.from("inquiries").insert(inquiryToRow(inquiry))
   } catch (error) {
     if (isSupabaseNetworkError(error)) {
-      await addFallbackInquiry(inquiry)
+      await tryAddFallbackInquiry(inquiry)
       return
     }
 
     console.error("Failed to create inquiry in Supabase, using backup storage", error)
-    await addFallbackInquiry(inquiry)
+    await tryAddFallbackInquiry(inquiry)
     return
   }
 
@@ -197,7 +210,7 @@ export async function createInquiry(inquiry: Inquiry) {
 
   if (error) {
     console.error("Failed to create inquiry in Supabase, using backup storage", error)
-    await addFallbackInquiry(inquiry)
+    await tryAddFallbackInquiry(inquiry)
   }
 }
 

@@ -1,6 +1,28 @@
 {
   "inquiries": [
     {
+      "id": "36e3a999-0473-4e5a-bb53-94887ab46ee0",
+      "userId": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
+      "name": "dsdsa",
+      "phone": "9999999",
+      "email": "suhee@yahoo.com",
+      "apartment": "3 өрөө байр",
+      "message": "dA",
+      "createdAt": "2026-06-23T08:40:23.492Z",
+      "status": "new"
+    },
+    {
+      "id": "37b6de21-b33d-4e08-b62f-b2ab8c1cdc5a",
+      "userId": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
+      "name": "batorgil",
+      "phone": "9999999",
+      "email": "suhee@yahoo.com",
+      "apartment": "Гарааш",
+      "message": "ewqewq",
+      "createdAt": "2026-06-18T06:48:20.091Z",
+      "status": "new"
+    },
+    {
       "id": "efe7dc24-cb90-4b6a-8c05-942b2b7f4ce5",
       "userId": "56e1abfc-859d-4c74-b0ad-3a19b8077a0f",
       "name": "suheee",

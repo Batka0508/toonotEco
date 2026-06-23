@@ -87,12 +87,12 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
   }
 
   return (
-    <section className="rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:p-6 lg:p-8">
+    <section className="rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl sm:rounded-[1.35rem] sm:p-6 lg:p-8">
       <FadeIn className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-2xl">
           <p className="mb-3 text-sm font-black uppercase tracking-wide text-emerald-300 drop-shadow-[0_0_12px_rgba(16,185,129,0.5)]">Гарааш худалдаа</p>
-          <h2 className="text-3xl font-black tracking-tight text-white text-balance md:text-4xl">Дулаан зогсоолын сонголтууд</h2>
-          <p className="mt-4 text-base leading-8 text-cyan-50/72">Таны автомашинд аюулгүй, дулаан, тохилог зогсоол.</p>
+          <h2 className="text-2xl font-black tracking-tight text-white text-balance sm:text-3xl md:text-4xl">Дулаан зогсоолын сонголтууд</h2>
+          <p className="mt-3 text-sm leading-7 text-cyan-50/72 sm:mt-4 sm:text-base sm:leading-8">Таны автомашинд аюулгүй, дулаан, тохилог зогсоол.</p>
         </div>
 
         <div className="flex flex-wrap gap-2 rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-xl">
@@ -119,19 +119,19 @@ export function GarageSales({ garages }: { garages: Garage[] }) {
       </FadeIn>
 
       <FadeIn delay={0.08} className="relative mt-8">
-        <div ref={carouselRef} className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div ref={carouselRef} className="flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-4 [scrollbar-width:none] sm:gap-4 [&::-webkit-scrollbar]:hidden">
           {groupedGarages.map((group) => (
             <div
               key={group.block}
               data-garage-block
-              className="w-[calc(100vw-2rem)] shrink-0 snap-center rounded-[1.35rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] sm:p-3 lg:w-[54rem]"
+              className="w-full shrink-0 snap-center rounded-[1.1rem] border border-cyan-200/16 bg-cyan-100/[0.055] p-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl sm:w-[34rem] sm:rounded-[1.35rem] sm:p-3 lg:w-[54rem]"
             >
               <div className="mb-3 flex items-center justify-between gap-3 px-1">
                 <div>
                   <p className="text-xs font-black uppercase tracking-wide text-emerald-300">Гарааш блок</p>
-                  <h3 className="text-xl font-black text-white">{group.block}</h3>
+                  <h3 className="text-lg font-black text-white sm:text-xl">{group.block}</h3>
                 </div>
-                <span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-black text-emerald-100 shadow-sm ring-1 ring-emerald-300/20 backdrop-blur">
+                <span className="shrink-0 rounded-full bg-emerald-400/10 px-2.5 py-1 text-[0.68rem] font-black text-emerald-100 shadow-sm ring-1 ring-emerald-300/20 backdrop-blur sm:px-3 sm:text-xs">
                   {group.garages.length} сонголт
                 </span>
               </div>
@@ -358,3 +358,4 @@ function SmallCarouselButton({ direction, onClick, label }: { direction: "previo
     </button>
   )
 }
+
