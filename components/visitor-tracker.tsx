@@ -37,19 +37,64 @@ export function VisitorTracker() {
       return
     }
 
-    const body = JSON.stringify({
-      visitorId: getVisitorId(),
-      path: pathname,
-      referrer: document.referrer,
-    })
+    const visitorId = getVisitorId()
 
-    navigator.sendBeacon?.("/api/visits", new Blob([body], { type: "application/json" })) ||
-      fetch("/api/visits", {
+    const sendVisitEvent = (event: "visit" | "heartbeat") => {
+      const body = JSON.stringify({
+        visitorId,
+        path: pathname,
+        referrer: document.referrer,
+        event,
+      })
+
+      navigator.sendBeacon?.("/api/visits", new Blob([body], { type: "application/json" })) ||
+        fetch("/api/visits", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body,
+          keepalive: true,
+        }).catch(() => undefined)
+    }
+
+    sendVisitEvent("visit")
+
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        sendVisitEvent("heartbeat")
+      }
+    }, 30_000)
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        sendVisitEvent("heartbeat")
+      }
+    }
+
+    const handlePageHide = () => {
+      const body = JSON.stringify({
+        visitorId,
+        path: pathname,
+        referrer: document.referrer,
+        event: "heartbeat",
+      })
+
+      navigator.sendBeacon?.("/api/visits", new Blob([body], { type: "application/json" })) ||
+        fetch("/api/visits", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body,
         keepalive: true,
       }).catch(() => undefined)
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange)
+    window.addEventListener("pagehide", handlePageHide)
+
+    return () => {
+      window.clearInterval(interval)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      window.removeEventListener("pagehide", handlePageHide)
+    }
   }, [pathname])
 
   return null

@@ -207,6 +207,7 @@ export function AIChatBot() {
                 event.preventDefault()
                 sendMessage(input)
               }}
+              autoComplete="off"
               className="mb-2 flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2 py-1 shadow-lg shadow-slate-900/5"
             >
               <Input
@@ -214,6 +215,9 @@ export function AIChatBot() {
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 placeholder="Асуултаа бичнэ үү..."
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
                 className="h-8 border-0 bg-transparent text-xs shadow-none focus-visible:ring-0"
               />
               <Button type="submit" size="icon" disabled={loading} className="h-8 w-8 rounded-full bg-emerald-600 hover:bg-emerald-700">

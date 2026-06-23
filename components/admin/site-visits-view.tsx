@@ -36,7 +36,7 @@ export function SiteVisitsView({ stats }: SiteVisitsViewProps) {
           icon={Activity}
           label="Одоо идэвхтэй"
           value={stats.activeVisitors}
-          subtext="Сүүлийн 15 минут"
+          subtext="Сүүлийн 75 секунд"
           iconClassName="bg-amber-100 text-amber-600"
         />
       </div>

@@ -3,13 +3,14 @@ import { trackSiteVisit } from "@/lib/site-visits"
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { visitorId?: string; path?: string; referrer?: string }
+    const body = (await request.json()) as { visitorId?: string; path?: string; referrer?: string; event?: string }
 
     await trackSiteVisit({
       visitorId: body.visitorId ?? "",
       path: body.path ?? "/",
       referrer: body.referrer ?? "",
       userAgent: request.headers.get("user-agent") ?? "",
+      recordVisit: body.event !== "heartbeat",
     })
 
     return NextResponse.json({ ok: true })

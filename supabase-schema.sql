@@ -56,6 +56,15 @@ create table if not exists public.chatbot_leads (
   created_at timestamptz default now()
 );
 
+create table if not exists public.site_visitors (
+  visitor_id text primary key,
+  path text not null default '/',
+  referrer text default '',
+  user_agent text default '',
+  first_seen_at timestamptz not null default now(),
+  last_seen_at timestamptz not null default now()
+);
+
 create table if not exists public.projects (
   id text primary key,
   name text not null,
@@ -71,6 +80,7 @@ alter table public.apartments enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.garages enable row level security;
 alter table public.chatbot_leads enable row level security;
+alter table public.site_visitors enable row level security;
 alter table public.projects enable row level security;
 
 drop policy if exists "Public can read apartments" on public.apartments;
@@ -91,6 +101,17 @@ create policy "Public can create inquiries"
 drop policy if exists "Public can create chatbot leads" on public.chatbot_leads;
 create policy "Public can create chatbot leads"
   on public.chatbot_leads for insert
+  with check (true);
+
+drop policy if exists "Public can upsert site visitors" on public.site_visitors;
+create policy "Public can upsert site visitors"
+  on public.site_visitors for insert
+  with check (true);
+
+drop policy if exists "Public can update own site visitor heartbeat" on public.site_visitors;
+create policy "Public can update own site visitor heartbeat"
+  on public.site_visitors for update
+  using (true)
   with check (true);
 
 drop policy if exists "Public can read projects" on public.projects;

@@ -7,7 +7,7 @@ import { getSupabaseAdminClient, isSupabaseNetworkError } from "@/lib/supabase"
 const BUCKET_NAME = "site-content"
 const STORAGE_PATH = "analytics/site-visits.json"
 const MAX_VISITS = 5000
-const ACTIVE_WINDOW_MS = 15 * 60 * 1000
+const ACTIVE_WINDOW_MS = 75 * 1000
 
 export type SiteVisit = {
   id: string
@@ -161,10 +161,73 @@ function shouldTrackPath(pathValue: string) {
   )
 }
 
-export async function trackSiteVisit(input: { visitorId: string; path: string; referrer?: string; userAgent?: string }) {
+async function updateActiveVisitor(input: { visitorId: string; path: string; referrer?: string; userAgent?: string }) {
+  const supabase = getSupabaseAdminClient()
+
+  if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return
+  }
+
+  const now = new Date().toISOString()
+
+  try {
+    await supabase.from("site_visitors").upsert(
+      {
+        visitor_id: input.visitorId.slice(0, 80),
+        path: input.path,
+        referrer: (input.referrer ?? "").slice(0, 180),
+        user_agent: (input.userAgent ?? "").slice(0, 220),
+        first_seen_at: now,
+        last_seen_at: now,
+      },
+      { onConflict: "visitor_id" },
+    )
+  } catch (error) {
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to update active visitor", error)
+    }
+  }
+}
+
+async function getActiveVisitorCountFromSupabase(now: Date) {
+  const supabase = getSupabaseAdminClient()
+
+  if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null
+  }
+
+  const since = new Date(now.getTime() - ACTIVE_WINDOW_MS).toISOString()
+
+  try {
+    const { count, error } = await supabase
+      .from("site_visitors")
+      .select("visitor_id", { count: "exact", head: true })
+      .gte("last_seen_at", since)
+
+    if (error) {
+      console.error("Failed to count active visitors", error)
+      return null
+    }
+
+    return count ?? 0
+  } catch (error) {
+    if (!isSupabaseNetworkError(error)) {
+      console.error("Failed to count active visitors", error)
+    }
+    return null
+  }
+}
+
+export async function trackSiteVisit(input: { visitorId: string; path: string; referrer?: string; userAgent?: string; recordVisit?: boolean }) {
   const pathValue = cleanPath(input.path)
 
   if (!input.visitorId || !shouldTrackPath(pathValue)) {
+    return
+  }
+
+  await updateActiveVisitor({ ...input, path: pathValue })
+
+  if (input.recordVisit === false) {
     return
   }
 
@@ -206,9 +269,10 @@ export async function getSiteVisitStats(): Promise<SiteVisitStats> {
   const data = await readVisitsData()
   const now = new Date()
   const todayVisitors = new Set<string>()
-  const activeVisitors = new Set<string>()
+  const activeVisitorIds = new Set<string>()
   const pageCounts = new Map<string, number>()
   let todayVisits = 0
+  const activeVisitorCount = await getActiveVisitorCountFromSupabase(now)
 
   for (const visit of data.visits) {
     const createdAt = new Date(visit.createdAt)
@@ -219,7 +283,7 @@ export async function getSiteVisitStats(): Promise<SiteVisitStats> {
     }
 
     if (now.getTime() - createdAt.getTime() <= ACTIVE_WINDOW_MS) {
-      activeVisitors.add(visit.visitorId)
+      activeVisitorIds.add(visit.visitorId)
     }
 
     pageCounts.set(visit.path, (pageCounts.get(visit.path) ?? 0) + 1)
@@ -229,7 +293,7 @@ export async function getSiteVisitStats(): Promise<SiteVisitStats> {
     totalVisits: data.visits.length,
     todayVisits,
     todayUniqueVisitors: todayVisitors.size,
-    activeVisitors: activeVisitors.size,
+    activeVisitors: activeVisitorCount ?? activeVisitorIds.size,
     recentVisits: data.visits.slice(0, 10),
     topPages: [...pageCounts.entries()]
       .map(([path, visits]) => ({ path, visits }))

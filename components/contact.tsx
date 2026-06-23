@@ -119,18 +119,18 @@ export function Contact({
               </div>
             )}
             <h3 className={isDark ? "mb-5 text-xl font-bold text-white sm:mb-6 sm:text-2xl" : "mb-5 text-xl font-bold text-slate-950 sm:mb-6 sm:text-2xl"}>{content.formTitle}</h3>
-            <form action={submitInquiry} className="space-y-5">
+            <form action={submitInquiry} className="space-y-5" autoComplete="off">
               <input type="hidden" name="sourcePath" value={sourcePath} />
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field variant={variant} label="Нэр">
-                  <Input id="name" name="name" placeholder="Таны нэр" required className={isDark ? darkFieldControlClass : undefined} />
+                  <Input id="name" name="name" placeholder="Таны нэр" required autoComplete="off" autoCorrect="off" spellCheck={false} className={isDark ? darkFieldControlClass : undefined} />
                 </Field>
                 <Field variant={variant} label="Утас">
-                  <Input id="phone" name="phone" type="tel" placeholder="Утасны дугаар" required className={isDark ? darkFieldControlClass : undefined} />
+                  <Input id="phone" name="phone" type="tel" placeholder="Утасны дугаар" required autoComplete="off" autoCorrect="off" spellCheck={false} className={isDark ? darkFieldControlClass : undefined} />
                 </Field>
               </div>
               <Field variant={variant} label="И-мэйл">
-                <Input id="email" name="email" type="email" placeholder="example@mail.com" className={isDark ? darkFieldControlClass : undefined} />
+                <Input id="email" name="email" type="email" placeholder="example@mail.com" autoComplete="off" autoCorrect="off" spellCheck={false} className={isDark ? darkFieldControlClass : undefined} />
               </Field>
               <Field variant={variant} label="Сонирхож буй байр">
                 <select
@@ -150,7 +150,7 @@ export function Contact({
                 </select>
               </Field>
               <Field variant={variant} label="Нэмэлт мэдээлэл">
-                <Textarea id="message" name="message" rows={5} placeholder="Жишээ: 2 өрөө, 50 м² орчим, урьдчилгаа төлбөрийн нөхцөл..." className={isDark ? darkFieldControlClass : undefined} />
+                <Textarea id="message" name="message" rows={5} placeholder="Жишээ: 2 өрөө, 50 м² орчим, урьдчилгаа төлбөрийн нөхцөл..." autoComplete="off" autoCorrect="off" spellCheck={false} className={isDark ? darkFieldControlClass : undefined} />
               </Field>
               <Button
                 className={
