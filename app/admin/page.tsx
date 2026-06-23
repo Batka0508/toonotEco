@@ -28,7 +28,7 @@ import { ConfirmSubmitButton } from "@/components/confirm-submit-button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, updateApartment, updateGalleryContent, updateGarage, updateHomepageContent } from "./actions"
+import { createApartment, createGarage, deleteApartment, deleteGarage, deleteInquiry, updateApartment, updateGalleryContent, updateGarage, updateHeroImageContent, updateHomepageContent } from "./actions"
 
 const INQUIRY_TIME_OFFSET_MS = 4 * 60 * 60 * 1000
 
@@ -172,6 +172,44 @@ function AdminAccessRequired() {
 function HomepageContentEditor({ content }: { content: Awaited<ReturnType<typeof getHomepageContent>> }) {
   return (
     <div className="grid gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Нүүр хэсгийн зураг солих</CardTitle>
+          <CardDescription>Homepage дээр хамгийн эхэнд харагддаг hero/background зургийг эндээс upload хийж солино.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form action={updateHeroImageContent} className="grid gap-5">
+            <div className="grid gap-4 md:grid-cols-[220px_1fr]">
+              <div className="relative h-36 overflow-hidden rounded-lg bg-slate-100">
+                <Image src={content.hero.backgroundImage || "/placeholder.jpg"} alt={content.hero.title} fill sizes="220px" className="object-cover" />
+              </div>
+              <div className="grid gap-4">
+                <Field label="Одоогийн зураг / public URL">
+                  <Input name="heroBackgroundImage" defaultValue={content.hero.backgroundImage} placeholder="/images/zurag.jpg.png" />
+                </Field>
+                <label className="grid gap-2 text-sm font-medium text-slate-800">
+                  Шинэ зураг upload
+                  <div className="rounded-lg border border-dashed border-emerald-300 bg-emerald-50 p-4">
+                    <div className="mb-3 flex items-center gap-2 text-emerald-800">
+                      <UploadCloud className="h-5 w-5" />
+                      <span className="font-semibold">Нүүр хэсгийн зураг сонгох</span>
+                    </div>
+                    <Input name="heroImageFile" type="file" accept="image/*" className="h-auto bg-white py-2 text-xs file:mr-3 file:rounded-md file:bg-emerald-700 file:px-3 file:py-2 file:text-xs file:text-white" />
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button type="submit">
+                <Save className="h-4 w-4" />
+                Нүүр зураг хадгалах
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Зургийн цомог засах</CardTitle>

@@ -360,6 +360,30 @@ export async function updateHomepageContent(formData: FormData) {
   redirect("/admin?view=content&saved=1")
 }
 
+export async function updateHeroImageContent(formData: FormData) {
+  await requireAdmin()
+
+  const homepageContent = await getHomepageContent()
+  const uploadedImages = await uploadPropertyImages(formData.getAll("heroImageFile"), "homepage-hero")
+  const backgroundImage = uploadedImages[0] || clean(formData.get("heroBackgroundImage"))
+
+  if (!backgroundImage) {
+    redirect("/admin?view=content&error=validation")
+  }
+
+  await saveHomepageContent({
+    ...homepageContent,
+    hero: {
+      ...homepageContent.hero,
+      backgroundImage,
+    },
+  })
+
+  revalidatePath("/")
+  revalidatePath("/admin")
+  redirect("/admin?view=content&saved=1")
+}
+
 export async function updateGalleryContent(formData: FormData) {
   await requireAdmin()
 

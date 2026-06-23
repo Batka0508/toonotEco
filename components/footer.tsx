@@ -88,8 +88,8 @@ export function Footer({ variant = "green" }: { variant?: "green" | "black" }) {
             <ul className="space-y-3 text-emerald-50">
               <li>Улаанбаатар хот</li>
               <li>
-                <a href="tel:+97611111111" className="transition-colors hover:text-white">
-                  +976 1111-1111
+                <a href="tel:+97675058877" className="transition-colors hover:text-white">
+                  75058877
                 </a>
               </li>
               <li>

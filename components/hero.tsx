@@ -76,7 +76,7 @@ export function Hero({ content }: { content: HomepageContent["hero"] }) {
             <Button
               asChild
               size="lg"
-              className="group h-12 w-full rounded-md bg-emerald-800 px-6 text-base font-bold shadow-lg shadow-emerald-950/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-900 hover:shadow-xl hover:shadow-emerald-950/25 sm:h-14 sm:w-auto"
+              className="group h-12 w-full rounded-md px-6 text-base font-bold transition-all hover:-translate-y-0.5 sm:h-14 sm:w-auto"
             >
               <Link href="/apartments#vr-tour" className="justify-center">
                 <Eye className="h-5 w-5 transition-transform group-hover:scale-110" />

@@ -165,7 +165,7 @@ export const defaultHomepageContent: HomepageContent = {
     mapTitle: "Байршлын зураг",
     mapEmbedUrl: "https://maps.google.com/maps?q=%D0%A2%D0%BE%D0%BE%D0%BD%D0%BE%D1%82%20%D0%AD%D0%BA%D0%BE%20apartment&t=&z=15&ie=UTF8&iwloc=&output=embed",
     info: [
-      { icon: "phone", title: "Борлуулалтын утас", value: "+976 1111-1111", href: "tel:+97611111111" },
+      { icon: "phone", title: "Борлуулалтын утас", value: "75058877", href: "tel:+97675058877" },
       { icon: "mail", title: "И-мэйл", value: "info@ecotown.mn", href: "mailto:info@ecotown.mn" },
       { icon: "map", title: "Байршил", value: "Улаанбаатар хот", href: "#location" },
       { icon: "clock", title: "Ажлын цаг", value: "Даваа-Бямба: 09:00-18:00", href: "#contact" },

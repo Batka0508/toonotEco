@@ -111,7 +111,7 @@
         "label": "Барилга"
       },
       {
-        "src": "https://aotycjrsaxtzslmsehaf.supabase.co/storage/v1/object/public/property-images/gallery-2/gallery-2-1778747666958-0.jpg",
+        "src": "/images/gallery-2-1782226592071-0.jpg",
         "title": "Гадна фасад",
         "label": "Гадна төрх"
       },
@@ -121,17 +121,17 @@
         "label": "Интерьер"
       },
       {
-        "src": "https://aotycjrsaxtzslmsehaf.supabase.co/storage/v1/object/public/property-images/gallery-4/gallery-4-1778747668138-0.jpg",
+        "src": "/images/gallery-4-1782226368692-0.jfif",
         "title": "Орчны зураг",
         "label": "Орчин"
       },
       {
-        "src": "https://aotycjrsaxtzslmsehaf.supabase.co/storage/v1/object/public/property-images/gallery-5/gallery-5-1778745270939-0.png",
-        "title": "2 өрөөний план",
+        "src": "/images/gallery-5-1782226517688-0.jpg",
+        "title": "Үүдний лобби",
         "label": "План зураг"
       },
       {
-        "src": "https://aotycjrsaxtzslmsehaf.supabase.co/storage/v1/object/public/property-images/gallery-6/gallery-6-1778747669682-0.jpg",
+        "src": "/images/gallery-6-1782226592076-0.jpg",
         "title": "Том талбай",
         "label": "Байр"
       }
@@ -148,8 +148,8 @@
       {
         "icon": "phone",
         "title": "Борлуулалтын утас",
-        "value": "+976 1111-1111",
-        "href": "tel:+97611111111"
+        "value": "75058877",
+        "href": "tel:+97675058877"
       },
       {
         "icon": "mail",

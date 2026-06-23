@@ -25,28 +25,31 @@
     },
     {
       "id": "dwq",
-      "title": "dwq",
-      "description": "eqw",
+      "title": "2өрөө",
+      "description": "z",
       "price": "4,7 сая/м2-с",
       "location": "Нисэх",
       "district": "Хан уул дүүрэг",
       "rooms": "5өрөө",
-      "area": "70м2",
+      "area": "52mk",
       "floor": "12давхар",
       "totalFloors": "1",
-      "status": "available",
+      "status": "sold",
       "images": [
-        "/images/dwq-1778567130695-0.png"
+        "/images/dwq-1782227647066-0.jfif",
+        "/images/dwq-1782227647078-1.jfif",
+        "/images/dwq-1782227647087-2.jfif",
+        "/images/dwq-1782227647097-3.jfif"
       ],
-      "image": "/images/dwq-1778567130695-0.png",
+      "image": "/images/dwq-1782227647066-0.jfif",
       "floorPlanImage": "",
       "amenities": [
-        "eqeqw"
+        "z"
       ],
-      "total": "789",
-      "tag": "wq",
+      "total": "210 саяас",
+      "tag": "Залуу гэр бүл",
       "createdAt": "2026-05-12T06:25:30.693Z",
-      "updatedAt": "2026-06-12T15:19:08.081Z"
+      "updatedAt": "2026-06-23T15:14:26.275Z"
     },
     {
       "id": "two-room",

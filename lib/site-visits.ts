@@ -64,6 +64,19 @@ async function writeLocalVisits(data: SiteVisitsData) {
   await writeFile(visitsPath, `${JSON.stringify(data, null, 2)}\n`, "utf8")
 }
 
+async function tryWriteLocalVisits(data: SiteVisitsData) {
+  try {
+    await writeLocalVisits(data)
+    return true
+  } catch (error) {
+    console.error(
+      "Failed to persist site visits locally. Configure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in production.",
+      error,
+    )
+    return false
+  }
+}
+
 async function readVisitsData(): Promise<SiteVisitsData> {
   const supabase = getSupabaseAdminClient()
 
@@ -96,7 +109,7 @@ async function writeVisitsData(data: SiteVisitsData) {
   const supabase = getSupabaseAdminClient()
 
   if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    await writeLocalVisits(nextData)
+    await tryWriteLocalVisits(nextData)
     return
   }
 
@@ -125,7 +138,7 @@ async function writeVisitsData(data: SiteVisitsData) {
     }
   } catch (error) {
     if (isSupabaseNetworkError(error)) {
-      await writeLocalVisits(nextData)
+      await tryWriteLocalVisits(nextData)
       return
     }
 

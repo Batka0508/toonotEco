@@ -11,9 +11,9 @@ const navLinks = [
   { href: "/#about", label: "Төслийн тухай" },
   { href: "/#location", label: "Байршил" },
   { href: "/apartments", label: "Байрууд" },
-  { href: "/apartments#vr-tour", label: "3D интерактив" },
+  { href: "/apartments#vr-tour", label: "3D аялал" },
+  { href: "/garages", label: "Гарааш" },
   { href: "/#gallery", label: "Зургийн цомог" },
-  { href: "/#contact", label: "Холбоо барих" },
 ]
 
 export function Header() {
@@ -79,11 +79,11 @@ export function Header() {
 
           <div className="ml-auto flex shrink-0 items-center gap-2">
             <a
-              href="tel:+97677778888"
+              href="tel:+97675058877"
               className="hidden items-center gap-2 rounded-full px-3 py-2 text-sm font-bold text-white/82 transition-colors hover:bg-white/8 hover:text-white lg:flex"
             >
               <Phone className="h-4 w-4 text-[#8fcd4f]" />
-              7777-8888
+              75058877
             </a>
             <Link
               href="/#contact"
@@ -122,11 +122,11 @@ export function Header() {
                 </Link>
               ))}
               <a
-                href="tel:+97677778888"
+                href="tel:+97675058877"
                 className="mt-1 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white/82 hover:bg-white/8 hover:text-white"
               >
                 <Phone className="h-4 w-4 text-[#8fcd4f]" />
-                7777-8888
+                75058877
               </a>
               <Link
                 href="/#contact"
