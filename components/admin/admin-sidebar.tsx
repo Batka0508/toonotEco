@@ -48,8 +48,8 @@ export function AdminSidebar({ activeView, newRequests, chatbotCount, notificati
   const counts = { requests: newRequests, chatbot: chatbotCount, notifications: notifications.length }
 
   return (
-    <div className="flex h-full flex-col px-4 py-6">
-      <div className="mb-8 flex items-center gap-3 pr-8">
+    <div className="flex h-full flex-col px-3 py-5 lg:px-4 lg:py-6">
+      <div className="mb-6 flex items-center gap-3 pr-8 lg:mb-8">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#5d5fef]">
           <Building2 className="h-5 w-5 text-white" />
         </div>
@@ -69,7 +69,7 @@ export function AdminSidebar({ activeView, newRequests, chatbotCount, notificati
               key={item.id}
               href={item.href}
               className={[
-                "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center justify-between gap-2 rounded-lg px-2.5 py-2.5 text-sm font-medium transition-colors lg:px-3",
                 active ? "bg-[#5d5fef] text-white" : "text-white/75 hover:bg-white/10 hover:text-white",
               ].join(" ")}
             >

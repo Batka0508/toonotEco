@@ -326,8 +326,8 @@ function PropertiesTable({ properties }: { properties: Apartment[] }) {
         <h2 className="text-base font-bold text-slate-900">Байрны жагсаалт</h2>
         <p className="mt-1 text-sm text-slate-500">Засах, устгах, төлөв харах хэсэг</p>
       </div>
-      <div className="p-5">
-        <Table>
+      <div className="overflow-x-auto p-5">
+        <Table className="min-w-[760px]">
           <TableHeader>
             <TableRow>
               <TableHead>Байр</TableHead>
@@ -665,7 +665,8 @@ function ChatbotLeadsTable({ leads }: { leads: ChatbotLead[] }) {
         {leads.length === 0 ? (
           <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50 p-6 text-sm text-slate-600">Одоогоор chatbot lead ирээгүй байна.</div>
         ) : (
-          <Table>
+          <div className="overflow-x-auto">
+          <Table className="min-w-[760px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Нэр</TableHead>
@@ -687,6 +688,7 @@ function ChatbotLeadsTable({ leads }: { leads: ChatbotLead[] }) {
               ))}
             </TableBody>
           </Table>
+          </div>
         )}
       </CardContent>
     </Card>
