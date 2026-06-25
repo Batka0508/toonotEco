@@ -198,15 +198,17 @@ function RequestRow({
 
 function ContactToggle({ inquiryId, contacted }: { inquiryId: string; contacted: boolean }) {
   return (
-    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+    <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 shadow-sm">
       <form action={updateInquiryStatus}>
         <input type="hidden" name="id" value={inquiryId} />
         <input type="hidden" name="status" value="new" />
         <button
           type="submit"
           className={[
-            "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
-            !contacted ? "bg-white text-amber-700 shadow-sm" : "text-slate-500 hover:text-slate-700",
+            "cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98]",
+            !contacted
+              ? "bg-amber-100 text-amber-800 shadow-sm ring-1 ring-amber-200 hover:bg-amber-200"
+              : "text-slate-500 hover:bg-amber-50 hover:text-amber-800",
           ].join(" ")}
         >
           Холбогдоогүй
@@ -218,8 +220,10 @@ function ContactToggle({ inquiryId, contacted }: { inquiryId: string; contacted:
         <button
           type="submit"
           className={[
-            "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
-            contacted ? "bg-[#5d5fef] text-white shadow-sm" : "text-slate-500 hover:text-slate-700",
+            "cursor-pointer rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98]",
+            contacted
+              ? "bg-[#5d5fef] text-white shadow-sm ring-1 ring-[#5d5fef]/30 hover:bg-[#4f51e8]"
+              : "text-slate-500 hover:bg-[#5d5fef]/10 hover:text-[#4f51e8]",
           ].join(" ")}
         >
           Холбогдсон

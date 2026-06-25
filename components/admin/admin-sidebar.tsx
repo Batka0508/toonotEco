@@ -9,7 +9,6 @@ import {
   LogOut,
   Settings,
   Users,
-  Wallet,
 } from "lucide-react"
 import { logoutUser } from "@/app/(user-auth)/actions"
 import { NotificationNavBadge } from "@/components/admin/notification-nav-badge"
@@ -31,8 +30,7 @@ const navItems: NavItemConfig[] = [
   { id: "garages", href: "/admin?view=garages", icon: Car, label: "Гараж", matchViews: ["garages"] },
   { id: "requests", href: "/admin?view=requests", icon: ClipboardList, label: "Захиалга", matchViews: ["requests"], countKey: "requests" },
   { id: "chatbot", href: "/admin?view=chatbot", icon: Users, label: "Харилцагчид", matchViews: ["chatbot"], countKey: "chatbot" },
-  { id: "payments", href: "/admin?view=requests", icon: Wallet, label: "Төлбөрүүд", matchViews: [] },
-  { id: "reports", href: "/admin?view=reports", icon: BarChart3, label: "Тайлан", matchViews: ["reports"] },
+  { id: "reports", href: "/admin?view=reports", icon: BarChart3, label: "Нийт хандалт", matchViews: ["reports"] },
   { id: "notifications", href: "/admin?view=notifications", icon: Bell, label: "Мэдэгдэл", matchViews: ["notifications"], countKey: "notifications" },
   { id: "settings", href: "/admin?view=content", icon: Settings, label: "Тохиргоо", matchViews: ["content"] },
 ]
