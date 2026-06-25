@@ -8,7 +8,7 @@ export function AdminCard({
   className?: string
 }) {
   return (
-    <div className={`rounded-xl border border-slate-200/80 bg-white shadow-sm shadow-slate-900/5 ${className}`}>
+    <div className={`rounded-lg border border-slate-200/80 bg-white shadow-sm shadow-slate-900/5 ${className}`}>
       {children}
     </div>
   )
@@ -28,14 +28,14 @@ export function AdminStatCard({
   iconClassName: string
 }) {
   return (
-    <AdminCard className="p-5">
-      <div className="flex items-start gap-4">
+    <AdminCard className="p-4 sm:p-5">
+      <div className="flex items-start gap-3 sm:gap-4">
         <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full ${iconClassName}`}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="min-w-0">
-          <p className="text-sm text-slate-500">{label}</p>
-          <p className="mt-0.5 text-2xl font-bold text-slate-900">{value}</p>
+          <p className="truncate text-sm text-slate-500">{label}</p>
+          <p className="mt-0.5 truncate text-xl font-bold text-slate-900 sm:text-2xl">{value}</p>
           {subtext && <p className="mt-1 text-xs text-slate-400">{subtext}</p>}
         </div>
       </div>

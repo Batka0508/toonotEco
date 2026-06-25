@@ -86,7 +86,7 @@ export function DashboardView({ apartments, garages, inquiries, chatbotLeads, vi
 
   return (
     <div className="grid gap-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
         <AdminStatCard
           icon={Building2}
           label="Нийт байр"
@@ -131,11 +131,11 @@ export function DashboardView({ apartments, garages, inquiries, chatbotLeads, vi
         />
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(20rem,1fr)]">
         <AdminCard>
-          <div className="flex flex-col gap-4 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-base font-bold text-slate-900">Сүүлийн үл хөдлөх хөрөнгүүд</h2>
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col gap-4 border-b border-slate-100 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+            <h2 className="min-w-0 text-base font-bold text-slate-900">Сүүлийн үл хөдлөх хөрөнгүүд</h2>
+            <div className="flex flex-col gap-2 min-[420px]:flex-row min-[420px]:items-center">
               <select className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-600 outline-none focus:border-[#5d5fef] focus:ring-2 focus:ring-[#5d5fef]/20">
                 <option>Бүгд</option>
                 <option>Боломжтой</option>
@@ -144,7 +144,7 @@ export function DashboardView({ apartments, garages, inquiries, chatbotLeads, vi
               </select>
               <Link
                 href="/admin?view=add"
-                className="inline-flex items-center gap-2 rounded-lg bg-[#5d5fef] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4f51e8]"
+                className="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-[#5d5fef] px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#4f51e8]"
               >
                 <Plus className="h-4 w-4" />
                 Шинээр нэмэх

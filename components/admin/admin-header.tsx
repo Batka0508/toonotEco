@@ -12,14 +12,14 @@ export function AdminHeader({ title, email, notifications }: AdminHeaderProps) {
   const displayName = email.split("@")[0] || "Admin"
 
   return (
-    <div className="flex w-full items-center justify-between gap-4">
-      <h1 className="truncate text-lg font-bold text-slate-900 sm:text-xl">{title}</h1>
+    <div className="flex w-full min-w-0 items-center justify-between gap-2 sm:gap-4">
+      <h1 className="min-w-0 flex-1 truncate text-base font-bold text-slate-900 sm:text-xl">{title}</h1>
 
-      <div className="flex shrink-0 items-center gap-2 sm:gap-3 lg:gap-5">
+      <div className="flex shrink-0 items-center gap-1.5 sm:gap-3 lg:gap-5">
         <AdminNotifications notifications={notifications} />
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-[#5d5fef] to-[#7c7ff5] text-sm font-bold text-white sm:h-10 sm:w-10">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#5d5fef] to-[#7c7ff5] text-sm font-bold text-white sm:h-10 sm:w-10">
             {displayName.charAt(0).toUpperCase()}
           </div>
           <div className="hidden min-w-0 lg:block">

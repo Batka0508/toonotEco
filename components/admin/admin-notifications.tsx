@@ -36,7 +36,7 @@ export function AdminNotifications({ notifications }: AdminNotificationsProps) {
         </button>
       </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-80 p-0 sm:w-96">
+      <PopoverContent align="end" className="w-[calc(100vw-1.5rem)] max-w-96 p-0 sm:w-96">
         <div className="border-b border-slate-100 px-4 py-3">
           <p className="text-sm font-bold text-slate-900">Мэдэгдэл</p>
           <p className="text-xs text-slate-500">
